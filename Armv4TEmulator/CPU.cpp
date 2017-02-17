@@ -133,7 +133,7 @@ inline std::tuple<u32, bool> CPU::shifter_operand(u32 instr, unsigned I) {
 		else if (vRs7_0 == 32)
 			return std::make_tuple(0, (gprs[Rm] & 0b1) == 1);
 		else 
-			return std::make_tuple(0, 0);
+			return std::make_tuple(0, false);
 		break;
 	}
 	case 0b010: { //>> is logical because gprs are unsigned
@@ -152,7 +152,7 @@ inline std::tuple<u32, bool> CPU::shifter_operand(u32 instr, unsigned I) {
 		else if (vRs7_0 == 32)
 			return std::make_tuple(0, ((gprs[Rm] >> 31) & 0b1) == 1);
 		else
-			return std::make_tuple(0, 0);
+			return std::make_tuple(0, false);
 		break;
 	}
 	}
