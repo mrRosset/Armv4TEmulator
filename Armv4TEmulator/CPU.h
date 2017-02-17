@@ -54,7 +54,7 @@ public:
 	-> which one is the 31th ? Can only see 30
 	*/
 	//use u32 or s32 ? -> mgba use s32
-	s32 gprs[16];
+	u32 gprs[16];
 
 	CPSR cpsr;
 	CPSR spsr;

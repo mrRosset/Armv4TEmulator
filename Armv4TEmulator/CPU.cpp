@@ -1,6 +1,11 @@
 #include <stdlib.h>
 #include "CPU.h"
 
+/*
+Code is microsoft-specific. Some functions for circluar functions are only in VC++
+And the operator >> is used. This operator is logical/arithmetic depending on the implementation
+In visual c++ it's arithmetic. https://msdn.microsoft.com/en-us/library/336xbhcz.aspx
+*/
 
 void CPU::Step() {
 	u32 instr = mem.read32(gprs[Regs::PC]);
@@ -101,13 +106,38 @@ inline std::tuple<u32, bool> CPU::shifter_operand(u32 instr, unsigned I) {
 		unsigned immed_8 = instr & 0xFF;
 		unsigned rotate_imm = (instr >> 8) & 0xF;
 		u32 result = _rotr(immed_8, rotate_imm * 2);
-		if (rotate_imm == 0) {
+		if (rotate_imm == 0) 
 			return std::make_tuple(result, cpsr.flag_C);
-		}
-		else {
+		else 
 			return std::make_tuple(result, ((result >> 31) & 0b1) == 1);
-		}
 	}
+	unsigned shift_imm = (instr >> 7) & 0b11111;
+	unsigned Rs = (instr >> 8) & 0xF;
+	unsigned Rm = instr & 0xF;
+	//TODO take care of PC as Rm, Rn, Rd, Rs
+	
+	switch ((instr >> 4) & 0b111) {
+	case 0b000: {
+		if (shift_imm == 0)
+			return std::make_tuple(gprs[Rm], cpsr.flag_C);
+		else
+			return std::make_tuple(gprs[Rm] << shift_imm, (gprs[Rm] >> (32 - shift_imm) & 0b1) == 1);
+		break;
+	}
+	case 0b001: {
+		unsigned vRs7_0 = Rs & 0xFF;
+		if (vRs7_0 == 0)
+			return std::make_tuple(gprs[Rm], cpsr.flag_C);
+		else if (vRs7_0 < 32)
+			return std::make_tuple(gprs[Rm] << vRs7_0, (gprs[Rm] >> (32 - vRs7_0) & 0b1) == 1);
+		else if (vRs7_0 == 32)
+			return std::make_tuple(0, (gprs[Rm] & 0b1) == 1);
+		else 
+			return std::make_tuple(0, 0);
+		break;
+	}
+	}
+	//throw "invalid shifter operand";
 	return std::make_tuple(0, false);
 }
 
