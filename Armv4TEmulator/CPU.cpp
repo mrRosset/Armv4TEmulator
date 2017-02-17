@@ -155,6 +155,32 @@ inline std::tuple<u32, bool> CPU::shifter_operand(u32 instr, unsigned I) {
 			return std::make_tuple(0, false);
 		break;
 	}
+	case 0b100: {
+		if (shift_imm == 0)
+			if (((gprs[Rm] >> 31) & 0b1) == 0)
+				return std::make_tuple(0, ((gprs[Rm] >> 31) & 0b1) == 1);
+			else
+				return std::make_tuple(0xFFFFFFFF, ((gprs[Rm] >> 31) & 0b1) == 1);
+		else {
+			signed vRm = gprs[Rm];
+			return std::make_tuple(vRm >> shift_imm, (gprs[Rm] >> (shift_imm - 1) & 0b1) == 1);
+		}
+		break;
+	}
+	case 0b101: {
+		unsigned vRs7_0 = Rs & 0xFF;
+		signed vRm = gprs[Rm];
+		if (vRs7_0 == 0)
+			return std::make_tuple(gprs[Rm], cpsr.flag_C);
+		else if (vRs7_0 < 32)
+			return std::make_tuple(gprs[Rm] >> vRs7_0, (gprs[Rm] >> (vRs7_0 - 1) & 0b1) == 1);
+		else
+			if (((gprs[Rm] >> 31) & 0b1) == 0)
+				return std::make_tuple(0, ((gprs[Rm] >> 31) & 0b1) == 1);
+			else
+				return std::make_tuple(0xFFFFFFFF, ((gprs[Rm] >> 31) & 0b1) == 1);
+		break;
+	}
 	}
 	//throw "invalid shifter operand";
 	return std::make_tuple(0, false);
