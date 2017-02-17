@@ -1,5 +1,5 @@
+#include <stdlib.h>
 #include "CPU.h"
-
 
 
 void CPU::Step() {
@@ -24,8 +24,8 @@ bool CPU::Check_Condition(u32 instr) {
 	case 0b1001: return cpsr.flag_C == 0 && cpsr.flag_Z == 1;
 	case 0b1010: return cpsr.flag_N == cpsr.flag_V;
 	case 0b1011: return cpsr.flag_N != cpsr.flag_V;
-	case 0b1100: return cpsr.flag_Z == 0 & cpsr.flag_N == cpsr.flag_V;
-	case 0b1101: return cpsr.flag_Z == 1 & cpsr.flag_N != cpsr.flag_V;
+	case 0b1100: return cpsr.flag_Z == 0 && cpsr.flag_N == cpsr.flag_V;
+	case 0b1101: return cpsr.flag_Z == 1 && cpsr.flag_N != cpsr.flag_V;
 	case 0b1110: return true;
 	case 0b1111: throw "Unpredictable instructions are not emulated";
 	}
@@ -52,7 +52,7 @@ void CPU::ARM_Execute(u32 instr) {
 			throw "3-2 not done";
 		}
 		else {
-			throw "data processing not done";
+			Data_Processing(instr);
 		}
 		break;
 	}
@@ -67,7 +67,7 @@ void CPU::ARM_Execute(u32 instr) {
 			throw "Move immediate to status register not done";
 		}
 		else {
-			throw "data processing not done";
+			Data_Processing(instr);
 		}
 		
 		break;
@@ -78,5 +78,47 @@ void CPU::ARM_Execute(u32 instr) {
 	case 0b101: break; // Branch and branch with link
 	case 0b110: break; // Coprocessor load/store and double register transfers[<- does it exist without the DSP extension ?
 	case 0b111: break; // Coprocessor + Software interrupts
+	}
+}
+
+inline void CPU::Data_Processing(u32 instr) {
+	unsigned opcode = (instr >> 21) & 0xF;
+	unsigned I = (instr >> 25) & 0b1;
+	unsigned S = (instr >> 20) & 0b1;
+	unsigned Rn = (instr >> 16) & 0xF;
+	unsigned Rd = (instr >> 12) & 0xF;
+	u32 shifter_op;
+	bool shifter_carry;
+	std::tie(shifter_op, shifter_carry) = shifter_operand(instr, I);
+
+	switch (opcode) {
+	case 0b0000: Add(S, Rd, Rn, shifter_op);
+	}
+}
+
+inline std::tuple<u32, bool> CPU::shifter_operand(u32 instr, unsigned I) {
+	if (I) { //Immediate
+		unsigned immed_8 = instr & 0xFF;
+		unsigned rotate_imm = (instr >> 8) & 0xF;
+		u32 result = _rotr(immed_8, rotate_imm * 2);
+		if (rotate_imm == 0) {
+			return std::make_tuple(result, cpsr.flag_C);
+		}
+		else {
+			return std::make_tuple(result, ((result >> 31) & 0b1) == 1);
+		}
+	}
+	return std::make_tuple(0, false);
+}
+
+inline void CPU::Add(unsigned S, unsigned Rd, unsigned Rn, u32 shifter_operand) {
+	gprs[Rd] = gprs[Rd] + shifter_operand;
+	if (S == 1 && Rd == Regs::PC) {
+		throw("no sprs in user/system mode, other mode not implemented yet");
+	} 
+	else if (S == 1) {
+		cpsr.flag_N = ((gprs[Rd] >> 31) & 0b1) ==1;
+		cpsr.flag_Z = gprs[Rd] == 0;
+		//TODO C and V
 	}
 }

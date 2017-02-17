@@ -1,6 +1,7 @@
 #pragma once
 #include "Common.h"
 #include "Memory.h"
+#include <tuple>
 
 //TODO: make sure scope of the elements are appropriate
 
@@ -62,4 +63,7 @@ public:
 	void Step();
 	bool Check_Condition(u32 instr);
 	void ARM_Execute(u32 instr);
+	void Data_Processing(u32 instr);
+	std::tuple<u32, bool> CPU::shifter_operand(u32 instr, unsigned I);
+	void Add(unsigned S, unsigned Rd, unsigned Rn, u32 shifter_operand);
 };
