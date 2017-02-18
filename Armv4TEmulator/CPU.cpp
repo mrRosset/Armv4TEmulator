@@ -97,11 +97,23 @@ inline void CPU::Data_Processing(u32 instr) {
 	std::tie(shifter_op, shifter_carry) = shifter_operand(instr, I);
 
 	switch (opcode) {
-	case 0b0000: Add(S, Rd, Rn, shifter_op);
+	case 0b0000: Add(S, Rd, Rn, shifter_op, shifter_carry);
 	}
 }
 
-inline std::tuple<u32, bool> CPU::shifter_operand(u32 instr, unsigned I) {
+inline unsigned getBit(u32 v, int bit_number) {
+	return ((v >> bit_number) & 0b1);
+}
+
+inline unsigned getBit(u32 v, unsigned bit_number) {
+	return ((v >> bit_number) & 0b1);
+}
+
+//avoid implicit conversions
+template <class T, class U>
+unsigned getBit(T, U) = delete;
+
+std::tuple<u32, bool> CPU::shifter_operand(u32 instr, unsigned I) {
 	if (I) { //Immediate
 		unsigned immed_8 = instr & 0xFF;
 		unsigned rotate_imm = (instr >> 8) & 0xF;
@@ -109,7 +121,7 @@ inline std::tuple<u32, bool> CPU::shifter_operand(u32 instr, unsigned I) {
 		if (rotate_imm == 0) 
 			return std::make_tuple(result, cpsr.flag_C);
 		else 
-			return std::make_tuple(result, ((result >> 31) & 0b1) == 1);
+			return std::make_tuple(result, getBit(result, 31) == 1);
 	}
 	unsigned shift_imm = (instr >> 7) & 0b11111;
 	unsigned Rs = (instr >> 8) & 0xF;
@@ -121,7 +133,7 @@ inline std::tuple<u32, bool> CPU::shifter_operand(u32 instr, unsigned I) {
 		if (shift_imm == 0)
 			return std::make_tuple(gprs[Rm], cpsr.flag_C);
 		else
-			return std::make_tuple(gprs[Rm] << shift_imm, (gprs[Rm] >> (32 - shift_imm) & 0b1) == 1);
+			return std::make_tuple(gprs[Rm] << shift_imm, getBit(gprs[Rm], 32 - shift_imm) == 1);
 		break;
 	}
 	case 0b001: {
@@ -129,7 +141,7 @@ inline std::tuple<u32, bool> CPU::shifter_operand(u32 instr, unsigned I) {
 		if (vRs7_0 == 0)
 			return std::make_tuple(gprs[Rm], cpsr.flag_C);
 		else if (vRs7_0 < 32)
-			return std::make_tuple(gprs[Rm] << vRs7_0, (gprs[Rm] >> (32 - vRs7_0) & 0b1) == 1);
+			return std::make_tuple(gprs[Rm] << vRs7_0, getBit(gprs[Rm], 32 - vRs7_0) == 1);
 		else if (vRs7_0 == 32)
 			return std::make_tuple(0, (gprs[Rm] & 0b1) == 1);
 		else 
@@ -138,9 +150,9 @@ inline std::tuple<u32, bool> CPU::shifter_operand(u32 instr, unsigned I) {
 	}
 	case 0b010: { //>> is logical because gprs are unsigned
 		if (shift_imm == 0)
-			return std::make_tuple(0, ((gprs[Rm] >> 31) & 0b1) == 1);
+			return std::make_tuple(0, getBit(gprs[Rm], 31) == 1);
 		else
-			return std::make_tuple(gprs[Rm] >> shift_imm, (gprs[Rm] >> (shift_imm - 1) & 0b1) == 1);
+			return std::make_tuple(gprs[Rm] >> shift_imm, getBit(gprs[Rm], shift_imm - 1) == 1);
 		break;
 	}
 	case 0b011: {
@@ -148,22 +160,22 @@ inline std::tuple<u32, bool> CPU::shifter_operand(u32 instr, unsigned I) {
 		if (vRs7_0 == 0)
 			return std::make_tuple(gprs[Rm], cpsr.flag_C);
 		else if (vRs7_0 < 32)
-			return std::make_tuple(gprs[Rm] >> vRs7_0, (gprs[Rm] >> (vRs7_0 - 1) & 0b1) == 1);
+			return std::make_tuple(gprs[Rm] >> vRs7_0, getBit(gprs[Rm], vRs7_0 - 1) == 1);
 		else if (vRs7_0 == 32)
-			return std::make_tuple(0, ((gprs[Rm] >> 31) & 0b1) == 1);
+			return std::make_tuple(0, getBit(gprs[Rm], 31) == 1);
 		else
 			return std::make_tuple(0, false);
 		break;
 	}
 	case 0b100: {
 		if (shift_imm == 0)
-			if (((gprs[Rm] >> 31) & 0b1) == 0)
-				return std::make_tuple(0, ((gprs[Rm] >> 31) & 0b1) == 1);
+			if (getBit(gprs[Rm], 31) == 0)
+				return std::make_tuple(0, getBit(gprs[Rm], 31) == 1);
 			else
-				return std::make_tuple(0xFFFFFFFF, ((gprs[Rm] >> 31) & 0b1) == 1);
+				return std::make_tuple(0xFFFFFFFF, getBit(gprs[Rm], 31) == 1);
 		else {
 			signed vRm = gprs[Rm];
-			return std::make_tuple(vRm >> shift_imm, (gprs[Rm] >> (shift_imm - 1) & 0b1) == 1);
+			return std::make_tuple(vRm >> shift_imm, getBit(gprs[Rm], shift_imm - 1) == 1);
 		}
 		break;
 	}
@@ -173,26 +185,49 @@ inline std::tuple<u32, bool> CPU::shifter_operand(u32 instr, unsigned I) {
 		if (vRs7_0 == 0)
 			return std::make_tuple(gprs[Rm], cpsr.flag_C);
 		else if (vRs7_0 < 32)
-			return std::make_tuple(gprs[Rm] >> vRs7_0, (gprs[Rm] >> (vRs7_0 - 1) & 0b1) == 1);
+			return std::make_tuple(gprs[Rm] >> vRs7_0, getBit(gprs[Rm], vRs7_0 - 1) == 1);
 		else
-			if (((gprs[Rm] >> 31) & 0b1) == 0)
-				return std::make_tuple(0, ((gprs[Rm] >> 31) & 0b1) == 1);
+			if (getBit(gprs[Rm], 31) == 0)
+				return std::make_tuple(0, getBit(gprs[Rm], 31) == 1);
 			else
-				return std::make_tuple(0xFFFFFFFF, ((gprs[Rm] >> 31) & 0b1) == 1);
+				return std::make_tuple(0xFFFFFFFF, getBit(gprs[Rm], 31) == 1);
+		break;
+	}
+	case 0b110: {
+		if (shift_imm == 0) {
+			return std::make_tuple((cpsr.flag_C << 31) & (gprs[Rm] >> 1), (gprs[Rm] & 0b1) == 1);
+		}
+		else
+			return std::make_tuple(_rotr(gprs[Rm], shift_imm), getBit(gprs[Rm], shift_imm - 1) == 1);
+		break;
+	}
+	case 0b111: {
+		unsigned vRs7_0 = Rs & 0xFF;
+		unsigned vRs4_0 = Rs & 0b11111;
+
+		if (vRs7_0 == 0) {
+			return std::make_tuple(gprs[Rm], cpsr.flag_C);
+		}
+		else if (vRs4_0 == 0) {
+			return std::make_tuple(gprs[Rm], getBit(gprs[Rm], 31) == 1);
+		}
+		else {
+			return std::make_tuple(_rotr(gprs[Rm], vRs4_0), getBit(gprs[Rm], vRs4_0 - 1) == 1);
+		}
 		break;
 	}
 	}
-	//throw "invalid shifter operand";
-	return std::make_tuple(0, false);
+	
+	throw "invalid shifter operand";
 }
 
-inline void CPU::Add(unsigned S, unsigned Rd, unsigned Rn, u32 shifter_operand) {
+inline void CPU::Add(unsigned S, unsigned Rd, unsigned Rn, u32 shifter_operand, bool shifter_carry) {
 	gprs[Rd] = gprs[Rd] + shifter_operand;
 	if (S == 1 && Rd == Regs::PC) {
 		throw("no sprs in user/system mode, other mode not implemented yet");
 	} 
 	else if (S == 1) {
-		cpsr.flag_N = ((gprs[Rd] >> 31) & 0b1) ==1;
+		cpsr.flag_N = getBit(gprs[Rd], 31) == 1;
 		cpsr.flag_Z = gprs[Rd] == 0;
 		//TODO C and V
 	}
