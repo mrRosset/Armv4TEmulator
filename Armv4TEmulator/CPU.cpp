@@ -97,7 +97,8 @@ inline void CPU::Data_Processing(u32 instr) {
 	std::tie(shifter_op, shifter_carry) = shifter_operand(instr, I);
 
 	switch (opcode) {
-	case 0b0000: Add(S, Rd, Rn, shifter_op, shifter_carry);
+	//case 0b0000: And(S, Rd, Rn, shifter_op, shifter_carry); break;
+	case 0b0100: Add(S, Rd, Rn, shifter_op, shifter_carry); break;
 	}
 }
 
