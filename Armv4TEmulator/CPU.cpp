@@ -96,11 +96,10 @@ inline void CPU::Data_Processing(u32 instr) {
 	bool shifter_carry;
 	std::tie(shifter_op, shifter_carry) = shifter_operand(instr, I);
 
-	//what to do with the shifter_carry_out ?
-
 	switch (opcode) {
-	//case 0b0000: And(S, Rd, Rn, shifter_op, shifter_carry); break;
-	case 0b0100: Add(S, Rd, Rn, shifter_op); break;
+	case 0b0000: And(S, Rd, Rn, shifter_op, shifter_carry); break;
+	case 0b0001: Eor(S, Rd, Rn, shifter_op, shifter_carry); break;
+	case 0b0100: Add(S, Rd, Rn, shifter_op, shifter_carry); break;
 	}
 }
 
@@ -242,8 +241,32 @@ inline bool OverflowFromAdd(s32 a, s32 b, s32 c) {
 	return (a > 0 && b > 0 && r < 0) || (a < 0 && b < 0 && r > 0);
 }
 
+inline void CPU::And(unsigned S, unsigned Rd, unsigned Rn, u32 shifter_operand, bool shifter_carry) {
+	gprs[Rd] = gprs[Rn] & shifter_operand;
+	if (S == 1 && Rd == Regs::PC) {
+		throw("no sprs in user/system mode, other mode not implemented yet");
+	}
+	else if (S == 1) {
+		cpsr.flag_N = getBit(gprs[Rd], 31) == 1;
+		cpsr.flag_Z = gprs[Rd] == 0;
+		cpsr.flag_C = shifter_carry;
+	}
+}
 
-inline void CPU::Add(unsigned S, unsigned Rd, unsigned Rn, u32 shifter_operand) {
+inline void CPU::Eor(unsigned S, unsigned Rd, unsigned Rn, u32 shifter_operand, bool shifter_carry) {
+	gprs[Rd] = gprs[Rn] ^ shifter_operand;
+	if (S == 1 && Rd == Regs::PC) {
+		throw("no sprs in user/system mode, other mode not implemented yet");
+	}
+	else if (S == 1) {
+		cpsr.flag_N = getBit(gprs[Rd], 31) == 1;
+		cpsr.flag_Z = gprs[Rd] == 0;
+		cpsr.flag_C = shifter_carry;
+	}
+}
+
+
+inline void CPU::Add(unsigned S, unsigned Rd, unsigned Rn, u32 shifter_operand, bool shifter_carry) {
 	gprs[Rd] = gprs[Rn] + shifter_operand;
 	if (S == 1 && Rd == Regs::PC) {
 		throw("no sprs in user/system mode, other mode not implemented yet");

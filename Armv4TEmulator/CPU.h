@@ -65,5 +65,7 @@ public:
 	void ARM_Execute(u32 instr);
 	void Data_Processing(u32 instr);
 	std::tuple<u32, bool> CPU::shifter_operand(u32 instr, unsigned I);
-	void Add(unsigned S, unsigned Rd, unsigned Rn, u32 shifter_operand);
+	void And(unsigned S, unsigned Rd, unsigned Rn, u32 shifter_operand, bool shifter_carry);
+	void Eor(unsigned S, unsigned Rd, unsigned Rn, u32 shifter_operand, bool shifter_carry);
+	void Add(unsigned S, unsigned Rd, unsigned Rn, u32 shifter_operand, bool shifter_carry)
 };
