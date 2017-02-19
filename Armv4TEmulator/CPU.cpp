@@ -96,9 +96,11 @@ inline void CPU::Data_Processing(u32 instr) {
 	bool shifter_carry;
 	std::tie(shifter_op, shifter_carry) = shifter_operand(instr, I);
 
+	//what to do with the shifter_carry_out ?
+
 	switch (opcode) {
 	//case 0b0000: And(S, Rd, Rn, shifter_op, shifter_carry); break;
-	case 0b0100: Add(S, Rd, Rn, shifter_op, shifter_carry); break;
+	case 0b0100: Add(S, Rd, Rn, shifter_op); break;
 	}
 }
 
@@ -182,7 +184,7 @@ std::tuple<u32, bool> CPU::shifter_operand(u32 instr, unsigned I) {
 	}
 	case 0b101: {
 		unsigned vRs7_0 = Rs & 0xFF;
-		signed vRm = gprs[Rm];
+		signed int vRm = gprs[Rm];
 		if (vRs7_0 == 0)
 			return std::make_tuple(gprs[Rm], cpsr.flag_C);
 		else if (vRs7_0 < 32)
@@ -222,14 +224,34 @@ std::tuple<u32, bool> CPU::shifter_operand(u32 instr, unsigned I) {
 	throw "invalid shifter operand";
 }
 
-inline void CPU::Add(unsigned S, unsigned Rd, unsigned Rn, u32 shifter_operand, bool shifter_carry) {
-	gprs[Rd] = gprs[Rd] + shifter_operand;
+inline bool CarryFrom(u64 a, u64 b) {
+	return (a + b) > UINT32_MAX;
+}
+
+inline bool CarryFrom(u64 a, u64 b, u64 c) {
+	return (a + b + c) > UINT32_MAX;
+}
+
+inline bool OverflowFromAdd(s32 a, s32 b) {
+	s32 r = a + b;
+	return (a > 0 && b > 0 && r < 0) || (a < 0 && b < 0 && r > 0);
+}
+
+inline bool OverflowFromAdd(s32 a, s32 b, s32 c) {
+	s32 r = a + b + c;
+	return (a > 0 && b > 0 && r < 0) || (a < 0 && b < 0 && r > 0);
+}
+
+
+inline void CPU::Add(unsigned S, unsigned Rd, unsigned Rn, u32 shifter_operand) {
+	gprs[Rd] = gprs[Rn] + shifter_operand;
 	if (S == 1 && Rd == Regs::PC) {
 		throw("no sprs in user/system mode, other mode not implemented yet");
 	} 
 	else if (S == 1) {
 		cpsr.flag_N = getBit(gprs[Rd], 31) == 1;
 		cpsr.flag_Z = gprs[Rd] == 0;
-		//TODO C and V
+		cpsr.flag_C = CarryFrom(gprs[Rn], shifter_operand);
+		cpsr.flag_V = OverflowFromAdd(gprs[Rn], shifter_operand);
 	}
 }
