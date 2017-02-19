@@ -226,19 +226,28 @@ std::tuple<u32, bool> CPU::shifter_operand(u32 instr, unsigned I) {
 inline bool CarryFrom(u64 a, u64 b) {
 	return (a + b) > UINT32_MAX;
 }
-
 inline bool CarryFrom(u64 a, u64 b, u64 c) {
 	return (a + b + c) > UINT32_MAX;
 }
 
+//check no sign extension
 inline bool OverflowFromAdd(s32 a, s32 b) {
 	s32 r = a + b;
 	return (a > 0 && b > 0 && r < 0) || (a < 0 && b < 0 && r > 0);
 }
-
 inline bool OverflowFromAdd(s32 a, s32 b, s32 c) {
 	s32 r = a + b + c;
 	return (a > 0 && b > 0 && r < 0) || (a < 0 && b < 0 && r > 0);
+}
+
+inline bool OverflowFromSub(s32 a, s32 b) {
+	s32 r = a - b;
+	return (a > 0 && b < 0 && r < 0) || (a < 0 && b > 0 && r > 0);
+}
+
+inline bool BorrowFromSub(u32 a, u32 b) {
+	//To check
+	return b > a;
 }
 
 inline void CPU::And(unsigned S, unsigned Rd, unsigned Rn, u32 shifter_operand, bool shifter_carry) {
@@ -265,7 +274,18 @@ inline void CPU::Eor(unsigned S, unsigned Rd, unsigned Rn, u32 shifter_operand, 
 	}
 }
 
-
+inline void CPU::Sub(unsigned S, unsigned Rd, unsigned Rn, u32 shifter_operand, bool shifter_carry) {
+	gprs[Rd] = gprs[Rn] - shifter_operand;
+	if (S == 1 && Rd == Regs::PC) {
+		throw("no sprs in user/system mode, other mode not implemented yet");
+	}
+	else if (S == 1) {
+		cpsr.flag_N = getBit(gprs[Rd], 31) == 1;
+		cpsr.flag_Z = gprs[Rd] == 0;
+		cpsr.flag_C = !BorrowFromSub(gprs[Rn], shifter_operand);
+		cpsr.flag_V = OverflowFromSub(gprs[Rn], shifter_operand);
+	}
+}
 inline void CPU::Add(unsigned S, unsigned Rd, unsigned Rn, u32 shifter_operand, bool shifter_carry) {
 	gprs[Rd] = gprs[Rn] + shifter_operand;
 	if (S == 1 && Rd == Regs::PC) {
