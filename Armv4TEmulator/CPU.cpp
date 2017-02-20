@@ -99,6 +99,8 @@ inline void CPU::Data_Processing(u32 instr) {
 	switch (opcode) {
 	case 0b0000: And(S, Rd, Rn, shifter_op, shifter_carry); break;
 	case 0b0001: Eor(S, Rd, Rn, shifter_op, shifter_carry); break;
+	case 0b0010: Sub(S, Rd, Rn, shifter_op, shifter_carry); break;
+	//case 0b0011: Rsb(S, Rd, Rn, shifter_op, shifter_carry); break;
 	case 0b0100: Add(S, Rd, Rn, shifter_op, shifter_carry); break;
 	}
 }
