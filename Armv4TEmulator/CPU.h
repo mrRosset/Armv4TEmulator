@@ -68,5 +68,6 @@ public:
 	void And(unsigned S, unsigned Rd, unsigned Rn, u32 shifter_operand, bool shifter_carry);
 	void Eor(unsigned S, unsigned Rd, unsigned Rn, u32 shifter_operand, bool shifter_carry);
 	void Sub(unsigned S, unsigned Rd, unsigned Rn, u32 shifter_operand, bool shifter_carry);
+	void Rsb(unsigned S, unsigned Rd, unsigned Rn, u32 shifter_operand, bool shifter_carry);
 	void Add(unsigned S, unsigned Rd, unsigned Rn, u32 shifter_operand, bool shifter_carry);
 };
