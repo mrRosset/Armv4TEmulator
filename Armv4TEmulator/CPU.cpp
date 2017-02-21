@@ -156,10 +156,11 @@ inline void CPU::Data_Processing(u32 instr) {
 	case 0b1001: DP_Instr2(gprs[Rn] ^ shifter_op, getBit(gprs[Rd], 31) == 1, gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break; //TEQ 
 	case 0b1010: DP_Instr2(gprs[Rn] - shifter_op, getBit(gprs[Rd], 31) == 1, gprs[Rd] == 0, !BorrowFromSub(gprs[Rn], shifter_op), OverflowFromSub(gprs[Rn], shifter_op)); break; //CMP
 	case 0b1011: DP_Instr2(gprs[Rn] + shifter_op, getBit(gprs[Rd], 31) == 1, gprs[Rd] == 0, CarryFrom(gprs[Rn], shifter_op), OverflowFromAdd(gprs[Rn], shifter_op)); break; //CMN
-	//case 0b1100: ORR; break;
-	//case 0b1101: MOV; break; <- no Rn
-	//case 0b1110: BIC; break;
-	//case 0b1111: MVN; break; <- no Rn
+	case 0b1100: DP_Instr1(S, Rd, gprs[Rn] | shifter_op, getBit(gprs[Rd], 31) == 1, gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break; //ORR
+	case 0b1101: DP_Instr1(S, Rd, shifter_op, getBit(gprs[Rd], 31) == 1, gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break; //MOV
+	case 0b1110: DP_Instr1(S, Rd, gprs[Rn] & !shifter_op, getBit(gprs[Rd], 31) == 1, gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break; //BIC
+	case 0b1111: DP_Instr1(S, Rd, !shifter_op, getBit(gprs[Rd], 31) == 1, gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break; //MVN
+	//TODO verify negation for MVN and BIC
 	}
 }
 
