@@ -86,36 +86,6 @@ void CPU::ARM_Execute(u32 instr) {
 	}
 }
 
-inline void CPU::Data_Processing(u32 instr) {
-	unsigned opcode = (instr >> 21) & 0xF;
-	unsigned I = (instr >> 25) & 0b1;
-	unsigned S = (instr >> 20) & 0b1;
-	unsigned Rn = (instr >> 16) & 0xF;
-	unsigned Rd = (instr >> 12) & 0xF;
-	u32 shifter_op;
-	bool shifter_carry;
-	std::tie(shifter_op, shifter_carry) = shifter_operand(instr, I);
-
-	switch (opcode) {
-	case 0b0000: And(S, Rd, Rn, shifter_op, shifter_carry); break;
-	case 0b0001: Eor(S, Rd, Rn, shifter_op, shifter_carry); break;
-	case 0b0010: Sub(S, Rd, Rn, shifter_op, shifter_carry); break;
-	case 0b0011: Rsb(S, Rd, Rn, shifter_op, shifter_carry); break;
-	case 0b0100: Add(S, Rd, Rn, shifter_op, shifter_carry); break;
-	//case 0b0101: ADC; break;
-	//case 0b0110: SBC; break;
-	//case 0b0111: RSC; break;
-	//case 0b1000: TST; break; <- no S, no Rd
-	//case 0b1001: TEQ; break; <- no S, no Rd
-	//case 0b1010: CMP; break; <- no S, no Rd
-	//case 0b1011: CMN; break; <- no S, no Rd
-	//case 0b1100: ORR; break;
-	//case 0b1101: MOV; break; <- no Rn
-	//case 0b1110: BIC; break;
-	//case 0b1111: MVN; break; <- no Rn
-	}
-}
-
 inline unsigned getBit(u32 v, int bit_number) {
 	return ((v >> bit_number) & 0b1);
 }
@@ -133,16 +103,16 @@ std::tuple<u32, bool> CPU::shifter_operand(u32 instr, unsigned I) {
 		unsigned immed_8 = instr & 0xFF;
 		unsigned rotate_imm = (instr >> 8) & 0xF;
 		u32 result = _rotr(immed_8, rotate_imm * 2);
-		if (rotate_imm == 0) 
+		if (rotate_imm == 0)
 			return std::make_tuple(result, cpsr.flag_C);
-		else 
+		else
 			return std::make_tuple(result, getBit(result, 31) == 1);
 	}
 	unsigned shift_imm = (instr >> 7) & 0b11111;
 	unsigned Rs = (instr >> 8) & 0xF;
 	unsigned Rm = instr & 0xF;
 	//TODO take care of PC as Rm, Rn, Rd, Rs
-	
+
 	switch ((instr >> 4) & 0b111) {
 	case 0b000: {
 		if (shift_imm == 0)
@@ -159,7 +129,7 @@ std::tuple<u32, bool> CPU::shifter_operand(u32 instr, unsigned I) {
 			return std::make_tuple(gprs[Rm] << vRs7_0, getBit(gprs[Rm], 32 - vRs7_0) == 1);
 		else if (vRs7_0 == 32)
 			return std::make_tuple(0, (gprs[Rm] & 0b1) == 1);
-		else 
+		else
 			return std::make_tuple(0, false);
 		break;
 	}
@@ -232,7 +202,7 @@ std::tuple<u32, bool> CPU::shifter_operand(u32 instr, unsigned I) {
 		break;
 	}
 	}
-	
+
 	throw "invalid shifter operand";
 }
 
@@ -263,65 +233,45 @@ inline bool BorrowFromSub(u32 a, u32 b) {
 	return b > a;
 }
 
-inline void CPU::And(unsigned S, unsigned Rd, unsigned Rn, u32 shifter_operand, bool shifter_carry) {
-	gprs[Rd] = gprs[Rn] & shifter_operand;
-	if (S == 1 && Rd == Regs::PC) {
-		throw("no sprs in user/system mode, other mode not implemented yet");
-	}
-	else if (S == 1) {
-		cpsr.flag_N = getBit(gprs[Rd], 31) == 1;
-		cpsr.flag_Z = gprs[Rd] == 0;
-		cpsr.flag_C = shifter_carry;
+inline void CPU::Data_Processing(u32 instr) {
+	unsigned opcode = (instr >> 21) & 0xF;
+	unsigned I = (instr >> 25) & 0b1;
+	unsigned S = (instr >> 20) & 0b1;
+	unsigned Rn = (instr >> 16) & 0xF;
+	unsigned Rd = (instr >> 12) & 0xF;
+	u32 shifter_op;
+	bool shifter_carry;
+	std::tie(shifter_op, shifter_carry) = shifter_operand(instr, I);
+
+	switch (opcode) {
+	case 0b0000: DP_Instr(S, Rd, gprs[Rn] & shifter_op, getBit(gprs[Rd], 31) == 1, gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break; //And
+	case 0b0001: DP_Instr(S, Rd, gprs[Rn] ^ shifter_op, getBit(gprs[Rd], 31) == 1, gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break; //Eor
+	case 0b0010: DP_Instr(S, Rd, gprs[Rn] - shifter_op, getBit(gprs[Rd], 31) == 1, gprs[Rd] == 0, !BorrowFromSub(gprs[Rn], shifter_op), OverflowFromSub(gprs[Rn], shifter_op)); break; //Sub
+	case 0b0011: DP_Instr(S, Rd, shifter_op - gprs[Rn], getBit(gprs[Rd], 31) == 1, gprs[Rd] == 0, !BorrowFromSub(shifter_op, gprs[Rn]), OverflowFromSub(shifter_op, gprs[Rn])); break; //Rsb
+	case 0b0100: DP_Instr(S, Rd, gprs[Rn] + shifter_op, getBit(gprs[Rd], 31) == 1, gprs[Rd] == 0, CarryFrom(gprs[Rn], shifter_op), OverflowFromAdd(gprs[Rn], shifter_op)); break; //Add
+	//case 0b0101: ADC; break;
+	//case 0b0110: SBC; break;
+	//case 0b0111: RSC; break;
+	//case 0b1000: TST; break; <- no S, no Rd
+	//case 0b1001: TEQ; break; <- no S, no Rd
+	//case 0b1010: CMP; break; <- no S, no Rd
+	//case 0b1011: CMN; break; <- no S, no Rd
+	//case 0b1100: ORR; break;
+	//case 0b1101: MOV; break; <- no Rn
+	//case 0b1110: BIC; break;
+	//case 0b1111: MVN; break; <- no Rn
 	}
 }
 
-inline void CPU::Eor(unsigned S, unsigned Rd, unsigned Rn, u32 shifter_operand, bool shifter_carry) {
-	gprs[Rd] = gprs[Rn] ^ shifter_operand;
+inline void CPU::DP_Instr(unsigned S, unsigned Rd, u32 result, bool N, bool Z, bool C, bool V) {
+	gprs[Rd] = result;
 	if (S == 1 && Rd == Regs::PC) {
 		throw("no sprs in user/system mode, other mode not implemented yet");
 	}
 	else if (S == 1) {
-		cpsr.flag_N = getBit(gprs[Rd], 31) == 1;
-		cpsr.flag_Z = gprs[Rd] == 0;
-		cpsr.flag_C = shifter_carry;
-	}
-}
-
-inline void CPU::Sub(unsigned S, unsigned Rd, unsigned Rn, u32 shifter_operand, bool shifter_carry) {
-	gprs[Rd] = gprs[Rn] - shifter_operand;
-	if (S == 1 && Rd == Regs::PC) {
-		throw("no sprs in user/system mode, other mode not implemented yet");
-	}
-	else if (S == 1) {
-		cpsr.flag_N = getBit(gprs[Rd], 31) == 1;
-		cpsr.flag_Z = gprs[Rd] == 0;
-		cpsr.flag_C = !BorrowFromSub(gprs[Rn], shifter_operand);
-		cpsr.flag_V = OverflowFromSub(gprs[Rn], shifter_operand);
-	}
-}
-
-inline void CPU::Rsb(unsigned S, unsigned Rd, unsigned Rn, u32 shifter_operand, bool shifter_carry) {
-	gprs[Rd] = shifter_operand - gprs[Rn];
-	if (S == 1 && Rd == Regs::PC) {
-		throw("no sprs in user/system mode, other mode not implemented yet");
-	}
-	else if (S == 1) {
-		cpsr.flag_N = getBit(gprs[Rd], 31) == 1;
-		cpsr.flag_Z = gprs[Rd] == 0;
-		cpsr.flag_C = !BorrowFromSub(shifter_operand, gprs[Rn]);
-		cpsr.flag_V = OverflowFromSub(shifter_operand, gprs[Rn]);
-	}
-}
-
-inline void CPU::Add(unsigned S, unsigned Rd, unsigned Rn, u32 shifter_operand, bool shifter_carry) {
-	gprs[Rd] = gprs[Rn] + shifter_operand;
-	if (S == 1 && Rd == Regs::PC) {
-		throw("no sprs in user/system mode, other mode not implemented yet");
-	} 
-	else if (S == 1) {
-		cpsr.flag_N = getBit(gprs[Rd], 31) == 1;
-		cpsr.flag_Z = gprs[Rd] == 0;
-		cpsr.flag_C = CarryFrom(gprs[Rn], shifter_operand);
-		cpsr.flag_V = OverflowFromAdd(gprs[Rn], shifter_operand);
+		cpsr.flag_N = N;
+		cpsr.flag_Z = Z;
+		cpsr.flag_C = C;
+		cpsr.flag_V = V;
 	}
 }
