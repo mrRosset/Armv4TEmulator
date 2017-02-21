@@ -144,22 +144,22 @@ inline void CPU::Data_Processing(u32 instr) {
 	std::tie(shifter_op, shifter_carry) = shifter_operand(instr, I);
 
 	switch (opcode) {
-	case 0b0000: DP_Instr1(S, Rd, gprs[Rn] & shifter_op, getBit(gprs[Rd], 31) == 1, gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break; //AND
-	case 0b0001: DP_Instr1(S, Rd, gprs[Rn] ^ shifter_op, getBit(gprs[Rd], 31) == 1, gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break; //EOR
-	case 0b0010: DP_Instr1(S, Rd, gprs[Rn] - shifter_op, getBit(gprs[Rd], 31) == 1, gprs[Rd] == 0, !BorrowFromSub(gprs[Rn], shifter_op), OverflowFromSub(gprs[Rn], shifter_op)); break; //SUB
-	case 0b0011: DP_Instr1(S, Rd, shifter_op - gprs[Rn], getBit(gprs[Rd], 31) == 1, gprs[Rd] == 0, !BorrowFromSub(shifter_op, gprs[Rn]), OverflowFromSub(shifter_op, gprs[Rn])); break; //RSB
-	case 0b0100: DP_Instr1(S, Rd, gprs[Rn] + shifter_op, getBit(gprs[Rd], 31) == 1, gprs[Rd] == 0, CarryFrom(gprs[Rn], shifter_op), OverflowFromAdd(gprs[Rn], shifter_op)); break; //ADD
-	case 0b0101: DP_Instr1(S, Rd, gprs[Rn] + shifter_op + cpsr.flag_C, getBit(gprs[Rd], 31) == 1, gprs[Rd] == 0, CarryFrom(gprs[Rn], shifter_op, cpsr.flag_C), OverflowFromAdd(gprs[Rn], shifter_op, cpsr.flag_C)); break; //ADC
-	case 0b0110: DP_Instr1(S, Rd, gprs[Rn] - shifter_op - !cpsr.flag_C, getBit(gprs[Rd], 31) == 1, gprs[Rd] == 0, !BorrowFromSub(gprs[Rn], shifter_op, !cpsr.flag_C), OverflowFromSub(gprs[Rn], shifter_op, !cpsr.flag_C)); break; //SBC
-	case 0b0111: DP_Instr1(S, Rd, shifter_op - gprs[Rn] - !cpsr.flag_C, getBit(gprs[Rd], 31) == 1, gprs[Rd] == 0, !BorrowFromSub(shifter_op, gprs[Rn], !cpsr.flag_C), OverflowFromSub(shifter_op, gprs[Rn], !cpsr.flag_C)); break; //RSC
-	case 0b1000: DP_Instr2(gprs[Rn] & shifter_op, getBit(gprs[Rd], 31) == 1, gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break; //TST
-	case 0b1001: DP_Instr2(gprs[Rn] ^ shifter_op, getBit(gprs[Rd], 31) == 1, gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break; //TEQ 
-	case 0b1010: DP_Instr2(gprs[Rn] - shifter_op, getBit(gprs[Rd], 31) == 1, gprs[Rd] == 0, !BorrowFromSub(gprs[Rn], shifter_op), OverflowFromSub(gprs[Rn], shifter_op)); break; //CMP
-	case 0b1011: DP_Instr2(gprs[Rn] + shifter_op, getBit(gprs[Rd], 31) == 1, gprs[Rd] == 0, CarryFrom(gprs[Rn], shifter_op), OverflowFromAdd(gprs[Rn], shifter_op)); break; //CMN
-	case 0b1100: DP_Instr1(S, Rd, gprs[Rn] | shifter_op, getBit(gprs[Rd], 31) == 1, gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break; //ORR
-	case 0b1101: DP_Instr1(S, Rd, shifter_op, getBit(gprs[Rd], 31) == 1, gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break; //MOV
-	case 0b1110: DP_Instr1(S, Rd, gprs[Rn] & !shifter_op, getBit(gprs[Rd], 31) == 1, gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break; //BIC
-	case 0b1111: DP_Instr1(S, Rd, !shifter_op, getBit(gprs[Rd], 31) == 1, gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break; //MVN
+	case 0b0000: DP_Instr1(S, Rd, gprs[Rn] & shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break; //AND
+	case 0b0001: DP_Instr1(S, Rd, gprs[Rn] ^ shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break; //EOR
+	case 0b0010: DP_Instr1(S, Rd, gprs[Rn] - shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, !BorrowFromSub(gprs[Rn], shifter_op), OverflowFromSub(gprs[Rn], shifter_op)); break; //SUB
+	case 0b0011: DP_Instr1(S, Rd, shifter_op - gprs[Rn], !!getBit(gprs[Rd], 31), gprs[Rd] == 0, !BorrowFromSub(shifter_op, gprs[Rn]), OverflowFromSub(shifter_op, gprs[Rn])); break; //RSB
+	case 0b0100: DP_Instr1(S, Rd, gprs[Rn] + shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, CarryFrom(gprs[Rn], shifter_op), OverflowFromAdd(gprs[Rn], shifter_op)); break; //ADD
+	case 0b0101: DP_Instr1(S, Rd, gprs[Rn] + shifter_op + cpsr.flag_C, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, CarryFrom(gprs[Rn], shifter_op, cpsr.flag_C), OverflowFromAdd(gprs[Rn], shifter_op, cpsr.flag_C)); break; //ADC
+	case 0b0110: DP_Instr1(S, Rd, gprs[Rn] - shifter_op - !cpsr.flag_C, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, !BorrowFromSub(gprs[Rn], shifter_op, !cpsr.flag_C), OverflowFromSub(gprs[Rn], shifter_op, !cpsr.flag_C)); break; //SBC
+	case 0b0111: DP_Instr1(S, Rd, shifter_op - gprs[Rn] - !cpsr.flag_C, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, !BorrowFromSub(shifter_op, gprs[Rn], !cpsr.flag_C), OverflowFromSub(shifter_op, gprs[Rn], !cpsr.flag_C)); break; //RSC
+	case 0b1000: DP_Instr2(gprs[Rn] & shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break; //TST
+	case 0b1001: DP_Instr2(gprs[Rn] ^ shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break; //TEQ 
+	case 0b1010: DP_Instr2(gprs[Rn] - shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, !BorrowFromSub(gprs[Rn], shifter_op), OverflowFromSub(gprs[Rn], shifter_op)); break; //CMP
+	case 0b1011: DP_Instr2(gprs[Rn] + shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, CarryFrom(gprs[Rn], shifter_op), OverflowFromAdd(gprs[Rn], shifter_op)); break; //CMN
+	case 0b1100: DP_Instr1(S, Rd, gprs[Rn] | shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break; //ORR
+	case 0b1101: DP_Instr1(S, Rd, shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break; //MOV
+	case 0b1110: DP_Instr1(S, Rd, gprs[Rn] & ~shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break; //BIC
+	case 0b1111: DP_Instr1(S, Rd, ~shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break; //MVN
 	//TODO verify negation for MVN and BIC
 	}
 }
