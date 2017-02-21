@@ -102,6 +102,17 @@ inline void CPU::Data_Processing(u32 instr) {
 	case 0b0010: Sub(S, Rd, Rn, shifter_op, shifter_carry); break;
 	case 0b0011: Rsb(S, Rd, Rn, shifter_op, shifter_carry); break;
 	case 0b0100: Add(S, Rd, Rn, shifter_op, shifter_carry); break;
+	//case 0b0101: ADC; break;
+	//case 0b0110: SBC; break;
+	//case 0b0111: RSC; break;
+	//case 0b1000: TST; break; <- no S, no Rd
+	//case 0b1001: TEQ; break; <- no S, no Rd
+	//case 0b1010: CMP; break; <- no S, no Rd
+	//case 0b1011: CMN; break; <- no S, no Rd
+	//case 0b1100: ORR; break;
+	//case 0b1101: MOV; break; <- no Rn
+	//case 0b1110: BIC; break;
+	//case 0b1111: MVN; break; <- no Rn
 	}
 }
 
