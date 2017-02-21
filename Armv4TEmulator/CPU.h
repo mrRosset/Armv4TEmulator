@@ -64,6 +64,7 @@ public:
 	bool Check_Condition(u32 instr);
 	void ARM_Execute(u32 instr);
 	void Data_Processing(u32 instr);
+	void DP_Instr1(unsigned S, unsigned Rd, u32 result, bool N, bool Z, bool C, bool V);
+	void DP_Instr2(u32 result, bool N, bool Z, bool C, bool V);
 	std::tuple<u32, bool> CPU::shifter_operand(u32 instr, unsigned I);
-	void DP_Instr(unsigned S, unsigned Rd, u32 result, bool N, bool Z, bool C, bool V);
 };
