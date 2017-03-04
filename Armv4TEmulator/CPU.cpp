@@ -7,6 +7,37 @@ And the operator >> is used. This operator is logical/arithmetic depending on th
 In visual c++ it's arithmetic. https://msdn.microsoft.com/en-us/library/336xbhcz.aspx
 */
 
+#if defined(__GNUG__)
+inline u8 ror8(const u8 x, const u8 n) {
+	u8 result = x;
+	__asm__("rorb %[n], %[result]" : [result] "+g" (result) : [n] "c" (n));
+	return result;
+}
+
+inline u16 ror16(const u16 x, const u16 n) {
+	u16 result = x;
+	__asm__("rorw %b[n], %[result]" : [result] "+g" (result) : [n] "c" (n));
+	return result;
+}
+
+inline u32 ror32(const u32 x, const u32 n) {
+	u32 result = x;
+	__asm__("rorl %b[n], %[result]" : [result] "+g" (result) : [n] "c" (n));
+	return result;
+}
+
+inline u64 ror64(const u64 x, const u64 n) {
+	u64 result = x;
+	__asm__("rorq %b[n], %[result]" : [result] "+g" (result) : [n] "c" (n));
+	return result;
+}
+#elif defined(_MSC_VER)
+inline u8 ror8(const u8 x, const u8 n) { return _rotr8(x, n); }
+inline u16 ror16(const u16 x, const u16 n) { return _rotr16(x, n); }
+inline u32 ror32(const u32 x, const u32 n) { return _rotr(x, n); }
+inline u64 ror64(const u64 x, const u64 n) { return _rotr64(x, n); }
+#endif
+
 void CPU::Step() {
 	u32 instr = mem.read32(gprs[Regs::PC]);
 	if (Check_Condition(instr)) {
@@ -190,7 +221,7 @@ std::tuple<u32, bool> CPU::shifter_operand(u32 instr, unsigned I) {
 	if (I) { //Immediate
 		unsigned immed_8 = instr & 0xFF;
 		unsigned rotate_imm = (instr >> 8) & 0xF;
-		u32 result = _rotr(immed_8, rotate_imm * 2);
+		u32 result = ror32(immed_8, rotate_imm * 2);
 		if (rotate_imm == 0)
 			return std::make_tuple(result, cpsr.flag_C);
 		else
@@ -271,7 +302,7 @@ std::tuple<u32, bool> CPU::shifter_operand(u32 instr, unsigned I) {
 			return std::make_tuple((cpsr.flag_C << 31) & (gprs[Rm] >> 1), (gprs[Rm] & 0b1) == 1);
 		}
 		else
-			return std::make_tuple(_rotr(gprs[Rm], shift_imm), getBit(gprs[Rm], shift_imm - 1) == 1);
+			return std::make_tuple(ror32(gprs[Rm], shift_imm), getBit(gprs[Rm], shift_imm - 1) == 1);
 		break;
 	}
 	case 0b111: {
@@ -285,7 +316,7 @@ std::tuple<u32, bool> CPU::shifter_operand(u32 instr, unsigned I) {
 			return std::make_tuple(gprs[Rm], getBit(gprs[Rm], 31) == 1);
 		}
 		else {
-			return std::make_tuple(_rotr(gprs[Rm], vRs4_0), getBit(gprs[Rm], vRs4_0 - 1) == 1);
+			return std::make_tuple(ror32(gprs[Rm], vRs4_0), getBit(gprs[Rm], vRs4_0 - 1) == 1);
 		}
 		break;
 	}
