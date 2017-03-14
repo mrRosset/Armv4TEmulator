@@ -116,6 +116,7 @@ void CPU::ARM_Execute(u32 instr) {
 	case 0b101: break; // Branch and branch with link
 	case 0b110: break; // Coprocessor load/store and double register transfers[<- does it exist without the DSP extension ?
 	case 0b111: break; // Coprocessor + Software interrupts
+	default: throw std::string("Unimplemented opcode");
 	}
 }
 
@@ -231,6 +232,9 @@ std::tuple<u32, bool> CPU::shifter_operand(u32 instr, unsigned I) {
 	unsigned Rs = (instr >> 8) & 0xF;
 	unsigned Rm = instr & 0xF;
 	//TODO take care of PC as Rm, Rn, Rd, Rs
+	if (Rm == Regs::PC || Rs == Regs::PC) {
+		throw std::string("unimpletend: PC as Rm, Rn, Rd, Rs is either unpredictable or current instruction address + 8");
+	}
 
 	switch ((instr >> 4) & 0b111) {
 	case 0b000: {
