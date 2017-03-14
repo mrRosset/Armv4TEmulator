@@ -122,11 +122,9 @@ void CPU::ARM_Execute(u32 instr) {
 inline unsigned getBit(u32 v, int bit_number) {
 	return ((v >> bit_number) & 0b1);
 }
-
 inline unsigned getBit(u32 v, unsigned bit_number) {
 	return ((v >> bit_number) & 0b1);
 }
-
 //avoid implicit conversions
 template <class T, class U>
 unsigned getBit(T, U) = delete;
@@ -138,7 +136,7 @@ inline bool CarryFrom(u64 a, u64 b, u64 c) {
 	return (a + b + c) > UINT32_MAX;
 }
 
-//check no sign extension
+//TODO: check no sign extension
 inline bool OverflowFromAdd(s32 a, s32 b) {
 	s32 r = a + b;
 	return (a > 0 && b > 0 && r < 0) || (a < 0 && b < 0 && r > 0);
