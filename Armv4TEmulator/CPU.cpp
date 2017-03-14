@@ -2,9 +2,11 @@
 #include "CPU.h"
 
 /*
-Code is microsoft-specific. Some functions for circluar functions are only in VC++
-And the operator >> is used. This operator is logical/arithmetic depending on the implementation
-In visual c++ it's arithmetic. https://msdn.microsoft.com/en-us/library/336xbhcz.aspx
+Code in this file is compiler-specific.
+Some functions for circluar functions are only defined for VC++ and GCC.
+Also the operator >> is used. This operator is can be logical or arithmetic
+In VC++ it's arithmetic. https://msdn.microsoft.com/en-us/library/336xbhcz.aspx
+Not tested in any other compiler, 
 */
 
 #if defined(__GNUG__)
