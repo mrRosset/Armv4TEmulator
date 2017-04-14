@@ -110,12 +110,12 @@ void CPU::ARM_Execute(u32 instr) {
 		
 		break;
 	}
-	case 0b010: break; // Load / store immediate offset
-	case 0b011: break; // Load / store register offset
-	case 0b100: break; // Load/store multiple
-	case 0b101: break; // Branch and branch with link
-	case 0b110: break; // Coprocessor load/store and double register transfers[<- does it exist without the DSP extension ?
-	case 0b111: break; // Coprocessor + Software interrupts
+	case 0b010: // Load / store immediate offset
+	case 0b011: // Load / store register offset
+	case 0b100: // Load/store multiple
+	case 0b101: // Branch and branch with link
+	case 0b110: // Coprocessor load/store and double register transfers[<- does it exist without the DSP extension ?
+	case 0b111: // Coprocessor + Software interrupts
 	default: throw std::string("Unimplemented opcode");
 	}
 }
