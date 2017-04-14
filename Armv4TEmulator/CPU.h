@@ -60,6 +60,7 @@ public:
 	CPSR spsr;
 	Memory mem;
 
+	CPU();
 	void Step();
 	bool Check_Condition(u32 instr);
 	void ARM_Execute(u32 instr);

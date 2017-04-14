@@ -40,6 +40,14 @@ inline u32 ror32(const u32 x, const u32 n) { return _rotr(x, n); }
 inline u64 ror64(const u64 x, const u64 n) { return _rotr64(x, n); }
 #endif
 
+
+CPU::CPU() : gprs{} {
+	//TODO: Seriously think about initialization values
+	cpsr.flag_N = cpsr.flag_Z = cpsr.flag_C = cpsr.flag_V = cpsr.flag_inter_I = cpsr.flag_inter_F = cpsr.flag_T = false;
+	cpsr.reserved = 0;
+	cpsr.mode = CpuMode::User;
+}
+
 void CPU::Step() {
 	u32 instr = mem.read32(gprs[Regs::PC]);
 	if (Check_Condition(instr)) {
@@ -49,7 +57,7 @@ void CPU::Step() {
 }
 
 bool CPU::Check_Condition(u32 instr) {
-	switch ((instr >> 28) | 0b1111) {
+	switch ((instr >> 28) & 0b1111) {
 	case 0b0000: return cpsr.flag_Z == 1;
 	case 0b0001: return cpsr.flag_Z == 0;
 	case 0b0010: return cpsr.flag_C == 1;
