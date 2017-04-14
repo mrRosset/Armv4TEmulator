@@ -4,7 +4,7 @@
 #include "Common.h"
 
 class Memory {
-	std::array<u8, 0x100000> mem{};
+	std::array<u8, 0x100> mem{};
 
 public:
 	inline u8 read8(u32 address)
