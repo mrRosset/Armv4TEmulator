@@ -6,11 +6,18 @@
 #define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
 #include "catch\catch.hpp"
 
+/*
+	Warning: All tests here were written by myself during developement of the
+	emulator and were based on my understanding of the behavior on arm procesor.
+	Those tests were not tried on any other emulator and any comprehension error
+	of the reference manual will probably be present in those tests.
+*/
+
+
 TEST_CASE("Step without crashing", "[Global]") {
 	CPU cpu;
 	cpu.Step();
 }
-
 
 struct condition_test {
 	u32 cond;
