@@ -91,6 +91,9 @@ TEST_CASE("Condition fields works correctly", "[ARM]") {
 		cpu.cpsr.flag_Z = tst.flag_Z;
 		cpu.cpsr.flag_C = tst.flag_C;
 		cpu.cpsr.flag_V = tst.flag_V;
+		//Unit
+		REQUIRE(cpu.Check_Condition((tst.cond << 28) | op) == tst.should_execute);
+		//Global
 		cpu.mem.write32(0, (tst.cond << 28) | op);
 		cpu.Step();
 		if(tst.should_execute)
