@@ -148,7 +148,7 @@
     <ClInclude Include="Memory.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CLI.cpp" />
+    <ClCompile Include="Tests.cpp" />
     <ClCompile Include="CPU.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -7,7 +7,7 @@
     <ClInclude Include="catch\catch.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CLI.cpp" />
     <ClCompile Include="CPU.cpp" />
+    <ClCompile Include="Tests.cpp" />
   </ItemGroup>
 </Project>
