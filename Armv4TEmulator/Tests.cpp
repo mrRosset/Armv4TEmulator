@@ -104,3 +104,41 @@ TEST_CASE("Condition fields works correctly", "[ARM]") {
 
 }
 
+inline unsigned getBit(u32 v, unsigned bit_number) {
+	return ((v >> bit_number) & 0b1);
+}
+inline unsigned getBit(u32 v, signed bit_number) {
+	if(bit_number < 0) throw std::string("Unimplemented opcode");
+	return ((v >> bit_number) & 0b1);
+}
+//avoid implicit conversions
+template <class T, class U>
+unsigned getBit(T, U) = delete;
+
+TEST_CASE("Shifter Operand Immediate example from manual", "[ARM]") {
+	CPU cpu;
+	//S = 1
+	u32 op = 0b00000010000100000001000000000000;
+	u32 rotate_imm = 0xE;
+	u32 immed_8 = 0x3F;
+	u32 opcode = (rotate_imm << 8) | immed_8 | op;
+	u32 shifter_op;
+	bool shifter_carry;
+	std::tie(shifter_op, shifter_carry) = cpu.shifter_operand(opcode, getBit(opcode, 25));
+
+	REQUIRE(shifter_op == 0x3F0);
+	REQUIRE(shifter_carry == false);
+
+	u32 rotate_imm_2 = 0xF;
+	u32 immed_8_2 = 0xFC;
+	u32 opcode_2 = (rotate_imm_2 << 8) | immed_8_2 | op;
+	u32 shifter_op_2;
+	bool shifter_carry_2;
+	std::tie(shifter_op_2, shifter_carry_2) = cpu.shifter_operand(opcode, getBit(opcode, 25));
+
+	REQUIRE(shifter_carry == shifter_carry_2);
+	REQUIRE(shifter_op == shifter_op_2);
+}
+
+
+
