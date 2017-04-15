@@ -67,7 +67,7 @@ bool CPU::Check_Condition(u32 instr) {
 	case 0b0110: return cpsr.flag_V == 1;
 	case 0b0111: return cpsr.flag_V == 0;
 	case 0b1000: return cpsr.flag_C == 1 && cpsr.flag_Z == 0;
-	case 0b1001: return cpsr.flag_C == 0 && cpsr.flag_Z == 1;
+	case 0b1001: return cpsr.flag_C == 0 || cpsr.flag_Z == 1;
 	case 0b1010: return cpsr.flag_N == cpsr.flag_V;
 	case 0b1011: return cpsr.flag_N != cpsr.flag_V;
 	case 0b1100: return cpsr.flag_Z == 0 && cpsr.flag_N == cpsr.flag_V;
