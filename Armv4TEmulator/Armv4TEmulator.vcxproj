@@ -146,6 +146,7 @@
     <ClInclude Include="Common.h" />
     <ClInclude Include="CPU.h" />
     <ClInclude Include="Memory.h" />
+    <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Tests.cpp" />

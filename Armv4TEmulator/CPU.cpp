@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "CPU.h"
+#include "Utils.h"
 
 /*
 Code in this file is compiler-specific.
@@ -127,16 +128,6 @@ void CPU::ARM_Execute(u32 instr) {
 	default: throw std::string("Unimplemented opcode");
 	}
 }
-
-inline unsigned getBit(u32 v, int bit_number) {
-	return ((v >> bit_number) & 0b1);
-}
-inline unsigned getBit(u32 v, unsigned bit_number) {
-	return ((v >> bit_number) & 0b1);
-}
-//avoid implicit conversions
-template <class T, class U>
-unsigned getBit(T, U) = delete;
 
 inline bool CarryFrom(u64 a, u64 b) {
 	return (a + b) > UINT32_MAX;
