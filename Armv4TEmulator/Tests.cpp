@@ -81,7 +81,7 @@ static const std::vector<condition_test> condition_tests = {
 
 TEST_CASE("Condition fields works correctly", "[ARM]") {
 	//Rely on AND instruction working
-	for (const condition_test& tst: condition_tests) {
+	for (auto& tst: condition_tests) {
 		CPU cpu;
 		cpu.gprs[0] = 0b1100;
 		cpu.gprs[1] = 0b1010;
@@ -105,32 +105,29 @@ TEST_CASE("Condition fields works correctly", "[ARM]") {
 
 }
 
+struct shifter_operand_32_imm_test {
+	u32 rotate_imm;
+	u32 immed_8;
+	u32 expected_result;
+	bool expected_carry;
+};
 
+static const std::vector<shifter_operand_32_imm_test> shifter_operand_32_imm_tests = {
+	{ 0xE, 0x3F, 0x3F0, false },
+	{ 0xF, 0xFC, 0x3F0, false },
+};
 
-TEST_CASE("Shifter Operand Immediate example from manual", "[ARM]") {
-	CPU cpu;
-	//S = 1
-	u32 op = 0b00000010000100000001000000000000;
-	u32 rotate_imm = 0xE;
-	u32 immed_8 = 0x3F;
-	u32 opcode = (rotate_imm << 8) | immed_8 | op;
-	u32 shifter_op;
-	bool shifter_carry;
-	std::tie(shifter_op, shifter_carry) = cpu.shifter_operand(opcode, getBit(opcode, 25));
+TEST_CASE("Shifter Operand Immediate works", "[ARM]") {
+	for (auto& tst : shifter_operand_32_imm_tests) {
+		CPU cpu;
+		//S = 1
+		u32 op = 0b00000010000100000001000000000000;
+		u32 opcode = (tst.rotate_imm << 8) | tst.immed_8 | op;
+		u32 shifter_op;
+		bool shifter_carry;
+		std::tie(shifter_op, shifter_carry) = cpu.shifter_operand(opcode, getBit(opcode, 25));
 
-	REQUIRE(shifter_op == 0x3F0);
-	REQUIRE(shifter_carry == false);
-
-	u32 rotate_imm_2 = 0xF;
-	u32 immed_8_2 = 0xFC;
-	u32 opcode_2 = (rotate_imm_2 << 8) | immed_8_2 | op;
-	u32 shifter_op_2;
-	bool shifter_carry_2;
-	std::tie(shifter_op_2, shifter_carry_2) = cpu.shifter_operand(opcode, getBit(opcode, 25));
-
-	REQUIRE(shifter_carry == shifter_carry_2);
-	REQUIRE(shifter_op == shifter_op_2);
+		REQUIRE(shifter_op == tst.expected_result);
+		REQUIRE(shifter_carry == tst.expected_carry);
+	}
 }
-
-
-
