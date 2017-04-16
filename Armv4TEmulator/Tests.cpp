@@ -81,23 +81,23 @@ static const std::vector<condition_test> condition_tests = {
 
 TEST_CASE("Condition fields works correctly", "[ARM]") {
 	//Rely on AND instruction working
-	for (auto& tst: condition_tests) {
+	for (auto& test: condition_tests) {
 		CPU cpu;
 		cpu.gprs[0] = 0b1100;
 		cpu.gprs[1] = 0b1010;
 		//and r0, r1, r0
 		u32 op = 0b00000000000010000000000000000;
 
-		cpu.cpsr.flag_N = tst.flag_N;
-		cpu.cpsr.flag_Z = tst.flag_Z;
-		cpu.cpsr.flag_C = tst.flag_C;
-		cpu.cpsr.flag_V = tst.flag_V;
+		cpu.cpsr.flag_N = test.flag_N;
+		cpu.cpsr.flag_Z = test.flag_Z;
+		cpu.cpsr.flag_C = test.flag_C;
+		cpu.cpsr.flag_V = test.flag_V;
 		//Unit
-		REQUIRE(cpu.Check_Condition((tst.cond << 28) | op) == tst.should_execute);
+		REQUIRE(cpu.Check_Condition((test.cond << 28) | op) == test.should_execute);
 		//Global
-		cpu.mem.write32(0, (tst.cond << 28) | op);
+		cpu.mem.write32(0, (test.cond << 28) | op);
 		cpu.Step();
-		if(tst.should_execute)
+		if(test.should_execute)
 			REQUIRE(cpu.gprs[0] == 0b1000);
 		else 
 			REQUIRE(cpu.gprs[0] == 0b1100);
@@ -108,26 +108,31 @@ TEST_CASE("Condition fields works correctly", "[ARM]") {
 struct shifter_operand_32_imm_test {
 	u32 rotate_imm;
 	u32 immed_8;
+	bool flag_C;
 	u32 expected_result;
 	bool expected_carry;
 };
 
 static const std::vector<shifter_operand_32_imm_test> shifter_operand_32_imm_tests = {
-	{ 0xE, 0x3F, 0x3F0, false },
-	{ 0xF, 0xFC, 0x3F0, false },
+	{ 0xE, 0x3F, false, 0x3F0, false },
+	{ 0xF, 0xFC, false, 0x3F0, false },
+	{ 0, 0xAB, false, 0xAB, false },
+	{ 0, 0xAB, true, 0xAB, true },
+	{ 0x2, 0b1101, false, 0xD0000000, true},
 };
 
 TEST_CASE("Shifter Operand Immediate works", "[ARM]") {
-	for (auto& tst : shifter_operand_32_imm_tests) {
+	for (auto& test : shifter_operand_32_imm_tests) {
 		CPU cpu;
+		cpu.cpsr.flag_C = test.flag_C;
 		//S = 1
 		u32 op = 0b00000010000100000001000000000000;
-		u32 opcode = (tst.rotate_imm << 8) | tst.immed_8 | op;
+		u32 opcode = (test.rotate_imm << 8) | test.immed_8 | op;
 		u32 shifter_op;
 		bool shifter_carry;
 		std::tie(shifter_op, shifter_carry) = cpu.shifter_operand(opcode, getBit(opcode, 25));
 
-		REQUIRE(shifter_op == tst.expected_result);
-		REQUIRE(shifter_carry == tst.expected_carry);
+		REQUIRE(shifter_op == test.expected_result);
+		REQUIRE(shifter_carry == test.expected_carry);
 	}
 }
