@@ -122,13 +122,56 @@ static const std::vector<shifter_operand_32_imm_test> shifter_operand_32_imm_tes
 	{ 0x1, 0b1101, false, 0x40000003, false },
 };
 
-TEST_CASE("Shifter Operand Immediate works", "[ARM]") {
+TEST_CASE("Shifter Operand Immediate works correctly", "[ARM]") {
 	for (auto& test : shifter_operand_32_imm_tests) {
 		CPU cpu;
 		cpu.cpsr.flag_C = test.flag_C;
 		//S = 1
-		u32 op = 0b00000010000100000001000000000000;
+		u32 op = 0b11100010000100000001000000000000;
 		u32 opcode = (test.rotate_imm << 8) | test.immed_8 | op;
+		u32 shifter_op;
+		bool shifter_carry;
+		std::tie(shifter_op, shifter_carry) = cpu.shifter_operand(opcode, getBit(opcode, 25));
+
+		REQUIRE(shifter_op == test.expected_result);
+		REQUIRE(shifter_carry == test.expected_carry);
+	}
+}
+
+struct shifter_operand_imm_shifts_test {
+	u32 shift_imm;
+	u32 shift;
+	u32 Rm;
+	u32 vRm;
+	bool flag_C;
+	u32 expected_result;
+	bool expected_carry;
+};
+
+//TODO deal with Rn, Rm = PC
+static const std::vector<shifter_operand_imm_shifts_test> shifter_operand_imm_shifts_tests = {
+	{ 0, 0, 0, 5, false, 5, false },
+	{ 0, 0, 0, 5, true, 5, true },
+	{ 0, 0, 0, 0, false, 0, false },
+	{ 0, 0, 0, 0, true, 0, true },
+	{ 0, 0, 0, 0xFFFFFFFF, false, 0xFFFFFFFF, false },
+	{ 0, 0, 0, 0xFFFFFFFF, true, 0xFFFFFFFF, true },
+	{ 0, 0, 7, 5, false, 5, false },
+	{ 0, 0, 7, 5, true, 5, true },
+	{ 0, 0, 7, 0, false, 0, false },
+	{ 0, 0, 7, 0, true, 0, true },
+	{ 0, 0, 7, 0xFFFFFFFF, false, 0xFFFFFFFF, false },
+	{ 0, 0, 7, 0xFFFFFFFF, true, 0xFFFFFFFF, true },
+};
+
+TEST_CASE("Shifter Operand Immediate shifts works correctly", "[ARM]") {
+	for (auto& test : shifter_operand_imm_shifts_tests) {
+		CPU cpu;
+		cpu.cpsr.flag_C = test.flag_C;
+		cpu.gprs[test.Rm] = test.vRm;
+		//S = 1
+		u32 op = 0b11100000000100000001000000000000;
+		u32 opcode = (test.shift_imm << 7) | (test.shift << 5) | test.Rm | op;
 		u32 shifter_op;
 		bool shifter_carry;
 		std::tie(shifter_op, shifter_carry) = cpu.shifter_operand(opcode, getBit(opcode, 25));
