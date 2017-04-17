@@ -157,6 +157,12 @@ static const std::vector<shifter_operand_imm_shifts_test> shifter_operand_imm_sh
 	{ 0, 0, 0, true, 0, true },
 	{ 0, 0, 0xFFFFFFFF, false, 0xFFFFFFFF, false },
 	{ 0, 0, 0xFFFFFFFF, true, 0xFFFFFFFF, true },
+
+	//5.1.5 - Logical shift left by immediate
+	{ 0b0100, 0, 0xFFFFFFFF, false, 0xFFFFFFF0, true },
+	{ 0b1111, 0, 0xFFFFFFFF, false, 0xFFFF8000, true },
+	{ 0b1001, 0, 0x00000000, false, 0x00000000, false },
+	{ 0b1001, 0, 0x00000003, false, 0x00000600, false },
 };
 
 TEST_CASE("Shifter Operand Immediate shifts works correctly", "[ARM]") {
