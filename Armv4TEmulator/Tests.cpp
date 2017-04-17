@@ -118,7 +118,8 @@ static const std::vector<shifter_operand_32_imm_test> shifter_operand_32_imm_tes
 	{ 0xF, 0xFC, false, 0x3F0, false },
 	{ 0, 0xAB, false, 0xAB, false },
 	{ 0, 0xAB, true, 0xAB, true },
-	{ 0x2, 0b1101, false, 0xD0000000, true},
+	{ 0x2, 0b1101, false, 0xD0000000, true },
+	{ 0x1, 0b1101, false, 0x40000003, false },
 };
 
 TEST_CASE("Shifter Operand Immediate works", "[ARM]") {
