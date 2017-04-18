@@ -6,7 +6,8 @@
     <ClInclude Include="Memory.h" />
     <ClInclude Include="catch\catch.hpp" />
     <ClInclude Include="Utils.h" />
-    <ClInclude Include="Disassembler.h" />
+    <ClInclude Include="Disassembly\Disassembler.h" />
+    <ClInclude Include="Disassembly\IR.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CPU.cpp" />
