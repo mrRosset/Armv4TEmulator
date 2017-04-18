@@ -6,6 +6,7 @@
     <ClInclude Include="Memory.h" />
     <ClInclude Include="catch\catch.hpp" />
     <ClInclude Include="Utils.h" />
+    <ClInclude Include="Disassembler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CPU.cpp" />
