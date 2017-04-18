@@ -12,5 +12,6 @@
   <ItemGroup>
     <ClCompile Include="CPU.cpp" />
     <ClCompile Include="Tests.cpp" />
+    <ClCompile Include="Disassembly\Disassembler.cpp" />
   </ItemGroup>
 </Project>

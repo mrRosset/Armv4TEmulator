@@ -90,12 +90,12 @@ enum Shifter_type {
 	ASR_reg,
 	ROR_imm,
 	ROR_reg,
-	RRx
+	RRX
 };
 
 struct Shifter_ops {
 	Shifter_type type;
-	u32 operand1;
+	u32 Rm;
 	u32 operand2;
 };
 

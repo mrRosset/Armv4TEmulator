@@ -151,6 +151,7 @@
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Disassembly\Disassembler.cpp" />
     <ClCompile Include="Tests.cpp" />
     <ClCompile Include="CPU.cpp" />
   </ItemGroup>
