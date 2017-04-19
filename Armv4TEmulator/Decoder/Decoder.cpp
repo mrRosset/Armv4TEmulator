@@ -20,7 +20,9 @@ void Decoder::Decode(IR_ARM & ir, u32 instr) {
 			if (bit27_4 == 0b000100101111111111110001) {
 				Decode_Branch(ir, instr);
 			}
-			throw "3-3 not done";
+			else {
+				throw "3-3 not done";
+			}
 		}
 		else if (bit7 == 1 && bit4 == 1) {
 			throw "3-2 not done";
