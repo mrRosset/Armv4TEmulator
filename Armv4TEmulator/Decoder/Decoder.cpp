@@ -57,22 +57,22 @@ void Decoder::Decode_Data_Processing(IR_ARM & ir, u32 instr) {
 	Decode_Shifter_operand(ir, instr);
 	
 	switch ((instr >> 21) & 0xF) {
-	case 0b0000: ir.instr = Instructions::AND;
-	case 0b0001: ir.instr = Instructions::EOR;
-	case 0b0010: ir.instr = Instructions::SUB;
-	case 0b0011: ir.instr = Instructions::RSB;
-	case 0b0100: ir.instr = Instructions::ADD;
-	case 0b0101: ir.instr = Instructions::ADC;
-	case 0b0110: ir.instr = Instructions::SBC;
-	case 0b0111: ir.instr = Instructions::RSC;
-	case 0b1000: ir.instr = Instructions::TST;
-	case 0b1001: ir.instr = Instructions::TEQ;
-	case 0b1010: ir.instr = Instructions::CMP;
-	case 0b1011: ir.instr = Instructions::CMN;
-	case 0b1100: ir.instr = Instructions::ORR;
-	case 0b1101: ir.instr = Instructions::MOV;
-	case 0b1110: ir.instr = Instructions::BIC;
-	case 0b1111: ir.instr = Instructions::MVN;
+	case 0b0000: ir.instr = Instructions::AND; break;
+	case 0b0001: ir.instr = Instructions::EOR; break;
+	case 0b0010: ir.instr = Instructions::SUB; break;
+	case 0b0011: ir.instr = Instructions::RSB; break;
+	case 0b0100: ir.instr = Instructions::ADD; break;
+	case 0b0101: ir.instr = Instructions::ADC; break;
+	case 0b0110: ir.instr = Instructions::SBC; break;
+	case 0b0111: ir.instr = Instructions::RSC; break;
+	case 0b1000: ir.instr = Instructions::TST; break;
+	case 0b1001: ir.instr = Instructions::TEQ; break;
+	case 0b1010: ir.instr = Instructions::CMP; break;
+	case 0b1011: ir.instr = Instructions::CMN; break;
+	case 0b1100: ir.instr = Instructions::ORR; break;
+	case 0b1101: ir.instr = Instructions::MOV; break;
+	case 0b1110: ir.instr = Instructions::BIC; break;
+	case 0b1111: ir.instr = Instructions::MVN; break;
 	}
 
 	ir.operand1 = (instr >> 20) & 0b1;
@@ -90,13 +90,15 @@ void Decoder::Decode_Shifter_operand(IR_ARM & ir, u32 instr) {
 	switch ((instr >> 4) & 0b111) {
 	case 0b000: if(shift_imm == 0) ir.shifter_operand = { Shifter_type::Register, Rm};
 				else ir.shifter_operand = { Shifter_type::LSL_imm, Rm, shift_imm };
-	case 0b001: ir.shifter_operand = { Shifter_type::LSL_reg, Rm, Rs };
-	case 0b010: ir.shifter_operand = { Shifter_type::LSR_imm, Rm, shift_imm };
-	case 0b011: ir.shifter_operand = { Shifter_type::LSR_reg, Rm, Rs };
-	case 0b100: ir.shifter_operand = { Shifter_type::ASR_imm, Rm, shift_imm };
-	case 0b101: ir.shifter_operand = { Shifter_type::ASR_reg, Rm, Rs };
+				break;
+	case 0b001: ir.shifter_operand = { Shifter_type::LSL_reg, Rm, Rs }; break;
+	case 0b010: ir.shifter_operand = { Shifter_type::LSR_imm, Rm, shift_imm }; break;
+	case 0b011: ir.shifter_operand = { Shifter_type::LSR_reg, Rm, Rs }; break;
+	case 0b100: ir.shifter_operand = { Shifter_type::ASR_imm, Rm, shift_imm }; break;
+	case 0b101: ir.shifter_operand = { Shifter_type::ASR_reg, Rm, Rs }; break;
 	case 0b110: if(shift_imm == 0) ir.shifter_operand = { Shifter_type::RRX, Rm};
 				else ir.shifter_operand = { Shifter_type::ROR_imm, Rm, shift_imm };
-	case 0b111: ir.shifter_operand = { Shifter_type::ROR_reg, Rm, Rs };
+				break;
+	case 0b111: ir.shifter_operand = { Shifter_type::ROR_reg, Rm, Rs }; break;
 	}
 }
