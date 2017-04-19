@@ -42,10 +42,16 @@ inline u32 ror32(const u32 x, const u32 n) { return _rotr(x, n); }
 inline u64 ror64(const u64 x, const u64 n) { return _rotr64(x, n); }
 #endif
 
-inline unsigned getBit(u32 v, unsigned bit_number) {
+template <class T>
+inline unsigned getBit(T v, unsigned bit_number) {
 	return ((v >> bit_number) & 0b1);
 }
-inline unsigned getBit(u32 v, signed bit_number) {
+template <class T>
+inline unsigned getBit(T v, u64 bit_number) {
+	return ((v >> bit_number) & 0b1);
+}
+template <class T>
+inline unsigned getBit(T v, signed bit_number) {
 	if (bit_number < 0) throw std::string("Unimplemented opcode");
 	return ((v >> bit_number) & 0b1);
 }
@@ -54,3 +60,13 @@ template <class T, class U>
 unsigned getBit(T, U) = delete;
 
 
+template<typename T>
+inline T SignExtend(const T v, unsigned bit_count) {
+	if (bit_count > sizeof(T) * 8) throw std::string("cannot sign extend to a type of smaller size");
+	T mask = static_cast<T>(1ULL << bit_count) - 1;
+	unsigned s = getBit(v, bit_count - 1);
+	if (s == 1) {
+		return v | ~mask;
+	}
+	return v;
+}
