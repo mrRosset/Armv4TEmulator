@@ -9,6 +9,12 @@ std::string Disassmbler::Disassemble(IR_ARM & ir) {
 	switch (ir.instr) {
 
 	//Data Processing instructions
+	case Instructions::TST: return "tst" + Disassemble_Condition(ir) + " r" + std::to_string(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::TEQ: return "teq" + Disassemble_Condition(ir) + " r" + std::to_string(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::CMP: return "cmp" + Disassemble_Condition(ir) + " r" + std::to_string(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::CMN: return "cmn" + Disassemble_Condition(ir) + " r" + std::to_string(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::MOV: return "mov" + s + Disassemble_Condition(ir) + " r" + std::to_string(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::MVN: return "mvn" + s + Disassemble_Condition(ir) + " r" + std::to_string(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
 	case Instructions::AND: return "and" + s + Disassemble_Condition(ir) + " r" + std::to_string(ir.operand2) + ", r" + std::to_string(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
 	case Instructions::EOR: return "eor" + s + Disassemble_Condition(ir) + " r" + std::to_string(ir.operand2) + ", r" + std::to_string(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
 	case Instructions::SUB: return "sub" + s + Disassemble_Condition(ir) + " r" + std::to_string(ir.operand2) + ", r" + std::to_string(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
@@ -17,13 +23,7 @@ std::string Disassmbler::Disassemble(IR_ARM & ir) {
 	case Instructions::ADC: return "adc" + s + Disassemble_Condition(ir) + " r" + std::to_string(ir.operand2) + ", r" + std::to_string(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
 	case Instructions::SBC: return "sbc" + s + Disassemble_Condition(ir) + " r" + std::to_string(ir.operand2) + ", r" + std::to_string(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
 	case Instructions::RSC: return "rsc" + s + Disassemble_Condition(ir) + " r" + std::to_string(ir.operand2) + ", r" + std::to_string(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::TST: return "tst" + s + Disassemble_Condition(ir) + " r" + std::to_string(ir.operand2) + ", r" + std::to_string(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::TEQ: return "teq" + s + Disassemble_Condition(ir) + " r" + std::to_string(ir.operand2) + ", r" + std::to_string(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::CMP: return "cmp" + s + Disassemble_Condition(ir) + " r" + std::to_string(ir.operand2) + ", r" + std::to_string(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::CMN: return "cmn" + s + Disassemble_Condition(ir) + " r" + std::to_string(ir.operand2) + ", r" + std::to_string(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
 	case Instructions::ORR: return "orr" + s + Disassemble_Condition(ir) + " r" + std::to_string(ir.operand2) + ", r" + std::to_string(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::MOV: return "mov" + s + Disassemble_Condition(ir) + " r" + std::to_string(ir.operand2) + ", r" + std::to_string(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::MVN: return "mvn" + s + Disassemble_Condition(ir) + " r" + std::to_string(ir.operand2) + ", r" + std::to_string(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
 	case Instructions::BIC: return "bic" + s + Disassemble_Condition(ir) + " r" + std::to_string(ir.operand2) + ", r" + std::to_string(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
 
 	}
@@ -55,14 +55,14 @@ std::string Disassmbler::Disassemble_Shifter_Operand(Shifter_op& so) {
 	switch (so.type) {
 	case Immediate: return "#" + std::to_string(ror32(so.operand2, so.operand1 * 2));
 	case Register: return "r" + std::to_string(so.operand1);
-	case LSL_imm: return "r" + std::to_string(so.operand1) + ", LSL #" + std::to_string(so.operand2);
-	case LSL_reg: return "r" + std::to_string(so.operand1) + ", LSL r" + std::to_string(so.operand2);
-	case LSR_imm: return "r" + std::to_string(so.operand1) + ", LSR #" + std::to_string(so.operand2);
-	case LSR_reg: return "r" + std::to_string(so.operand1) + ", LSR r" + std::to_string(so.operand2);
-	case ASR_imm: return "r" + std::to_string(so.operand1) + ", ASR #" + std::to_string(so.operand2);
-	case ASR_reg: return "r" + std::to_string(so.operand1) + ", ASR r" + std::to_string(so.operand2);
-	case ROR_imm: return "r" + std::to_string(so.operand1) + ", ROR #" + std::to_string(so.operand2);
-	case ROR_reg: return "r" + std::to_string(so.operand1) + ", ROR r" + std::to_string(so.operand2);
-	case RRX: return "r" + std::to_string(so.operand1) + ", RRX";
+	case LSL_imm: return "r" + std::to_string(so.operand1) + ", lsl #" + std::to_string(so.operand2);
+	case LSL_reg: return "r" + std::to_string(so.operand1) + ", lsl r" + std::to_string(so.operand2);
+	case LSR_imm: return "r" + std::to_string(so.operand1) + ", lsr #" + std::to_string(so.operand2);
+	case LSR_reg: return "r" + std::to_string(so.operand1) + ", lsr r" + std::to_string(so.operand2);
+	case ASR_imm: return "r" + std::to_string(so.operand1) + ", asr #" + std::to_string(so.operand2);
+	case ASR_reg: return "r" + std::to_string(so.operand1) + ", asr r" + std::to_string(so.operand2);
+	case ROR_imm: return "r" + std::to_string(so.operand1) + ", ror #" + std::to_string(so.operand2);
+	case ROR_reg: return "r" + std::to_string(so.operand1) + ", ror r" + std::to_string(so.operand2);
+	case RRX: return "r" + std::to_string(so.operand1) + ", rrx";
 	}
 }
