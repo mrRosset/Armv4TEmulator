@@ -1,9 +1,10 @@
+#include <cstdlib>
 #include "Disassembler.h"
 #include "../Utils.h"
 
 
 
-std::string Disassmbler::Disassemble(IR_ARM & ir) {
+std::string Disassembler::Disassemble(IR_ARM & ir) {
 	std::string s = ir.operand1 == 1 ? "s" : "";
 	
 	switch (ir.instr) {
@@ -26,11 +27,16 @@ std::string Disassmbler::Disassemble(IR_ARM & ir) {
 	case Instructions::ORR: return "orr" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand2) + ", " + Disassemble_register(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
 	case Instructions::BIC: return "bic" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand2) + ", " + Disassemble_register(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
 
+	//Branch Instructions
+	case Instructions::B: return "b" + Disassemble_Condition(ir) + " " + Disassemble_Branch_Offset(ir.operand1);
+	case Instructions::BL: return "bl" + Disassemble_Condition(ir) + " " + Disassemble_Branch_Offset(ir.operand1) ;
+	case Instructions::BX: return "bx" + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand1);
+
 	}
 	return std::string();
 }
 
-std::string Disassmbler::Disassemble_register(u32 reg) {
+std::string Disassembler::Disassemble_register(u32 reg) {
 	switch (reg) {
 	case 13: return "sp";
 	case 14: return "lr";
@@ -39,7 +45,7 @@ std::string Disassmbler::Disassemble_register(u32 reg) {
 	}
 }
 
-std::string Disassmbler::Disassemble_Condition(IR_ARM & ir) {
+std::string Disassembler::Disassemble_Condition(IR_ARM & ir) {
 	switch (ir.cond) {
 	case Conditions::EQ: return "eq";
 	case Conditions::NE: return "ne";
@@ -60,7 +66,7 @@ std::string Disassmbler::Disassemble_Condition(IR_ARM & ir) {
 	}
 }
 
-std::string Disassmbler::Disassemble_Shifter_Operand(Shifter_op& so) {
+std::string Disassembler::Disassemble_Shifter_Operand(Shifter_op& so) {
 	switch (so.type) {
 	case Immediate: return "#" + std::to_string(ror32(so.operand2, so.operand1 * 2));
 	case Register: return Disassemble_register(so.operand1);
@@ -74,4 +80,10 @@ std::string Disassmbler::Disassemble_Shifter_Operand(Shifter_op& so) {
 	case ROR_reg: return Disassemble_register(so.operand1) + ", ror " + Disassemble_register(so.operand2);
 	case RRX: return Disassemble_register(so.operand1) + ", rrx";
 	}
+}
+
+std::string Disassembler::Disassemble_Branch_Offset(u32 operand) {
+	u32 offset = SignExtend<s32>(operand << 2, 26) + 8;
+	std::string sign = offset >= 0 ? "+" : "-";
+	return sign + "#" + std::to_string(offset);
 }

@@ -10,7 +10,7 @@
 std::string Disassemble(u32 instr) {
 	IR_ARM ir;
 	Decoder::Decode(ir, instr);
-	return Disassmbler::Disassemble(ir);
+	return Disassembler::Disassemble(ir);
 }
 
 TEST_CASE("Disassemble Data Processing", "[Disassembler]") {
