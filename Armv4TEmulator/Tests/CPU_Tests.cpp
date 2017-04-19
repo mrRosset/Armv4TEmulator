@@ -1,11 +1,10 @@
 #include <iostream>
 #include <bitset>
-#include "Common.h"
-#include "CPU.h"
-#include "Utils.h"
+#include "../Common.h"
+#include "../CPU.h"
+#include "../Utils.h"
 
-#define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
-#include "catch\catch.hpp"
+#include "../catch/catch.hpp"
 
 /*
 	Warning: All tests here were written by myself during developement of the

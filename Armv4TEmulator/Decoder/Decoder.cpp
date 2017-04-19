@@ -3,8 +3,7 @@
 #include "../Utils.h"
 
 
-void Decoder::Decode(IR_ARM & ir, u32 instr)
-{
+void Decoder::Decode(IR_ARM & ir, u32 instr) {
 	ir.cond = static_cast<Conditions>((instr >> 28) & 0b1111);
 	
 	unsigned bits28_25 = (instr >> 25) & 0b111;

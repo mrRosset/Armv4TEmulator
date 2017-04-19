@@ -152,7 +152,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Decoder\Decoder.cpp" />
-    <ClCompile Include="Tests.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Tests\CPU_Tests.cpp" />
     <ClCompile Include="CPU.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
