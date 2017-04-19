@@ -147,14 +147,18 @@
     <ClInclude Include="CPU.h" />
     <ClInclude Include="Decoder\Decoder.h" />
     <ClInclude Include="Decoder\IR.h" />
+    <ClInclude Include="Disassembler\Disassembler.h" />
     <ClInclude Include="Memory.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Decoder\Decoder.cpp" />
+    <ClCompile Include="Disassembler\Disassembler.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Tests\CPU_Tests.cpp" />
     <ClCompile Include="CPU.cpp" />
+    <ClCompile Include="Tests\Decoder_Tests.cpp" />
+    <ClCompile Include="Tests\Disassembler_Tests.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

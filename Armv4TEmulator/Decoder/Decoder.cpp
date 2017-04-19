@@ -81,7 +81,7 @@ void Decoder::Decode_Data_Processing(IR_ARM & ir, u32 instr) {
 }
 
 void Decoder::Decode_Shifter_operand(IR_ARM & ir, u32 instr) {
-	if (getBit(instr, 25)) ir.shifter_operand = { Shifter_type::Immediate };
+	if (getBit(instr, 25)) ir.shifter_operand = { Shifter_type::Immediate, (instr >> 8) & 0xF, instr & 0xFF };
 	
 	unsigned shift_imm = (instr >> 7) & 0b11111;
 	unsigned Rs = (instr >> 8) & 0xF;

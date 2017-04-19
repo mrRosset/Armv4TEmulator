@@ -8,11 +8,15 @@
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Decoder\IR.h" />
     <ClInclude Include="Decoder\Decoder.h" />
+    <ClInclude Include="Disassembler\Disassembler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CPU.cpp" />
     <ClCompile Include="Decoder\Decoder.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Tests\CPU_Tests.cpp" />
+    <ClCompile Include="Tests\Decoder_Tests.cpp" />
+    <ClCompile Include="Disassembler\Disassembler.cpp" />
+    <ClCompile Include="Tests\Disassembler_Tests.cpp" />
   </ItemGroup>
 </Project>

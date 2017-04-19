@@ -93,9 +93,9 @@ enum Shifter_type {
 	RRX
 };
 
-struct Shifter_ops {
+struct Shifter_op {
 	Shifter_type type;
-	u32 Rm;
+	u32 operand1;
 	u32 operand2;
 };
 
@@ -105,5 +105,5 @@ struct IR_ARM {
 	u32 operand1;
 	u32 operand2;
 	u32 operand3;
-	Shifter_ops shifter_operand;
+	Shifter_op shifter_operand;
 };
