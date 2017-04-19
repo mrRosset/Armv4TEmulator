@@ -16,6 +16,10 @@ void Decoder::Decode(IR_ARM & ir, u32 instr) {
 		unsigned bit24_23 = (instr >> 23) & 0b11;
 
 		if (bit24_23 == 0b10 && bit20 == 0) {
+			unsigned bit27_4 = (instr >> 4) & 0xFFFFFF;
+			if (bit27_4 == 0b000100101111111111110001) {
+				Decode_Branch(ir, instr);
+			}
 			throw "3-3 not done";
 		}
 		else if (bit7 == 1 && bit4 == 1) {
@@ -45,13 +49,14 @@ void Decoder::Decode(IR_ARM & ir, u32 instr) {
 	case 0b010: // Load / store immediate offset
 	case 0b011: // Load / store register offset
 	case 0b100: // Load/store multiple
-	case 0b101: // Branch and branch with link
+	case 0b101: Decode_Branch(ir, instr); // Branch and branch with link
 	case 0b110: // Coprocessor load/store and double register transfers[<- does it exist without the DSP extension ?
 	case 0b111: // Coprocessor + Software interrupts
 	default: throw std::string("Unimplemented opcode");
 	}
 
 }
+
 
 void Decoder::Decode_Data_Processing(IR_ARM & ir, u32 instr) {
 	Decode_Shifter_operand(ir, instr);
@@ -80,7 +85,7 @@ void Decoder::Decode_Data_Processing(IR_ARM & ir, u32 instr) {
 	ir.operand3 = (instr >> 16) & 0xF;
 }
 
-void Decoder::Decode_Shifter_operand(IR_ARM & ir, u32 instr) {
+void Decoder::Decode_Shifter_operand(IR_ARM& ir, u32 instr) {
 	if (getBit(instr, 25)) {
 		ir.shifter_operand = { Shifter_type::Immediate, (instr >> 8) & 0xF, instr & 0xFF };
 		return;
@@ -103,5 +108,13 @@ void Decoder::Decode_Shifter_operand(IR_ARM & ir, u32 instr) {
 				else ir.shifter_operand = { Shifter_type::ROR_imm, Rm, shift_imm };
 				break;
 	case 0b111: ir.shifter_operand = { Shifter_type::ROR_reg, Rm, Rs }; break;
+	}
+}
+
+void Decoder::Decode_Branch(IR_ARM& ir, u32 instr) {
+	switch ((instr >> 24) & 0xF) {
+	case 0b1010: ir.instr = Instructions::B; ir.operand1 = instr & 0xFFFFFF; break;
+	case 0b1011: ir.instr = Instructions::BL; ir.operand1 = instr & 0xFFFFFF; break;
+	case 0b0001: ir.instr = Instructions::BX; ir.operand1 = instr & 0xF; break;
 	}
 }
