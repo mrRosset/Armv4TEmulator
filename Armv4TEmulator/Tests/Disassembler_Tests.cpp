@@ -6,8 +6,13 @@
 
 #include "../catch/catch.hpp"
 
-TEST_CASE("WIP", "[Disassembler]") {
+
+std::string Disassemble(u32 instr) {
 	IR_ARM ir;
-	Decoder::Decode(ir, 0xE2853004);
-	std::cout << Disassmbler::Disassemble(ir);
+	Decoder::Decode(ir, instr);
+	return Disassmbler::Disassemble(ir);
+}
+
+TEST_CASE("Disassemble Data Processing", "[Disassembler]") {
+	REQUIRE(Disassemble(0x2201230F) == "andcs r2, r1, #1006632960");
 }
