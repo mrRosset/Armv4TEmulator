@@ -6,12 +6,12 @@
     <ClInclude Include="Memory.h" />
     <ClInclude Include="catch\catch.hpp" />
     <ClInclude Include="Utils.h" />
-    <ClInclude Include="Disassembly\Disassembler.h" />
-    <ClInclude Include="Disassembly\IR.h" />
+    <ClInclude Include="Decoder\IR.h" />
+    <ClInclude Include="Decoder\Decoder.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CPU.cpp" />
     <ClCompile Include="Tests.cpp" />
-    <ClCompile Include="Disassembly\Disassembler.cpp" />
+    <ClCompile Include="Decoder\Decoder.cpp" />
   </ItemGroup>
 </Project>

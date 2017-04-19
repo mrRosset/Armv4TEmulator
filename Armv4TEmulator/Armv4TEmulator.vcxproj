@@ -145,13 +145,13 @@
     <ClInclude Include="catch\catch.hpp" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="CPU.h" />
-    <ClInclude Include="Disassembly\Disassembler.h" />
-    <ClInclude Include="Disassembly\IR.h" />
+    <ClInclude Include="Decoder\Decoder.h" />
+    <ClInclude Include="Decoder\IR.h" />
     <ClInclude Include="Memory.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Disassembly\Disassembler.cpp" />
+    <ClCompile Include="Decoder\Decoder.cpp" />
     <ClCompile Include="Tests.cpp" />
     <ClCompile Include="CPU.cpp" />
   </ItemGroup>

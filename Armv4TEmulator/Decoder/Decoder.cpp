@@ -1,9 +1,9 @@
 #include <string>
-#include "Disassembler.h"
+#include "Decoder.h"
 #include "../Utils.h"
 
 
-void Disassembler::Disassemble(IR_ARM & ir, u32 instr)
+void Decoder::Decode(IR_ARM & ir, u32 instr)
 {
 	ir.cond = static_cast<Conditions>((instr >> 28) & 0b1111);
 	
@@ -23,7 +23,7 @@ void Disassembler::Disassemble(IR_ARM & ir, u32 instr)
 			throw "3-2 not done";
 		}
 		else {
-			Disassemble_Data_Processing(ir, instr);
+			Decode_Data_Processing(ir, instr);
 		}
 		break;
 	}
@@ -38,7 +38,7 @@ void Disassembler::Disassemble(IR_ARM & ir, u32 instr)
 			throw "Move immediate to status register not done";
 		}
 		else {
-			Disassemble_Data_Processing(ir, instr);
+			Decode_Data_Processing(ir, instr);
 		}
 
 		break;
@@ -54,14 +54,34 @@ void Disassembler::Disassemble(IR_ARM & ir, u32 instr)
 
 }
 
-void Disassembler::Disassemble_Data_Processing(IR_ARM & ir, u32 instr) {
-	Disassemble_Shifter_operand(ir, instr);
+void Decoder::Decode_Data_Processing(IR_ARM & ir, u32 instr) {
+	Decode_Shifter_operand(ir, instr);
+	
+	switch ((instr >> 21) & 0xF) {
+	case 0b0000: ir.instr = Instructions::AND;
+	case 0b0001: ir.instr = Instructions::EOR;
+	case 0b0010: ir.instr = Instructions::SUB;
+	case 0b0011: ir.instr = Instructions::RSB;
+	case 0b0100: ir.instr = Instructions::ADD;
+	case 0b0101: ir.instr = Instructions::ADC;
+	case 0b0110: ir.instr = Instructions::SBC;
+	case 0b0111: ir.instr = Instructions::RSC;
+	case 0b1000: ir.instr = Instructions::TST;
+	case 0b1001: ir.instr = Instructions::TEQ;
+	case 0b1010: ir.instr = Instructions::CMP;
+	case 0b1011: ir.instr = Instructions::CMN;
+	case 0b1100: ir.instr = Instructions::ORR;
+	case 0b1101: ir.instr = Instructions::MOV;
+	case 0b1110: ir.instr = Instructions::BIC;
+	case 0b1111: ir.instr = Instructions::MVN;
+	}
 
-
-
+	ir.operand1 = (instr >> 20) & 0b1;
+	ir.operand2 = (instr >> 12) & 0xF;
+	ir.operand3 = (instr >> 16) & 0xF;
 }
 
-void Disassembler::Disassemble_Shifter_operand(IR_ARM & ir, u32 instr) {
+void Decoder::Decode_Shifter_operand(IR_ARM & ir, u32 instr) {
 	if (getBit(instr, 25)) ir.shifter_operand = { Shifter_type::Immediate };
 	
 	unsigned shift_imm = (instr >> 7) & 0b11111;
