@@ -61,7 +61,7 @@ void CPU::ARM_Execute(u32 instr) {
 		unsigned bit20 = (instr >> 20) & 0b1;
 		unsigned bit24_23 = (instr >> 23) & 0b11;
 		
-		if (bit24_23 == 0b10 && bit20 == 1) {
+		if (bit24_23 == 0b10 && bit20 == 0) {
 			throw "3-3 not done";
 		}
 		else if (bit7 == 1 && bit4 == 1) {
