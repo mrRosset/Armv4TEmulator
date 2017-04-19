@@ -49,7 +49,7 @@ void Decoder::Decode(IR_ARM & ir, u32 instr) {
 	case 0b010: // Load / store immediate offset
 	case 0b011: // Load / store register offset
 	case 0b100: // Load/store multiple
-	case 0b101: Decode_Branch(ir, instr); // Branch and branch with link
+	case 0b101: Decode_Branch(ir, instr); break; // Branch and branch with link
 	case 0b110: // Coprocessor load/store and double register transfers[<- does it exist without the DSP extension ?
 	case 0b111: // Coprocessor + Software interrupts
 	default: throw std::string("Unimplemented opcode");
