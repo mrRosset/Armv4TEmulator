@@ -145,6 +145,15 @@ void Decoder::Decode_Multiply(IR_ARM& ir, u32 instr) {
 	ir.operand4 = (instr >> 16) & 0xF; //Rd or RdHi
 }
 
+void Decoder::Decode_Status_Register(IR_ARM& ir, u32 instr) {
+	switch ((instr >> 20) & 0xFF) {
+	case 0b00010000: ir.instr = Instructions::MRS; ir.operand2 = (instr >> 12) & 0xF; break;
+	case 0b00110010: ir.instr = Instructions::MSR_imm; ir.operand2 = instr & 0xFF; ir.operand3 = (instr >> 8) & 0xF; ir.operand4 = (instr >> 16) & 0xF; break;
+	case 0b00010010: ir.instr = Instructions::MSR_reg; ir.operand2 = instr & 0xF; ir.operand3 = (instr >> 16) & 0xF; break;
+	}
+	ir.operand1 = (instr >> 22) & 0b1; //R
+}
+
 
 /*For decoding co-processor:
 TODO: Read and take care if necessary
