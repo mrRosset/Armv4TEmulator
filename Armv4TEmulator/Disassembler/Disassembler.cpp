@@ -9,7 +9,7 @@ std::string Disassembler::Disassemble(IR_ARM & ir) {
 	
 	switch (ir.instr) {
 
-	//Data Processing instructions
+	//Data Processing Instructions
 	case Instructions::TST: return "tst" + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
 	case Instructions::TEQ: return "teq" + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
 	case Instructions::CMP: return "cmp" + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
@@ -31,6 +31,14 @@ std::string Disassembler::Disassemble(IR_ARM & ir) {
 	case Instructions::B: return "b" + Disassemble_Condition(ir) + " " + Disassemble_Branch_Offset(ir.operand1);
 	case Instructions::BL: return "bl" + Disassemble_Condition(ir) + " " + Disassemble_Branch_Offset(ir.operand1) ;
 	case Instructions::BX: return "bx" + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand1);
+
+	//Multiply Instructions
+	case Instructions::MUL: return "mul" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand4) + ", " + Disassemble_register(ir.operand1) + ", " + Disassemble_register(ir.operand2); break;
+	case Instructions::MLA: return "mla" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand4) + ", " + Disassemble_register(ir.operand1) + ", " + Disassemble_register(ir.operand2) + ", " + Disassemble_register(ir.operand3); break;
+	case Instructions::UMULL: return "umull" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand3) + ", " + Disassemble_register(ir.operand4) + ", " + Disassemble_register(ir.operand1) + ", " + Disassemble_register(ir.operand2); break;
+	case Instructions::UMLAL: return "umlal" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand3) + ", " + Disassemble_register(ir.operand4) + ", " + Disassemble_register(ir.operand1) + ", " + Disassemble_register(ir.operand2); break;
+	case Instructions::SMULL: return "smull" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand3) + ", " + Disassemble_register(ir.operand4) + ", " + Disassemble_register(ir.operand1) + ", " + Disassemble_register(ir.operand2); break;
+	case Instructions::SMLAL: return "smlal" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand3) + ", " + Disassemble_register(ir.operand4) + ", " + Disassemble_register(ir.operand1) + ", " + Disassemble_register(ir.operand2); break;
 
 	}
 	return std::string();

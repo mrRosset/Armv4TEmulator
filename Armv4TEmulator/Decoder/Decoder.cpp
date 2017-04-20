@@ -143,7 +143,6 @@ void Decoder::Decode_Multiply(IR_ARM& ir, u32 instr) {
 	ir.operand2 = (instr >> 8) & 0xF; //Rs
 	ir.operand3 = (instr >> 12) & 0xF; //Rn or RdLo
 	ir.operand4 = (instr >> 16) & 0xF; //Rd or RdHi
-
 }
 
 
