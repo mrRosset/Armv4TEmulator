@@ -88,9 +88,9 @@ void Decoder::Decode_Data_Processing(IR_ARM & ir, u32 instr) {
 	case 0b1111: ir.instr = Instructions::MVN; break;
 	}
 
-	ir.operand1 = (instr >> 20) & 0b1; //S
-	ir.operand2 = (instr >> 12) & 0xF;
-	ir.operand3 = (instr >> 16) & 0xF;
+	ir.s = (instr >> 20) & 0b1 == 1; //S
+	ir.operand1 = (instr >> 12) & 0xF; //Rd
+	ir.operand2 = (instr >> 16) & 0xF; //Rn
 }
 
 void Decoder::Decode_Shifter_operand(IR_ARM& ir, u32 instr) {
@@ -138,7 +138,7 @@ void Decoder::Decode_Multiply(IR_ARM& ir, u32 instr) {
 	case 0b0111: ir.instr = Instructions::SMLAL; break;
 	}
 
-	ir.s = (instr >> 20) & 0b1; //S
+	ir.s = (instr >> 20) & 0b1 == 1; //S
 	ir.operand1 = instr & 0xF; //Rm
 	ir.operand2 = (instr >> 8) & 0xF; //Rs
 	ir.operand3 = (instr >> 12) & 0xF; //Rn or RdLo

@@ -5,27 +5,27 @@
 
 
 std::string Disassembler::Disassemble(IR_ARM & ir) {
-	std::string s = ir.operand1 == 1 ? "s" : "";
+	std::string s = ir.s ? "s" : "";
 	
 	switch (ir.instr) {
 
 	//Data Processing instructions
-	case Instructions::TST: return "tst" + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::TEQ: return "teq" + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::CMP: return "cmp" + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::CMN: return "cmn" + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::MOV: return "mov" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::MVN: return "mvn" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::AND: return "and" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand2) + ", " + Disassemble_register(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::EOR: return "eor" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand2) + ", " + Disassemble_register(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::SUB: return "sub" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand2) + ", " + Disassemble_register(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::RSB: return "rsb" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand2) + ", " + Disassemble_register(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::ADD: return "add" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand2) + ", " + Disassemble_register(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::ADC: return "adc" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand2) + ", " + Disassemble_register(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::SBC: return "sbc" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand2) + ", " + Disassemble_register(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::RSC: return "rsc" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand2) + ", " + Disassemble_register(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::ORR: return "orr" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand2) + ", " + Disassemble_register(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::BIC: return "bic" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand2) + ", " + Disassemble_register(ir.operand3) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::TST: return "tst" + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::TEQ: return "teq" + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::CMP: return "cmp" + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::CMN: return "cmn" + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::MOV: return "mov" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand1) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::MVN: return "mvn" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand1) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::AND: return "and" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand1) + ", " + Disassemble_register(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::EOR: return "eor" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand1) + ", " + Disassemble_register(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::SUB: return "sub" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand1) + ", " + Disassemble_register(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::RSB: return "rsb" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand1) + ", " + Disassemble_register(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::ADD: return "add" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand1) + ", " + Disassemble_register(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::ADC: return "adc" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand1) + ", " + Disassemble_register(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::SBC: return "sbc" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand1) + ", " + Disassemble_register(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::RSC: return "rsc" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand1) + ", " + Disassemble_register(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::ORR: return "orr" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand1) + ", " + Disassemble_register(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::BIC: return "bic" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand1) + ", " + Disassemble_register(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
 
 	//Branch Instructions
 	case Instructions::B: return "b" + Disassemble_Condition(ir) + " " + Disassemble_Branch_Offset(ir.operand1);
