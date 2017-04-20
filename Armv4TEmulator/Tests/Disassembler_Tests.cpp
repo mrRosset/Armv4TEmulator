@@ -27,3 +27,13 @@ TEST_CASE("Disassemble Branch instr", "[Disassembler]") {
 	REQUIRE(Disassemble(0x312FFF15) == "bxcc r5");
 	REQUIRE(Disassemble(0x312FFF1E) == "bxcc lr");
 }
+
+TEST_CASE("Disassemble Status Register access instr", "[Disassembler]") {
+	REQUIRE(Disassemble(0xE14F3000) == "mrs r3, SPSR");
+	REQUIRE(Disassemble(0xE10FD000) == "mrs sp, CPSR");
+
+	REQUIRE(Disassemble(0xE16BF003) == "msr SPSR_fxc, r3");
+	REQUIRE(Disassemble(0xE12BF005) == "msr CPSR_fxc, r5");
+	REQUIRE(Disassemble(0xE365F603) == "msr SPSR_sc, #3145728");
+	REQUIRE(Disassemble(0xE320FA23) == "msr CPSR_, #143360");
+}
