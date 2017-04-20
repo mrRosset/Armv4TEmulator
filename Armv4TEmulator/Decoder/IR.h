@@ -102,8 +102,10 @@ struct Shifter_op {
 struct IR_ARM {
 	Instructions instr;
 	Conditions cond;
+	bool s;
 	u32 operand1;
 	u32 operand2;
 	u32 operand3;
+	u32 operand4;
 	Shifter_op shifter_operand;
 };

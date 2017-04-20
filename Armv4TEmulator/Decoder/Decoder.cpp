@@ -25,7 +25,13 @@ void Decoder::Decode(IR_ARM & ir, u32 instr) {
 			}
 		}
 		else if (bit7 == 1 && bit4 == 1) {
-			throw "3-2 not done";
+			unsigned bit7_4 = (instr >> 4) & 0xF;
+			if (bit7_4 == 0b1001) {
+				Decode_Multiply(ir, instr);
+			}
+			else {
+				throw "3-2 not done";
+			}
 		}
 		else {
 			Decode_Data_Processing(ir, instr);
@@ -82,7 +88,7 @@ void Decoder::Decode_Data_Processing(IR_ARM & ir, u32 instr) {
 	case 0b1111: ir.instr = Instructions::MVN; break;
 	}
 
-	ir.operand1 = (instr >> 20) & 0b1;
+	ir.operand1 = (instr >> 20) & 0b1; //S
 	ir.operand2 = (instr >> 12) & 0xF;
 	ir.operand3 = (instr >> 16) & 0xF;
 }
@@ -120,3 +126,28 @@ void Decoder::Decode_Branch(IR_ARM& ir, u32 instr) {
 	case 0b0001: ir.instr = Instructions::BX; ir.operand1 = instr & 0xF; break;
 	}
 }
+
+void Decoder::Decode_Multiply(IR_ARM& ir, u32 instr) {
+
+	switch ((instr >> 21) & 0xF) {
+	case 0b0000: ir.instr = Instructions::MUL; break;
+	case 0b0001: ir.instr = Instructions::MLA; break;
+	case 0b0100: ir.instr = Instructions::UMULL; break;
+	case 0b0101: ir.instr = Instructions::UMLAL; break;
+	case 0b0110: ir.instr = Instructions::SMULL; break;
+	case 0b0111: ir.instr = Instructions::SMLAL; break;
+	}
+
+	ir.s = (instr >> 20) & 0b1; //S
+	ir.operand1 = instr & 0xF; //Rm
+	ir.operand2 = (instr >> 8) & 0xF; //Rs
+	ir.operand3 = (instr >> 12) & 0xF; //Rn or RdLo
+	ir.operand4 = (instr >> 16) & 0xF; //Rd or RdHi
+
+}
+
+
+/*For decoding co-processor:
+TODO: Read and take care if necessary
+	"The coprocessor double register transfer instructions are described in Chapter A10 Enhanced DSP Extension."
+*/
