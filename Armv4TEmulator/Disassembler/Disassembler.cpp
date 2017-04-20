@@ -40,6 +40,9 @@ std::string Disassembler::Disassemble(IR_ARM & ir) {
 	case Instructions::SMULL: return "smull" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand3) + ", " + Disassemble_Reg(ir.operand4) + ", " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2); break;
 	case Instructions::SMLAL: return "smlal" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand3) + ", " + Disassemble_Reg(ir.operand4) + ", " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2); break;
 
+	//Status Register Access Instructions
+	case Instructions::MRS: return "mrs" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_PSR(ir.operand1); break;
+	case Instructions::MSR: return "msr" + Disassemble_Cond(ir) + " " + Disassemble_PSR(ir.operand1) + "_" + Disassemble_Fields(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand); break;
 	}
 	return std::string();
 }
@@ -94,4 +97,17 @@ std::string Disassembler::Disassemble_Branch_Offset(u32 operand) {
 	u32 offset = SignExtend<s32>(operand << 2, 26) + 8;
 	std::string sign = offset >= 0 ? "+" : "-";
 	return sign + "#" + std::to_string(offset);
+}
+
+std::string Disassembler::Disassemble_PSR(u32 R) {
+	return R == 1 ? "SPSR" : "CPSR";
+}
+
+std::string Disassembler::Disassemble_Fields(u32 fields) {
+	std::string r = "";
+	r += getBit(fields, 3) == 1 ? "f" : "";
+	r += getBit(fields, 2) == 1 ? "s" : "";
+	r += getBit(fields, 1) == 1 ? "x" : "";
+	r += getBit(fields, 0) == 1 ? "c" : "";
+	return r;
 }

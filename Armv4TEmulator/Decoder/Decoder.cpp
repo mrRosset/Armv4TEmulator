@@ -13,14 +13,20 @@ void Decoder::Decode(IR_ARM & ir, u32 instr) {
 		unsigned bit4 = (instr >> 4) & 0b1;
 		unsigned bit7 = (instr >> 7) & 0b1;
 		unsigned bit20 = (instr >> 20) & 0b1;
+		unsigned bit22 = (instr >> 22) & 0b1;
 		unsigned bit24_23 = (instr >> 23) & 0b11;
 
 		if (bit24_23 == 0b10 && bit20 == 0) {
-			unsigned bit27_4 = (instr >> 4) & 0xFFFFFF;
-			if (bit27_4 == 0b000100101111111111110001) {
-				Decode_Branch(ir, instr);
-			}
-			else {
+			unsigned bit7_4 = (instr >> 4) & 0xF;
+			switch (bit7_4) {
+			case 0b0000: Decode_Status_Register(ir, instr); break;
+			case 0b0001: if(bit22 == 0) Decode_Branch(ir, instr);
+						 else throw "3-3 not done"; break;
+			case 0b0011:
+			case 0b0101:
+			case 0b0111:
+			//case 0b1xy0:
+			default:
 				throw "3-3 not done";
 			}
 		}
@@ -45,8 +51,8 @@ void Decoder::Decode(IR_ARM & ir, u32 instr) {
 		if (bit24_23 == 0b10 && bit21_20 == 0b00) {
 			throw "Undefined instruction are not emulated";
 		}
-		else if (bit24_23 == 0b10 && bit21_20 == 10) {
-			throw "Move immediate to status register not done";
+		else if (bit24_23 == 0b10 && bit21_20 == 0b10) {
+			Decode_Status_Register(ir, instr);
 		}
 		else {
 			Decode_Data_Processing(ir, instr);
@@ -146,11 +152,12 @@ void Decoder::Decode_Multiply(IR_ARM& ir, u32 instr) {
 }
 
 void Decoder::Decode_Status_Register(IR_ARM& ir, u32 instr) {
-	switch ((instr >> 20) & 0xFF) {
+	switch ((instr >> 20) & 0b11111011) {
 	case 0b00010000: ir.instr = Instructions::MRS; ir.operand2 = (instr >> 12) & 0xF; break;
-	case 0b00110010: ir.instr = Instructions::MSR_imm; ir.operand2 = instr & 0xFF; ir.operand3 = (instr >> 8) & 0xF; ir.operand4 = (instr >> 16) & 0xF; break;
-	case 0b00010010: ir.instr = Instructions::MSR_reg; ir.operand2 = instr & 0xF; ir.operand3 = (instr >> 16) & 0xF; break;
+	case 0b00110010: ir.instr = Instructions::MSR; ir.operand2 = (instr >> 16) & 0xF; ir.shifter_operand = { Shifter_type::Immediate, (instr >> 8) & 0xF, instr & 0xFF }; break;
+	case 0b00010010: ir.instr = Instructions::MSR; ir.operand2 = (instr >> 16) & 0xF; ir.shifter_operand = { Shifter_type::Register,  instr & 0xFF }; break;
 	}
+
 	ir.operand1 = (instr >> 22) & 0b1; //R
 }
 
