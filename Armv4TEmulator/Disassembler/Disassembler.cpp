@@ -10,41 +10,41 @@ std::string Disassembler::Disassemble(IR_ARM & ir) {
 	switch (ir.instr) {
 
 	//Data Processing Instructions
-	case Instructions::TST: return "tst" + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::TEQ: return "teq" + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::CMP: return "cmp" + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::CMN: return "cmn" + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::MOV: return "mov" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand1) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::MVN: return "mvn" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand1) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::AND: return "and" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand1) + ", " + Disassemble_register(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::EOR: return "eor" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand1) + ", " + Disassemble_register(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::SUB: return "sub" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand1) + ", " + Disassemble_register(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::RSB: return "rsb" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand1) + ", " + Disassemble_register(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::ADD: return "add" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand1) + ", " + Disassemble_register(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::ADC: return "adc" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand1) + ", " + Disassemble_register(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::SBC: return "sbc" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand1) + ", " + Disassemble_register(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::RSC: return "rsc" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand1) + ", " + Disassemble_register(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::ORR: return "orr" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand1) + ", " + Disassemble_register(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::BIC: return "bic" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand1) + ", " + Disassemble_register(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::TST: return "tst" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::TEQ: return "teq" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::CMP: return "cmp" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::CMN: return "cmn" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::MOV: return "mov" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::MVN: return "mvn" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::AND: return "and" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::EOR: return "eor" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::SUB: return "sub" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::RSB: return "rsb" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::ADD: return "add" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::ADC: return "adc" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::SBC: return "sbc" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::RSC: return "rsc" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::ORR: return "orr" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case Instructions::BIC: return "bic" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
 
 	//Branch Instructions
-	case Instructions::B: return "b" + Disassemble_Condition(ir) + " " + Disassemble_Branch_Offset(ir.operand1);
-	case Instructions::BL: return "bl" + Disassemble_Condition(ir) + " " + Disassemble_Branch_Offset(ir.operand1) ;
-	case Instructions::BX: return "bx" + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand1);
+	case Instructions::B: return "b" + Disassemble_Cond(ir) + " " + Disassemble_Branch_Offset(ir.operand1);
+	case Instructions::BL: return "bl" + Disassemble_Cond(ir) + " " + Disassemble_Branch_Offset(ir.operand1) ;
+	case Instructions::BX: return "bx" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1);
 
 	//Multiply Instructions
-	case Instructions::MUL: return "mul" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand4) + ", " + Disassemble_register(ir.operand1) + ", " + Disassemble_register(ir.operand2); break;
-	case Instructions::MLA: return "mla" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand4) + ", " + Disassemble_register(ir.operand1) + ", " + Disassemble_register(ir.operand2) + ", " + Disassemble_register(ir.operand3); break;
-	case Instructions::UMULL: return "umull" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand3) + ", " + Disassemble_register(ir.operand4) + ", " + Disassemble_register(ir.operand1) + ", " + Disassemble_register(ir.operand2); break;
-	case Instructions::UMLAL: return "umlal" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand3) + ", " + Disassemble_register(ir.operand4) + ", " + Disassemble_register(ir.operand1) + ", " + Disassemble_register(ir.operand2); break;
-	case Instructions::SMULL: return "smull" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand3) + ", " + Disassemble_register(ir.operand4) + ", " + Disassemble_register(ir.operand1) + ", " + Disassemble_register(ir.operand2); break;
-	case Instructions::SMLAL: return "smlal" + s + Disassemble_Condition(ir) + " " + Disassemble_register(ir.operand3) + ", " + Disassemble_register(ir.operand4) + ", " + Disassemble_register(ir.operand1) + ", " + Disassemble_register(ir.operand2); break;
+	case Instructions::MUL: return "mul" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand4) + ", " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2); break;
+	case Instructions::MLA: return "mla" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand4) + ", " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Reg(ir.operand3); break;
+	case Instructions::UMULL: return "umull" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand3) + ", " + Disassemble_Reg(ir.operand4) + ", " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2); break;
+	case Instructions::UMLAL: return "umlal" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand3) + ", " + Disassemble_Reg(ir.operand4) + ", " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2); break;
+	case Instructions::SMULL: return "smull" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand3) + ", " + Disassemble_Reg(ir.operand4) + ", " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2); break;
+	case Instructions::SMLAL: return "smlal" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand3) + ", " + Disassemble_Reg(ir.operand4) + ", " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2); break;
 
 	}
 	return std::string();
 }
 
-std::string Disassembler::Disassemble_register(u32 reg) {
+std::string Disassembler::Disassemble_Reg(u32 reg) {
 	switch (reg) {
 	case 13: return "sp";
 	case 14: return "lr";
@@ -53,7 +53,7 @@ std::string Disassembler::Disassemble_register(u32 reg) {
 	}
 }
 
-std::string Disassembler::Disassemble_Condition(IR_ARM & ir) {
+std::string Disassembler::Disassemble_Cond(IR_ARM & ir) {
 	switch (ir.cond) {
 	case Conditions::EQ: return "eq";
 	case Conditions::NE: return "ne";
@@ -77,16 +77,16 @@ std::string Disassembler::Disassemble_Condition(IR_ARM & ir) {
 std::string Disassembler::Disassemble_Shifter_Operand(Shifter_op& so) {
 	switch (so.type) {
 	case Immediate: return "#" + std::to_string(ror32(so.operand2, so.operand1 * 2));
-	case Register: return Disassemble_register(so.operand1);
-	case LSL_imm: return Disassemble_register(so.operand1) + ", lsl #" + std::to_string(so.operand2);
-	case LSL_reg: return Disassemble_register(so.operand1) + ", lsl " + Disassemble_register(so.operand2);
-	case LSR_imm: return Disassemble_register(so.operand1) + ", lsr #" + std::to_string(so.operand2);
-	case LSR_reg: return Disassemble_register(so.operand1) + ", lsr " + Disassemble_register(so.operand2);
-	case ASR_imm: return Disassemble_register(so.operand1) + ", asr #" + std::to_string(so.operand2);
-	case ASR_reg: return Disassemble_register(so.operand1) + ", asr " + Disassemble_register(so.operand2);
-	case ROR_imm: return Disassemble_register(so.operand1) + ", ror #" + std::to_string(so.operand2);
-	case ROR_reg: return Disassemble_register(so.operand1) + ", ror " + Disassemble_register(so.operand2);
-	case RRX: return Disassemble_register(so.operand1) + ", rrx";
+	case Register: return Disassemble_Reg(so.operand1);
+	case LSL_imm: return Disassemble_Reg(so.operand1) + ", lsl #" + std::to_string(so.operand2);
+	case LSL_reg: return Disassemble_Reg(so.operand1) + ", lsl " + Disassemble_Reg(so.operand2);
+	case LSR_imm: return Disassemble_Reg(so.operand1) + ", lsr #" + std::to_string(so.operand2);
+	case LSR_reg: return Disassemble_Reg(so.operand1) + ", lsr " + Disassemble_Reg(so.operand2);
+	case ASR_imm: return Disassemble_Reg(so.operand1) + ", asr #" + std::to_string(so.operand2);
+	case ASR_reg: return Disassemble_Reg(so.operand1) + ", asr " + Disassemble_Reg(so.operand2);
+	case ROR_imm: return Disassemble_Reg(so.operand1) + ", ror #" + std::to_string(so.operand2);
+	case ROR_reg: return Disassemble_Reg(so.operand1) + ", ror " + Disassemble_Reg(so.operand2);
+	case RRX: return Disassemble_Reg(so.operand1) + ", rrx";
 	}
 }
 
