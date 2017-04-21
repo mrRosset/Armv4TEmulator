@@ -161,6 +161,46 @@ void Decoder::Decode_Status_Register(IR_ARM& ir, u32 instr) {
 	ir.operand1 = (instr >> 22) & 0b1; //R
 }
 
+void Decoder::Decode_Load_Store_W_UB(IR_ARM& ir, u32 instr) {
+	unsigned P = getBit(instr, 24);
+	unsigned U = getBit(instr, 23);
+	unsigned B = getBit(instr, 22);
+	unsigned W = getBit(instr, 21);
+	unsigned L = getBit(instr, 20);
+	unsigned Rd = (instr >> 12) & 0xF;
+	unsigned Rn = (instr >> 16) & 0xF;
+
+	switch ((instr >> 20) & 0b10111) {
+	case 0b00000: ir.instr = Instructions::LDR; break;
+	case 0b00001: ir.instr = Instructions::STR; break;
+	case 0b00010: ir.instr = Instructions::LDRT; break;
+	case 0b00011: ir.instr = Instructions::STRT; break;
+	case 0b00100: ir.instr = Instructions::LDRB; break;
+	case 0b00101: ir.instr = Instructions::STRB; break;
+	case 0b00110: ir.instr = Instructions::LDRBT; break;
+	case 0b00111: ir.instr = Instructions::STRBT; break;
+	case 0b10001: ir.instr = Instructions::STR; break;
+	case 0b10010: ir.instr = Instructions::LDR; break;
+	case 0b10011: ir.instr = Instructions::STR; break;
+	case 0b10100: ir.instr = Instructions::LDRB; break;
+	case 0b10101: ir.instr = Instructions::STRB; break;
+	case 0b10110: ir.instr = Instructions::LDRB; break;
+	case 0b10111: ir.instr = Instructions::STRB; break;
+	}
+
+	ir.operand1 = (instr >> 12) & 0xF; //Rd
+	ir.operand2 = (instr >> 16) & 0xF; //Rn
+	ir.operand3 = (instr >> 21) & 0xF; //PUBW
+
+	if (getBit(instr, 25)) {
+		ir.shifter_operand = { Shifter_type::Immediate, instr & 0xFFF };
+		return;
+	}
+	
+
+
+}
+
 
 /*For decoding co-processor:
 TODO: Read and take care if necessary
