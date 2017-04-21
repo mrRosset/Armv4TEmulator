@@ -162,13 +162,6 @@ void Decoder::Decode_Status_Register(IR_ARM& ir, u32 instr) {
 }
 
 void Decoder::Decode_Load_Store_W_UB(IR_ARM& ir, u32 instr) {
-	unsigned P = getBit(instr, 24);
-	unsigned U = getBit(instr, 23);
-	unsigned B = getBit(instr, 22);
-	unsigned W = getBit(instr, 21);
-	unsigned L = getBit(instr, 20);
-	unsigned Rd = (instr >> 12) & 0xF;
-	unsigned Rn = (instr >> 16) & 0xF;
 
 	switch ((instr >> 20) & 0b10111) {
 	case 0b00000: ir.instr = Instructions::LDR; break;
@@ -194,7 +187,17 @@ void Decoder::Decode_Load_Store_W_UB(IR_ARM& ir, u32 instr) {
 
 	if (getBit(instr, 25)) {
 		ir.shifter_operand = { Shifter_type::Immediate, instr & 0xFFF };
-		return;
+	}
+	else {
+		u32 shift = (instr >> 5) & 0b11;
+		u32 shift_imm = (instr >> 7) & 0x1F;
+
+		if (shift == 0 && shift_imm == 0) {
+			ir.shifter_operand = { Shifter_type::Immediate, instr & 0xF };
+		}
+		else {
+			//TODO: understand how the choice of LSL, LSR, ASL, ROR, RXX happens
+		}
 	}
 	
 
