@@ -37,3 +37,7 @@ TEST_CASE("Disassemble Status Register access instr", "[Disassembler]") {
 	REQUIRE(Disassemble(0xE365F603) == "msr SPSR_sc, #3145728");
 	REQUIRE(Disassemble(0xE320FA23) == "msr CPSR_, #143360");
 }
+
+TEST_CASE("Disassemble Load/Store unsigned Byte/Word", "[Disassembler]") {
+	REQUIRE(Disassemble(0xE5331048) == "ldr r1, [r3, #-72]!");
+}
