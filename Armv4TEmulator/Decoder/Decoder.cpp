@@ -60,8 +60,8 @@ void Decoder::Decode(IR_ARM & ir, u32 instr) {
 
 		break;
 	}
-	case 0b010: // Load / store immediate offset
-	case 0b011: // Load / store register offset
+	case 0b010: Decode_Load_Store_W_UB(ir, instr); // Load / store immediate offset
+	case 0b011: Decode_Load_Store_W_UB(ir, instr); // Load / store register offset
 	case 0b100: // Load/store multiple
 	case 0b101: Decode_Branch(ir, instr); break; // Branch and branch with link
 	case 0b110: // Coprocessor load/store and double register transfers[<- does it exist without the DSP extension ?
@@ -164,21 +164,21 @@ void Decoder::Decode_Status_Register(IR_ARM& ir, u32 instr) {
 void Decoder::Decode_Load_Store_W_UB(IR_ARM& ir, u32 instr) {
 
 	switch ((instr >> 20) & 0b10111) {
-	case 0b00000: ir.instr = Instructions::LDR; break;
-	case 0b00001: ir.instr = Instructions::STR; break;
-	case 0b00010: ir.instr = Instructions::LDRT; break;
-	case 0b00011: ir.instr = Instructions::STRT; break;
-	case 0b00100: ir.instr = Instructions::LDRB; break;
-	case 0b00101: ir.instr = Instructions::STRB; break;
-	case 0b00110: ir.instr = Instructions::LDRBT; break;
-	case 0b00111: ir.instr = Instructions::STRBT; break;
+	case 0b00000: ir.instr = Instructions::STR; break;
+	case 0b00001: ir.instr = Instructions::LDR; break;
+	case 0b00010: ir.instr = Instructions::STRT; break;
+	case 0b00011: ir.instr = Instructions::LDRT; break;
+	case 0b00100: ir.instr = Instructions::STRB; break;
+	case 0b00101: ir.instr = Instructions::LDRB; break;
+	case 0b00110: ir.instr = Instructions::STRBT; break;
+	case 0b00111: ir.instr = Instructions::LDRBT; break;
 	case 0b10001: ir.instr = Instructions::STR; break;
-	case 0b10010: ir.instr = Instructions::LDR; break;
-	case 0b10011: ir.instr = Instructions::STR; break;
-	case 0b10100: ir.instr = Instructions::LDRB; break;
-	case 0b10101: ir.instr = Instructions::STRB; break;
-	case 0b10110: ir.instr = Instructions::LDRB; break;
-	case 0b10111: ir.instr = Instructions::STRB; break;
+	case 0b10010: ir.instr = Instructions::STR; break;
+	case 0b10011: ir.instr = Instructions::LDR; break;
+	case 0b10100: ir.instr = Instructions::STRB; break;
+	case 0b10101: ir.instr = Instructions::LDRB; break;
+	case 0b10110: ir.instr = Instructions::STRB; break;
+	case 0b10111: ir.instr = Instructions::LDRB; break;
 	}
 
 	ir.operand1 = (instr >> 12) & 0xF; //Rd
