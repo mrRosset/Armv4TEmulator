@@ -196,12 +196,11 @@ void Decoder::Decode_Load_Store_W_UB(IR_ARM& ir, u32 instr) {
 			ir.shifter_operand = { Shifter_type::Register, instr & 0xF };
 		}
 		else {
-			unsigned shifter_imm = (instr >> 7) & 0x1F;
-			switch ((instr >> 5) & 0b11) {
-			case 0b00: ir.shifter_operand = { Shifter_type::LSL_imm, instr & 0xF,  shifter_imm };
-			case 0b01: ir.shifter_operand = { Shifter_type::LSR_imm, instr & 0xF,  shifter_imm == 0 ? 32 : shifter_imm };
-			case 0b10: ir.shifter_operand = { Shifter_type::ASR_imm, instr & 0xF,  shifter_imm == 0 ? 32 : shifter_imm };
-			case 0b11: ir.shifter_operand = { shifter_imm == 0 ? Shifter_type::RRX : Shifter_type::ROR_imm, instr & 0xF,  shifter_imm };
+			switch (shift) {
+			case 0b00: ir.shifter_operand = { Shifter_type::LSL_imm, instr & 0xF,  shift_imm };
+			case 0b01: ir.shifter_operand = { Shifter_type::LSR_imm, instr & 0xF,  shift_imm == 0 ? 32 : shift_imm };
+			case 0b10: ir.shifter_operand = { Shifter_type::ASR_imm, instr & 0xF,  shift_imm == 0 ? 32 : shift_imm };
+			case 0b11: ir.shifter_operand = { shift_imm == 0 ? Shifter_type::RRX : Shifter_type::ROR_imm, instr & 0xF,  shift_imm };
 			}
 		}
 	}
