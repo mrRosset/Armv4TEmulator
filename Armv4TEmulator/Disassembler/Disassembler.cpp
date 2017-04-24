@@ -45,14 +45,14 @@ std::string Disassembler::Disassemble(IR_ARM & ir) {
 	case Instructions::MSR: return "msr" + Disassemble_Cond(ir) + " " + Disassemble_PSR(ir.operand1) + "_" + Disassemble_Fields(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand); break;
 	
 	//Load/Store unsigned byte/word
-	case Instructions::LDR: return "ldr" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) +  ", " + Disassemble_Shifter_Operand(ir.shifter_operand); break;
-	case Instructions::STR: return "str" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand); break;
-	case Instructions::LDRT: return "ldrt" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand); break;
-	case Instructions::STRT: return "strt" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand); break;
-	case Instructions::LDRB: return "ldrb" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand); break;
-	case Instructions::STRB: return "strb" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand); break;
-	case Instructions::LDRBT: return "ldrbt" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand); break;
-	case Instructions::STRBT: return "strbt" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand); break;
+	case Instructions::LDR: return "ldr" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", [" + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand) + "]"; break;
+	case Instructions::STR: return "str" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", [" + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand) + "]"; break;
+	case Instructions::LDRT: return "ldrt" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", [" + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand) + "]"; break;
+	case Instructions::STRT: return "strt" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", [" + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand) + "]"; break;
+	case Instructions::LDRB: return "ldrb" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", [" + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand) + "]"; break;
+	case Instructions::STRB: return "strb" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", [" + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand) + "]"; break;
+	case Instructions::LDRBT: return "ldrbt" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", [" + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand) + "]"; break;
+	case Instructions::STRBT: return "strbt" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", [" + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand) + "]"; break;
 	}
 	return std::string();
 }

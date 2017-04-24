@@ -185,7 +185,7 @@ void Decoder::Decode_Load_Store_W_UB(IR_ARM& ir, u32 instr) {
 	ir.operand2 = (instr >> 16) & 0xF; //Rn
 	ir.operand3 = (instr >> 21) & 0xF; //PUBW
 
-	if (getBit(instr, 25)) {
+	if (getBit(instr, 25) == 0) {
 		ir.shifter_operand = { Shifter_type::Immediate, instr & 0xFFF };
 	}
 	else {
