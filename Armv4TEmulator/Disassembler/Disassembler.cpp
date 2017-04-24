@@ -89,7 +89,7 @@ std::string Disassembler::Disassemble_Cond(IR_ARM & ir) {
 
 std::string Disassembler::Disassemble_Shifter_Operand(Shifter_op& so) {
 	switch (so.type) {
-	case Immediate: return "#" + std::to_string(ror32(so.operand2, so.operand1 * 2));
+	case Immediate: return "#" + std::to_string(so.operand1);
 	case Register: return Disassemble_Reg(so.operand1);
 	case LSL_imm: return Disassemble_Reg(so.operand1) + ", lsl #" + std::to_string(so.operand2);
 	case LSL_reg: return Disassemble_Reg(so.operand1) + ", lsl " + Disassemble_Reg(so.operand2);

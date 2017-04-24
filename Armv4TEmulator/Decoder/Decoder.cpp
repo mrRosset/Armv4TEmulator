@@ -101,7 +101,7 @@ void Decoder::Decode_Data_Processing(IR_ARM & ir, u32 instr) {
 
 void Decoder::Decode_Shifter_operand(IR_ARM& ir, u32 instr) {
 	if (getBit(instr, 25)) {
-		ir.shifter_operand = { Shifter_type::Immediate, (instr >> 8) & 0xF, instr & 0xFF };
+		ir.shifter_operand = { Shifter_type::Immediate, ror32(instr & 0xFF, ((instr >> 8) & 0xF) * 2) };
 		return;
 	}
 
@@ -154,7 +154,7 @@ void Decoder::Decode_Multiply(IR_ARM& ir, u32 instr) {
 void Decoder::Decode_Status_Register(IR_ARM& ir, u32 instr) {
 	switch ((instr >> 20) & 0b11111011) {
 	case 0b00010000: ir.instr = Instructions::MRS; ir.operand2 = (instr >> 12) & 0xF; break;
-	case 0b00110010: ir.instr = Instructions::MSR; ir.operand2 = (instr >> 16) & 0xF; ir.shifter_operand = { Shifter_type::Immediate, (instr >> 8) & 0xF, instr & 0xFF }; break;
+	case 0b00110010: ir.instr = Instructions::MSR; ir.operand2 = (instr >> 16) & 0xF; ir.shifter_operand = { Shifter_type::Immediate, ror32(instr & 0xFF, ((instr >> 8) & 0xF) * 2) }; break;
 	case 0b00010010: ir.instr = Instructions::MSR; ir.operand2 = (instr >> 16) & 0xF; ir.shifter_operand = { Shifter_type::Register,  instr & 0xFF }; break;
 	}
 
