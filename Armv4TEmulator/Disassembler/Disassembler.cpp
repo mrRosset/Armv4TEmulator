@@ -45,14 +45,14 @@ std::string Disassembler::Disassemble(IR_ARM & ir) {
 	case Instructions::MSR: return "msr" + Disassemble_Cond(ir) + " " + Disassemble_PSR(ir.operand1) + "_" + Disassemble_Fields(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand); break;
 	
 	//Load/Store unsigned byte/word
-	case Instructions::LDR: return "ldr" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", [" + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand) + "]"; break;
-	case Instructions::STR: return "str" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", [" + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand) + "]"; break;
-	case Instructions::LDRT: return "ldrt" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", [" + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand) + "]"; break;
-	case Instructions::STRT: return "strt" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", [" + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand) + "]"; break;
-	case Instructions::LDRB: return "ldrb" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", [" + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand) + "]"; break;
-	case Instructions::STRB: return "strb" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", [" + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand) + "]"; break;
-	case Instructions::LDRBT: return "ldrbt" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", [" + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand) + "]"; break;
-	case Instructions::STRBT: return "strbt" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", [" + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand) + "]"; break;
+	case Instructions::LDR: return "ldr" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
+	case Instructions::STR: return "str" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
+	case Instructions::LDRT: return "ldrt" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
+	case Instructions::STRT: return "strt" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
+	case Instructions::LDRB: return "ldrb" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
+	case Instructions::STRB: return "strb" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
+	case Instructions::LDRBT: return "ldrbt" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
+	case Instructions::STRBT: return "strbt" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", *" + Disassemble_LS_Shifter_Operand(ir); break;
 	}
 	return std::string();
 }
@@ -87,20 +87,25 @@ std::string Disassembler::Disassemble_Cond(IR_ARM & ir) {
 	}
 }
 
-std::string Disassembler::Disassemble_Shifter_Operand(Shifter_op& so) {
+std::string Disassembler::Disassemble_Shifter_Operand(Shifter_op& so, bool negatif) {
+	std::string negation = negatif ? "-" : "";
 	switch (so.type) {
-	case Immediate: return "#" + std::to_string(so.operand1);
+	case Immediate: return "#" + negation + std::to_string(so.operand1);
 	case Register: return Disassemble_Reg(so.operand1);
-	case LSL_imm: return Disassemble_Reg(so.operand1) + ", lsl #" + std::to_string(so.operand2);
+	case LSL_imm: return Disassemble_Reg(so.operand1) + ", lsl #" + negation + std::to_string(so.operand2);
 	case LSL_reg: return Disassemble_Reg(so.operand1) + ", lsl " + Disassemble_Reg(so.operand2);
-	case LSR_imm: return Disassemble_Reg(so.operand1) + ", lsr #" + std::to_string(so.operand2);
+	case LSR_imm: return Disassemble_Reg(so.operand1) + ", lsr #" + negation + std::to_string(so.operand2);
 	case LSR_reg: return Disassemble_Reg(so.operand1) + ", lsr " + Disassemble_Reg(so.operand2);
-	case ASR_imm: return Disassemble_Reg(so.operand1) + ", asr #" + std::to_string(so.operand2);
+	case ASR_imm: return Disassemble_Reg(so.operand1) + ", asr #" + negation + std::to_string(so.operand2);
 	case ASR_reg: return Disassemble_Reg(so.operand1) + ", asr " + Disassemble_Reg(so.operand2);
-	case ROR_imm: return Disassemble_Reg(so.operand1) + ", ror #" + std::to_string(so.operand2);
+	case ROR_imm: return Disassemble_Reg(so.operand1) + ", ror #" + negation + std::to_string(so.operand2);
 	case ROR_reg: return Disassemble_Reg(so.operand1) + ", ror " + Disassemble_Reg(so.operand2);
 	case RRX: return Disassemble_Reg(so.operand1) + ", rrx";
 	}
+}
+
+std::string Disassembler::Disassemble_Shifter_Operand(Shifter_op& so) {
+	return Disassemble_Shifter_Operand(so, false);
 }
 
 std::string Disassembler::Disassemble_Branch_Offset(u32 operand) {
@@ -120,4 +125,21 @@ std::string Disassembler::Disassemble_Fields(u32 fields) {
 	r += getBit(fields, 1) == 1 ? "x" : "";
 	r += getBit(fields, 0) == 1 ? "c" : "";
 	return r;
+}
+
+std::string Disassembler::Disassemble_LS_Shifter_Operand(IR_ARM& ir) {
+	bool P = (ir.operand3 & 0b1000) >> 3 == 1;
+	bool U = (ir.operand3 & 0b0100) >> 2== 1;
+	bool W = (ir.operand3 & 0b0001) == 1;
+
+	auto preindexed = (ir.operand3 & 0b1001) == 0b1001 ? "!" : "";
+	if (!P) {
+		return "[" + Disassemble_Reg(ir.operand2) + "], " + Disassemble_Shifter_Operand(ir.shifter_operand, !U);
+	}
+	else if (P && W) {
+		return "[" + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand, !U) + "]!";
+	}
+	else {
+		return "[" + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand, !U) + "]";
+	}
 }
