@@ -193,10 +193,16 @@ void Decoder::Decode_Load_Store_W_UB(IR_ARM& ir, u32 instr) {
 		u32 shift_imm = (instr >> 7) & 0x1F;
 
 		if (shift == 0 && shift_imm == 0) {
-			ir.shifter_operand = { Shifter_type::Immediate, instr & 0xF };
+			ir.shifter_operand = { Shifter_type::Register, instr & 0xF };
 		}
 		else {
-			//TODO: understand how the choice of LSL, LSR, ASL, ROR, RXX happens
+			unsigned shifter_imm = (instr >> 7) & 0x1F;
+			switch ((instr >> 5) & 0b11) {
+			case 0b00: ir.shifter_operand = { Shifter_type::LSL_imm, instr & 0xF,  shifter_imm };
+			case 0b01: ir.shifter_operand = { Shifter_type::LSR_imm, instr & 0xF,  shifter_imm == 0 ? 32 : shifter_imm };
+			case 0b10: ir.shifter_operand = { Shifter_type::ASR_imm, instr & 0xF,  shifter_imm == 0 ? 32 : shifter_imm };
+			case 0b11: ir.shifter_operand = { shifter_imm == 0 ? Shifter_type::RRX : Shifter_type::ROR_imm, instr & 0xF,  shifter_imm };
+			}
 		}
 	}
 	
