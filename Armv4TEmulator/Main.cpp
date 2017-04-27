@@ -49,8 +49,14 @@ int main(int argc, char* argv[])
 			for (int i = 0; i < code.size() / 4; i+=4) {
 				u32 instr = (code[i+3] << 24) | (code[i+2] << 16) | (code[i+1] << 8) | code[i];
 				IR_ARM ir;
-				Decoder::Decode(ir, instr);
-				std::cout << Disassembler::Disassemble(ir) << "\r\n";
+				try {
+					Decoder::Decode(ir, instr);
+					std::cout << Disassembler::Disassemble(ir);
+				}
+				catch (...) {
+					std::cout << "Unkown instruction";
+				}
+				std::cin.get();
 			}
 
 
