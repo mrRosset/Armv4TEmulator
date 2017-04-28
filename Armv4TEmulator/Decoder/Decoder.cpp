@@ -162,8 +162,6 @@ void Decoder::Decode_Status_Register(IR_ARM& ir, u32 instr) {
 }
 
 void Decoder::Decode_Load_Store_W_UB(IR_ARM& ir, u32 instr) {
-	u32 a = (instr >> 20) & 0b10111;
-
 	switch ((instr >> 20) & 0b10111) {
 	case 0b00000: ir.instr = Instructions::STR; break;
 	case 0b00001: ir.instr = Instructions::LDR; break;
