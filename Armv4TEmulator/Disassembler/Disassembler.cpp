@@ -59,9 +59,9 @@ std::string Disassembler::Disassemble(IR_ARM & ir) {
 
 std::string Disassembler::Disassemble_Reg(u32 reg) {
 	switch (reg) {
-	case 13: return "sp";
-	case 14: return "lr";
-	case 15: return "pc";
+	case Regs::SP: return "sp";
+	case Regs::LR: return "lr";
+	case Regs::PC: return "pc";
 	default: return "r" + std::to_string(reg);
 	}
 }

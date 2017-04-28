@@ -2,6 +2,24 @@
 
 #include "../Common.h"
 
+
+namespace Regs {
+	enum {
+		/*
+		Register R13 is normally used as a stack pointer and is also known as the SP. In the ARM instruction set,
+		this is by convention only, as there are no defined instructions or other functionality which use R13 in a
+		special-case manner. However, there are such instructions in the Thumb instruction set,
+		*/
+		SP = 13,
+		LR = 14,
+		/*
+		Beware of all the special cases regarding R15. Also reading is a special thing. see page 38/39
+		! see what implementation it is for STR and STM with R15 -> It's 12
+		*/
+		PC = 15
+	};
+}
+
 //see "4.2 ARM instructions and architecture versions" page 213
 enum class Instructions {
 	ADC,
