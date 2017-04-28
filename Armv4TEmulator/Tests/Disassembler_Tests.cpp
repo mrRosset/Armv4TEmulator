@@ -54,5 +54,5 @@ TEST_CASE("Disassemble Load/Store unsigned Byte/Word", "[Disassembler]") {
 	REQUIRE(Disassemble(0xE5D31048) == "ldrb r1, [r3, #72]");
 	REQUIRE(Disassemble(0xE4731000) == "ldrbt r1, [r3], #-0");
 
-	REQUIRE(Disassemble(0xE5883000) == "str r3, [r8]");
+	REQUIRE(Disassemble(0xE5883000) == "str r3, [r8, #0]");
 }
