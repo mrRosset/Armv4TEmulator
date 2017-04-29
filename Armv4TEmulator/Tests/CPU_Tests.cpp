@@ -152,19 +152,19 @@ struct shifter_operand_imm_shifts_test {
 //TODO deal with Rn, Rm = PC (value of PC + 8)
 static const std::vector<shifter_operand_imm_shifts_test> shifter_operand_imm_shifts_tests = {
 	//5.1.4 - Register
-	{ 0, 0, 5, false, 5, false },
-	{ 0, 0, 5, true, 5, true },
-	{ 0, 0, 0, false, 0, false },
-	{ 0, 0, 0, true, 0, true },
-	{ 0, 0, 0xFFFFFFFF, false, 0xFFFFFFFF, false },
-	{ 0, 0, 0xFFFFFFFF, true, 0xFFFFFFFF, true },
+	{ 0b0000, 0b00, 0x00000005, false, 0x00000005, false},
+	{ 0b0000, 0b00, 0x00000005, true , 0x00000005, true },
+	{ 0b0000, 0b00, 0x00000000, false, 0x00000000, false},
+	{ 0b0000, 0b00, 0x00000000, true , 0x00000000, true },
+	{ 0b0000, 0b00, 0xFFFFFFFF, false, 0xFFFFFFFF, false},
+	{ 0b0000, 0b00, 0xFFFFFFFF, true , 0xFFFFFFFF, true },
 
 	//5.1.5 - Logical shift left by immediate
 	{ 0b0100, 0b00, 0xFFFFFFFF, false, 0xFFFFFFF0, true },
 	{ 0b1111, 0b00, 0xFFFFFFFF, false, 0xFFFF8000, true },
-	{ 0b1001, 0b00, 0x00000000, true, 0x00000000, false },
-	{ 0b1001, 0b00, 0x00000003, true, 0x00000600, false },
-	{ 0b0000, 0b00, 0xFFFFFFFF, false, 0xFFFFFFFF, false },
+	{ 0b1001, 0b00, 0x00000000, true , 0x00000000, false},
+	{ 0b1001, 0b00, 0x00000003, true , 0x00000600, false},
+	{ 0b0000, 0b00, 0xFFFFFFFF, false, 0xFFFFFFFF, false},
 
 	//5.1.7 - Logical shift right by immediate
 	{ 0b0100, 0b01, 0xFFFFFFFF, false, 0x0FFFFFFF, true },
