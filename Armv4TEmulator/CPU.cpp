@@ -197,11 +197,11 @@ std::tuple<u32, bool> CPU::shifter_operand(Shifter_op& so, bool negatif) {
 		if (shift_imm == 0)
 			if (getBit(gprs[Rm], 31) == 0) return std::make_tuple(0, getBit(gprs[Rm], 31) == 1);
 			else return std::make_tuple(0xFFFFFFFF, getBit(gprs[Rm], 31) == 1);
-		else return std::make_tuple(gprs[Rm] >> shift_imm, getBit(gprs[Rm], shift_imm - 1) == 1);
+		else return std::make_tuple(static_cast<signed>(gprs[Rm]) >> shift_imm, getBit(gprs[Rm], shift_imm - 1) == 1);
 
 	case Shifter_type::ASR_reg:
 		if (vRs7_0 == 0) return std::make_tuple(gprs[Rm], cpsr.flag_C);
-		else if (vRs7_0 < 32) return std::make_tuple(gprs[Rm] >> vRs7_0, getBit(gprs[Rm], vRs7_0 - 1) == 1);
+		else if (vRs7_0 < 32) return std::make_tuple(static_cast<signed>(gprs[Rm]) >> vRs7_0, getBit(gprs[Rm], vRs7_0 - 1) == 1);
 		else if (getBit(gprs[Rm], 31) == 0) return std::make_tuple(0, getBit(gprs[Rm], 31) == 1);
 		else return std::make_tuple(0xFFFFFFFF, getBit(gprs[Rm], 31) == 1);
 	
