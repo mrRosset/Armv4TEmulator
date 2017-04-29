@@ -20,6 +20,19 @@ namespace Regs {
 	};
 }
 
+enum class InstructionType {
+	Data_Processing,
+	Branch,
+	Multiply,
+	Status_Regsiter_Access,
+	Load_Store,
+	Load_Store_Multiple,
+	Semaphore, // to check
+	Exception_Generating, //to check
+	Coprocessor, //to check
+	Extensions //Is there only
+};
+
 //see "4.2 ARM instructions and architecture versions" page 213
 enum class Instructions {
 	ADC,
@@ -118,6 +131,7 @@ struct Shifter_op {
 };
 
 struct IR_ARM {
+	InstructionType type;
 	Instructions instr;
 	Conditions cond;
 	bool s;

@@ -73,6 +73,7 @@ void Decoder::Decode(IR_ARM & ir, u32 instr) {
 
 
 void Decoder::Decode_Data_Processing(IR_ARM & ir, u32 instr) {
+	ir.type = InstructionType::Data_Processing;
 	Decode_Shifter_operand(ir, instr);
 	
 	switch ((instr >> 21) & 0xF) {
@@ -126,6 +127,7 @@ void Decoder::Decode_Shifter_operand(IR_ARM& ir, u32 instr) {
 }
 
 void Decoder::Decode_Branch(IR_ARM& ir, u32 instr) {
+	ir.type = InstructionType::Branch;
 	switch ((instr >> 24) & 0xF) {
 	case 0b1010: ir.instr = Instructions::B; ir.operand1 = instr & 0xFFFFFF; break;
 	case 0b1011: ir.instr = Instructions::BL; ir.operand1 = instr & 0xFFFFFF; break;
@@ -134,6 +136,7 @@ void Decoder::Decode_Branch(IR_ARM& ir, u32 instr) {
 }
 
 void Decoder::Decode_Multiply(IR_ARM& ir, u32 instr) {
+	ir.type = InstructionType::Multiply;
 
 	switch ((instr >> 21) & 0xF) {
 	case 0b0000: ir.instr = Instructions::MUL; break;
@@ -152,6 +155,7 @@ void Decoder::Decode_Multiply(IR_ARM& ir, u32 instr) {
 }
 
 void Decoder::Decode_Status_Register(IR_ARM& ir, u32 instr) {
+	ir.type = InstructionType::Status_Regsiter_Access;
 	switch ((instr >> 20) & 0b11111011) {
 	case 0b00010000: ir.instr = Instructions::MRS; ir.operand2 = (instr >> 12) & 0xF; break;
 	case 0b00110010: ir.instr = Instructions::MSR; ir.operand2 = (instr >> 16) & 0xF; ir.shifter_operand = { Shifter_type::Immediate, ror32(instr & 0xFF, ((instr >> 8) & 0xF) * 2) }; break;
@@ -162,6 +166,7 @@ void Decoder::Decode_Status_Register(IR_ARM& ir, u32 instr) {
 }
 
 void Decoder::Decode_Load_Store_W_UB(IR_ARM& ir, u32 instr) {
+	ir.type = InstructionType::Load_Store;
 	switch ((instr >> 20) & 0b10111) {
 	case 0b00000: ir.instr = Instructions::STR; break;
 	case 0b00001: ir.instr = Instructions::LDR; break;

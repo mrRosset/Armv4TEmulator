@@ -46,10 +46,10 @@ public:
 
 	CPU();
 	void Step();
-	bool Check_Condition(u32 instr);
-	void ARM_Execute(u32 instr);
-	void Data_Processing(u32 instr);
-	void DP_Instr1(unsigned S, unsigned Rd, u32 result, bool N, bool Z, bool C, bool V);
+	bool Check_Condition(IR_ARM& ir);
+	void ARM_Execute(IR_ARM& ir);
+	void Data_Processing(IR_ARM& ir);
+	void DP_Instr1(bool S, unsigned Rd, u32 result, bool N, bool Z, bool C, bool V);
 	void DP_Instr2(u32 result, bool N, bool Z, bool C, bool V);
-	std::tuple<u32, bool> CPU::shifter_operand(u32 instr, unsigned I);
+	std::tuple<u32, bool> CPU::shifter_operand(Shifter_op& so, bool negatif);
 };
