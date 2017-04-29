@@ -129,14 +129,14 @@ TEST_CASE("Shifter Operand Immediate works correctly", "[ARM]") {
 		//S = 1
 		u32 op = 0b11100010000100000001000000000000;
 		u32 opcode = (test.rotate_imm << 8) | test.immed_8 | op;
+		IR_ARM ir;
+		Decoder::Decode(ir, opcode);
 		u32 shifter_op;
 		bool shifter_carry;
-		
-		//TODO: find a way to do the test with the decoder
-		//std::tie(shifter_op, shifter_carry) = cpu.shifter_operand(opcode, getBit(opcode, 25));
+		std::tie(shifter_op, shifter_carry) = cpu.shifter_operand(ir.shifter_operand, false);
 
-		//REQUIRE(shifter_op == test.expected_result);
-		//REQUIRE(shifter_carry == test.expected_carry);
+		REQUIRE(shifter_op == test.expected_result);
+		REQUIRE(shifter_carry == test.expected_carry);
 	}
 }
 
@@ -182,10 +182,8 @@ TEST_CASE("Shifter Operand Immediate shifts works correctly", "[ARM]") {
 			//S = 1
 			u32 op = 0b11100000000100000001000000000000;
 			u32 opcode = (test.shift_imm << 7) | (test.shift << 5) | Rm | op;
-			std::cout << opcode << std::endl;
 			IR_ARM ir;
 			Decoder::Decode(ir, opcode);
-			std::cout << Disassembler::Disassemble(ir) << std::endl;
 			u32 shifter_op;
 			bool shifter_carry;
 			std::tie(shifter_op, shifter_carry) = cpu.shifter_operand(ir.shifter_operand, false);

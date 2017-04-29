@@ -169,8 +169,12 @@ std::tuple<u32, bool> CPU::shifter_operand(Shifter_op& so, bool negatif) {
 	unsigned vRs4_0 = Rs & 0b11111;
 
 	switch (so.type) {
-	case Shifter_type::Immediate: return std::make_tuple(so.operand1, getBit(so.operand1, 31) == 1); //need to know shift_imm (different carry if shift_imm = 0)
+	case Shifter_type::Immediate: 
+		if (so.operand2 == 0) return std::make_tuple(so.operand1, cpsr.flag_C);
+		else return std::make_tuple(so.operand1, getBit(so.operand1, 31) == 1);
+	
 	case Shifter_type::Register: return std::make_tuple(gprs[Rm], cpsr.flag_C);
+	
 	case Shifter_type::LSL_imm: return std::make_tuple(gprs[Rm] << shift_imm, getBit(gprs[Rm], 32 - shift_imm) == 1);
 
 	case Shifter_type::LSL_reg:
