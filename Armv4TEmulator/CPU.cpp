@@ -57,15 +57,15 @@ bool CPU::Check_Condition(IR_ARM& ir) {
 void CPU::ARM_Execute(IR_ARM& ir) {
 	switch (ir.type) {
 	case InstructionType::Data_Processing: Data_Processing(ir); break;
-	case InstructionType::Branch: break;
-	case InstructionType::Multiply: break;
-	case InstructionType::Status_Regsiter_Access: break;
-	case InstructionType::Load_Store: break;
-	case InstructionType::Load_Store_Multiple: break;
-	case InstructionType::Semaphore: break;
-	case InstructionType::Exception_Generating: break;
-	case InstructionType::Coprocessor: break;
-	case InstructionType::Extensions: break;
+	case InstructionType::Branch: throw std::string("Unimplemented opcode"); break;
+	case InstructionType::Multiply: throw std::string("Unimplemented opcode"); break;
+	case InstructionType::Status_Regsiter_Access: throw std::string("Unimplemented opcode"); break;
+	case InstructionType::Load_Store: throw std::string("Unimplemented opcode"); break;
+	case InstructionType::Load_Store_Multiple: throw std::string("Unimplemented opcode"); break;
+	case InstructionType::Semaphore: throw std::string("Unimplemented opcode"); break;
+	case InstructionType::Exception_Generating: throw std::string("Unimplemented opcode"); break;
+	case InstructionType::Coprocessor: throw std::string("Unimplemented opcode"); break;
+	case InstructionType::Extensions: throw std::string("Unimplemented opcode"); break;
 	}
 }
 
