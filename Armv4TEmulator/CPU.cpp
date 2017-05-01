@@ -212,7 +212,7 @@ std::tuple<u32, bool> CPU::shifter_operand(Shifter_op& so, bool negatif) {
 		else if (vRs4_0 == 0) return std::make_tuple(gprs[Rm], getBit(gprs[Rm], 31) == 1);
 		else return std::make_tuple(ror32(gprs[Rm], vRs4_0), getBit(gprs[Rm], vRs4_0 - 1) == 1);
 
-	case Shifter_type::RRX: return std::make_tuple((cpsr.flag_C << 31) & (gprs[Rm] >> 1), (gprs[Rm] & 0b1) == 1);
+	case Shifter_type::RRX: return std::make_tuple((cpsr.flag_C << 31) | (gprs[Rm] >> 1), (gprs[Rm] & 0b1) == 1);
 
 	default: throw "invalid shifter operand";
 	}
