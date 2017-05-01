@@ -48,6 +48,7 @@ public:
 	void Step();
 	bool Check_Condition(IR_ARM& ir);
 	void ARM_Execute(IR_ARM& ir);
+	void Branch(IR_ARM& ir);
 	void Data_Processing(IR_ARM& ir);
 	void DP_Instr1(bool S, unsigned Rd, u32 result, bool N, bool Z, bool C, bool V);
 	void DP_Instr2(u32 result, bool N, bool Z, bool C, bool V);

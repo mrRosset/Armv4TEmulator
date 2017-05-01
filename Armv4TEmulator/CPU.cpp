@@ -53,7 +53,6 @@ bool CPU::Check_Condition(IR_ARM& ir) {
 	return false;
 }
 
-
 void CPU::ARM_Execute(IR_ARM& ir) {
 	switch (ir.type) {
 	case InstructionType::Data_Processing: Data_Processing(ir); break;
@@ -66,6 +65,25 @@ void CPU::ARM_Execute(IR_ARM& ir) {
 	case InstructionType::Exception_Generating: throw std::string("Unimplemented opcode"); break;
 	case InstructionType::Coprocessor: throw std::string("Unimplemented opcode"); break;
 	case InstructionType::Extensions: throw std::string("Unimplemented opcode"); break;
+	}
+}
+
+
+inline void CPU::Branch(IR_ARM& ir) {
+	switch (ir.instr) {
+	case Instructions::B: 
+		gprs[Regs::PC] += SignExtend<s32>(ir.operand1 << 2, 26) + 8;
+		break;
+	
+	case Instructions::BL:
+		gprs[Regs::LR] = gprs[Regs::PC] + 4; // TODO: Check that it's the correct address of next instruction
+		gprs[Regs::PC] += SignExtend<s32>(ir.operand1 << 2, 26) + 8;
+		break;
+
+	case Instructions::BX:
+		if (gprs[ir.operand1] & 0b1 == 1) throw std::string("change to Thumb instructions is not supported");
+		gprs[Regs::PC] += gprs[ir.operand1] & 0xFFFFFFFE;
+		break;
 	}
 }
 
