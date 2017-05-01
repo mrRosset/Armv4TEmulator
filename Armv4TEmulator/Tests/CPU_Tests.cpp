@@ -180,6 +180,12 @@ static const std::vector<shifter_operand_imm_shifts_test> shifter_operand_imm_sh
 	{ 0b0000, 0b10, 0x80000000, false, 0xFFFFFFFF, true },
 	{ 0b0000, 0b10, 0x12345678, false, 0x00000000, false},
 
+	//5.1.11 - Rotate right by immediate
+	{ 0b0100, 0b11, 0xFFFFFFFF, false, 0xFFFFFFFF, true },
+	{ 0b0100, 0b11, 0xFFFFF0FF, false, 0xFFFFFF0F, true },
+	{ 0b1001, 0b11, 0x00000000, false, 0x00000000, false},
+	{ 0b0100, 0b11, 0x80000007, false, 0x78000000, false},
+	{ 0b0100, 0b11, 0x12345678, false, 0x81234567, true },
 
 };
 
