@@ -70,3 +70,38 @@ inline T SignExtend(const T v, unsigned bit_count) {
 	}
 	return v;
 }
+
+inline bool CarryFrom(u64 a, u64 b) {
+	return (a + b) > UINT32_MAX;
+}
+inline bool CarryFrom(u64 a, u64 b, u64 c) {
+	return (a + b + c) > UINT32_MAX;
+}
+
+//TODO: check no sign extension
+inline bool OverflowFromAdd(s32 a, s32 b) {
+	s32 r = a + b;
+	return (a > 0 && b > 0 && r < 0) || (a < 0 && b < 0 && r > 0);
+}
+inline bool OverflowFromAdd(s32 a, s32 b, s32 c) {
+	s32 r = a + b + c;
+	return (a > 0 && b > 0 && r < 0) || (a < 0 && b < 0 && r > 0);
+}
+
+inline bool OverflowFromSub(s32 a, s32 b) {
+	s32 r = a - b;
+	return (a > 0 && b < 0 && r < 0) || (a < 0 && b > 0 && r > 0);
+}
+inline bool OverflowFromSub(s32 a, s32 b, s32 c) {
+	s32 r = a - b - c;
+	return (a > 0 && b < 0 && r < 0) || (a < 0 && b > 0 && r > 0);
+}
+
+inline bool BorrowFromSub(u32 a, u32 b) {
+	//To check
+	return b > a;
+}
+inline bool BorrowFromSub(u32 a, u32 b, u32 c) {
+	//To check
+	return b + c > a;
+}
