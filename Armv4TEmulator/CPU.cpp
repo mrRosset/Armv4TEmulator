@@ -217,15 +217,4 @@ std::tuple<u32, bool> CPU::shifter_operand(Shifter_op& so, bool negatif) {
 	default: throw "invalid shifter operand";
 	}
 
-
-	/*if (I) { //Immediate
-		unsigned immed_8 = instr & 0xFF;
-		unsigned rotate_imm = (instr >> 8) & 0xF;
-		u32 result = ror32(immed_8, rotate_imm * 2);
-		if (rotate_imm == 0)
-			return std::make_tuple(result, cpsr.flag_C);
-		else
-			return std::make_tuple(result, getBit(result, 31) == 1);
-	}*/
-
 }
