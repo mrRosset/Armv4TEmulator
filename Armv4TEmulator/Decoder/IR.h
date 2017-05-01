@@ -41,8 +41,6 @@ enum class Instructions {
 	B,
 	BIC,
 	BL,
-	BLX_1,
-	BLX_2,
 	BX,
 	CDP,
 	CMN,
