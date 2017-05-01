@@ -187,6 +187,12 @@ static const std::vector<shifter_operand_imm_shifts_test> shifter_operand_imm_sh
 	{ 0b0100, 0b11, 0x80000007, false, 0x78000000, false},
 	{ 0b0100, 0b11, 0x12345678, false, 0x81234567, true },
 
+	//5.1.13 - Rotate right with extend
+	{ 0b0000, 0b11, 0xFFFFFFFF, true , 0xFFFFFFFF, true },
+	{ 0b0000, 0b11, 0xFFFFFFFF, false, 0x7FFFFFFF, true },
+	{ 0b0000, 0b11, 0x12345678, false, 0x091A2B3C, false},
+	{ 0b0000, 0b11, 0x12345678, true , 0x891A2B3C, false},
+
 };
 
 TEST_CASE("Shifter Operand Immediate shifts works correctly", "[ARM]") {
