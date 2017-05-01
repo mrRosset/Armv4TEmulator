@@ -109,9 +109,9 @@ std::string Disassembler::Disassemble_Shifter_Operand(Shifter_op& so) {
 }
 
 std::string Disassembler::Disassemble_Branch_Offset(u32 operand) {
-	u32 offset = SignExtend<s32>(operand << 2, 26) + 8;
+	s32 offset = SignExtend<s32>(operand << 2, 26) + 8;
 	std::string sign = offset >= 0 ? "+" : "-";
-	return sign + "#" + std::to_string(offset);
+	return sign + "#" + std::to_string(abs(offset));
 }
 
 std::string Disassembler::Disassemble_PSR(u32 R) {
