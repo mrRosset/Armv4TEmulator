@@ -58,7 +58,7 @@ void CPU::ARM_Execute(IR_ARM& ir) {
 	case InstructionType::Data_Processing: Data_Processing(ir); break;
 	case InstructionType::Branch: Branch(ir); break;
 	case InstructionType::Multiply: Multiply(ir); break;
-	case InstructionType::Status_Regsiter_Access: throw std::string("Unimplemented opcode"); break;
+	case InstructionType::Status_Regsiter_Access: Status_Regsiter_Access(ir); break;
 	case InstructionType::Load_Store: throw std::string("Unimplemented opcode"); break;
 	case InstructionType::Load_Store_Multiple: throw std::string("Unimplemented opcode"); break;
 	case InstructionType::Semaphore: throw std::string("Unimplemented opcode"); break;
@@ -67,6 +67,37 @@ void CPU::ARM_Execute(IR_ARM& ir) {
 	case InstructionType::Extensions: throw std::string("Unimplemented opcode"); break;
 	}
 }
+
+inline void CPU::Status_Regsiter_Access(IR_ARM& ir) {
+	unsigned R = ir.operand1;
+	
+	if (ir.instr == Instructions::MRS) {
+		u32 Rd = ir.operand2;
+
+		if (Rd == Regs::PC) {
+			throw std::string("Unpredictable instructions are not emulated");
+		}
+
+		if (R) {
+			if (cpsr.mode == CpuMode::User || cpsr.mode == CpuMode::System) {
+				throw std::string("Unpredictable, there is no sp");
+			}
+			gprs[Rd] = composePSR(spsr);
+		}
+		else {
+			gprs[Rd] = composePSR(cpsr);
+		}
+	}
+	else if (ir.instr == Instructions::MSR) {
+		unsigned field_mask = ir.operand2;
+
+		u32 shifter_op;
+		std::tie(shifter_op, std::ignore) = shifter_operand(ir.shifter_operand, false);
+
+		throw std::string("MSR not implemented yet.");
+	}
+}
+
 
 inline void CPU::Multiply(IR_ARM& ir) {
 	u32 Rm = ir.operand1;

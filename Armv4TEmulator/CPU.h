@@ -19,7 +19,7 @@ enum struct CpuMode: u8 {
 
 
 //TODO: Think about default values.
-struct CPSR {
+struct PSR {
 	bool flag_N, flag_Z, flag_C, flag_V; //bits 31 - 28
 	u32 reserved; //bits 27 - 8
 	bool flag_inter_I, flag_inter_F; //bits 7-6 
@@ -40,14 +40,15 @@ public:
 	//use u32 or s32 ? -> mgba use s32
 	u32 gprs[16];
 
-	CPSR cpsr;
-	CPSR spsr;
+	PSR cpsr;
+	PSR spsr;
 	Memory mem;
 
 	CPU();
 	void Step();
 	bool Check_Condition(IR_ARM& ir);
 	void ARM_Execute(IR_ARM& ir);
+	void Status_Regsiter_Access(IR_ARM& ir);
 	void Multiply(IR_ARM& ir);
 	void MUL_Instr1(bool S, unsigned Rd, u32 result);
 	void MUL_Instr2(bool S, unsigned RdHi, unsigned RdLo, u32 resultHi, u32 resultLo);
