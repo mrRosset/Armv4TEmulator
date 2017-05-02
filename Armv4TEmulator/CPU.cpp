@@ -57,7 +57,7 @@ void CPU::ARM_Execute(IR_ARM& ir) {
 	switch (ir.type) {
 	case InstructionType::Data_Processing: Data_Processing(ir); break;
 	case InstructionType::Branch: Branch(ir); break;
-	case InstructionType::Multiply: throw std::string("Unimplemented opcode"); break;
+	case InstructionType::Multiply: Multiply(ir); break;
 	case InstructionType::Status_Regsiter_Access: throw std::string("Unimplemented opcode"); break;
 	case InstructionType::Load_Store: throw std::string("Unimplemented opcode"); break;
 	case InstructionType::Load_Store_Multiple: throw std::string("Unimplemented opcode"); break;
@@ -77,7 +77,7 @@ inline void CPU::Multiply(IR_ARM& ir) {
 	u32 RdHi = ir.operand4;
 
 
-	if (Rm == Regs::PC || Rs == Regs::PC || Rd == Regs::PC) {
+	if (Rm == Regs::PC || Rs == Regs::PC || Rd == Regs::PC || Rn == Regs::PC) {
 		throw std::string("Unpredictable instructions are not emulated");
 	}
 
