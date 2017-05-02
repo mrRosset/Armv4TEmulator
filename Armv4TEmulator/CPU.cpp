@@ -89,6 +89,8 @@ inline void CPU::Multiply(IR_ARM& ir) {
 	*/
 
 	// C and V flags should be UNPREDICTABLE in armv4T but are unchanged in armv5 and after.
+	// Here they are treated as unchanged to avoid having to track their potential use in further
+	// instructions
 
 	switch (ir.instr) {
 	case Instructions::MUL: MUL_Instr1(ir.s, Rd, getLo(static_cast<u64>(Rm) * static_cast<u64>(Rs)) ); break;
