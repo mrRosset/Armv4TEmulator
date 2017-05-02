@@ -68,6 +68,76 @@ void CPU::ARM_Execute(IR_ARM& ir) {
 	}
 }
 
+inline void CPU::Multiply(IR_ARM& ir) {
+	u32 Rm = ir.operand1;
+	u32 Rs = ir.operand2;
+	u32 Rn = ir.operand3;
+	u32 Rd = ir.operand4;
+	u32 RdLo = ir.operand3;
+	u32 RdHi = ir.operand4;
+
+
+	if (Rm == Regs::PC || Rs == Regs::PC || Rd == Regs::PC) {
+		throw std::string("Unpredictable instructions are not emulated");
+	}
+
+	/*
+	TODO: Check if there is support for early termination. From page 167:
+		"If the multiplier implementation supports early termination, it must be implemented
+		on the value of the <Rs> operand. The type of early termination used (signed or
+		unsigned) is IMPLEMENTATION DEFINED."
+	*/
+
+	// C and V flags should be UNPREDICTABLE in armv4T but are unchanged in armv5 and after.
+
+	switch (ir.instr) {
+	case Instructions::MUL: MUL_Instr1(ir.s, Rd, getLo(static_cast<u64>(Rm) * static_cast<u64>(Rs)) ); break;
+	case Instructions::MLA: MUL_Instr1(ir.s, Rd, getLo(static_cast<u64>(Rm) * static_cast<u64>(Rs)) + Rn); break;
+
+	case Instructions::UMULL: {
+		u64 result = static_cast<u64>(Rm) * static_cast<u64>(Rs);
+		MUL_Instr2(ir.s, RdHi, RdLo, getHi(result), getLo(result));
+		break;
+	}
+
+	case Instructions::UMLAL: {
+		u64 result = static_cast<u64>(Rm) * static_cast<u64>(Rs);
+		MUL_Instr2(ir.s, RdHi, RdLo, getHi(result) + gprs[RdHi] + CarryFrom(getLo(result), gprs[RdLo]) , getLo(result) + gprs[RdLo]);
+		break;
+	}
+
+	case Instructions::SMULL: {
+		s64 result = static_cast<s64>(Rm) * static_cast<s64>(Rs);
+		MUL_Instr2(ir.s, RdHi, RdLo, getHi(result), getLo(result));
+		break;
+	}
+
+	case Instructions::SMLAL: {
+		s64 result = static_cast<s64>(Rm) * static_cast<s64>(Rs);
+		MUL_Instr2(ir.s, RdHi, RdLo, getHi(result) + gprs[RdHi] + CarryFrom(getLo(result), gprs[RdLo]), getLo(result) + gprs[RdLo]);
+		break;
+	}
+
+	}
+}
+
+inline void CPU::MUL_Instr1(bool S, unsigned Rd, u32 result) {
+	gprs[Rd] = result;
+	if(S){
+		cpsr.flag_N = !!getBit(gprs[Rd], 31);
+		cpsr.flag_Z = gprs[Rd] == 0;
+	}
+}
+
+inline void CPU::MUL_Instr2(bool S, unsigned RdHi, unsigned RdLo, u32 resultHi, u32 resultLo) {
+	gprs[RdHi] = resultHi;
+	gprs[RdLo] = resultLo;
+	if (S) {
+		cpsr.flag_N = !!getBit(gprs[RdHi], 31);
+		cpsr.flag_Z = (gprs[RdHi] == 0) & (gprs[RdLo] == 0);
+	}
+}
+
 inline void CPU::Branch(IR_ARM& ir) {
 	switch (ir.instr) {
 	case Instructions::B: 
@@ -80,7 +150,7 @@ inline void CPU::Branch(IR_ARM& ir) {
 		break;
 
 	case Instructions::BX:
-		if (gprs[ir.operand1] & 0b1 == 1) throw std::string("change to Thumb instructions is not supported");
+		if ((gprs[ir.operand1] & 0b1) == 1) throw std::string("change to Thumb instructions is not supported");
 		gprs[Regs::PC] += gprs[ir.operand1] & 0xFFFFFFFE;
 		break;
 	}
@@ -116,10 +186,10 @@ inline void CPU::Data_Processing(IR_ARM& ir) {
 
 inline void CPU::DP_Instr1(bool S, unsigned Rd, u32 result, bool N, bool Z, bool C, bool V) {
 	gprs[Rd] = result;
-	if (S == 1 && Rd == Regs::PC) {
+	if (S && Rd == Regs::PC) {
 		throw("no sprs in user/system mode, other mode not implemented yet");
 	}
-	else if (S == 1) {
+	else if (S) {
 		cpsr.flag_N = N;
 		cpsr.flag_Z = Z;
 		cpsr.flag_C = C;

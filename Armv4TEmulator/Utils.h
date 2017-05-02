@@ -105,3 +105,26 @@ inline bool BorrowFromSub(u32 a, u32 b, u32 c) {
 	//To check
 	return b + c > a;
 }
+
+inline u32 getHi(u64 result) {
+	return (result >> 32) & 0xFFFFFFFF;
+}
+
+inline u32 getLo(u64 result) {
+	return result & 0xFFFFFFFF;
+}
+
+inline s32 getHi(s64 result) {
+	return (result >> 32) & 0xFFFFFFFF;
+}
+
+inline s32 getLo(s64 result) {
+	return result & 0xFFFFFFFF;
+}
+
+//avoid implicit conversions
+template <class T>
+u32 getHi(T) = delete;
+
+template <class T>
+u32 getLo(T) = delete;
