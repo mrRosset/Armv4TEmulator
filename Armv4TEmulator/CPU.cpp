@@ -56,7 +56,7 @@ bool CPU::Check_Condition(IR_ARM& ir) {
 void CPU::ARM_Execute(IR_ARM& ir) {
 	switch (ir.type) {
 	case InstructionType::Data_Processing: Data_Processing(ir); break;
-	case InstructionType::Branch: throw std::string("Unimplemented opcode"); break;
+	case InstructionType::Branch: Branch(ir); break;
 	case InstructionType::Multiply: throw std::string("Unimplemented opcode"); break;
 	case InstructionType::Status_Regsiter_Access: throw std::string("Unimplemented opcode"); break;
 	case InstructionType::Load_Store: throw std::string("Unimplemented opcode"); break;
@@ -68,7 +68,6 @@ void CPU::ARM_Execute(IR_ARM& ir) {
 	}
 }
 
-
 inline void CPU::Branch(IR_ARM& ir) {
 	switch (ir.instr) {
 	case Instructions::B: 
@@ -76,7 +75,7 @@ inline void CPU::Branch(IR_ARM& ir) {
 		break;
 	
 	case Instructions::BL:
-		gprs[Regs::LR] = gprs[Regs::PC] + 4; // TODO: Check that it's the correct address of next instruction
+		gprs[Regs::LR] = gprs[Regs::PC] + 4;
 		gprs[Regs::PC] += SignExtend<s32>(ir.operand1 << 2, 26) + 8;
 		break;
 
