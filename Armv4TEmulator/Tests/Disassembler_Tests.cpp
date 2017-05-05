@@ -15,6 +15,7 @@ std::string Disassemble(u32 instr) {
 
 TEST_CASE("Disassemble Data Processing instr", "[Disassembler]") {
 	REQUIRE(Disassemble(0x2201230F) == "andcs r2, r1, #1006632960");
+	REQUIRE(Disassemble(0xA0731048) == "rsbsge r1, r3, r8, asr #32");
 }
 
 TEST_CASE("Disassemble Branch instr", "[Disassembler]") {
