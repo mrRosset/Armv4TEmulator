@@ -80,7 +80,7 @@ inline void CPU::Status_Register_Access(IR_ARM& ir) {
 
 		if (R) {
 			if (cpsr.mode == CpuMode::User || cpsr.mode == CpuMode::System) {
-				throw std::string("Unpredictable, there is no sp");
+				throw std::string("Unpredictable, there is no spsr");
 			}
 			gprs[Rd] = composePSR(spsr);
 		}
