@@ -210,8 +210,32 @@ void Decoder::Decode_Load_Store_W_UB(IR_ARM& ir, u32 instr) {
 			}
 		}
 	}
-	
+}
 
+
+void Decoder::Decode_Load_Store_H_SB(IR_ARM& ir, u32 instr) {
+	//LSH
+	switch ((getBit(instr, 20) << 2) | (instr >> 5) & 0b11) {
+	case 0b000: throw std::string("Not a valid str instruction should be SWP or multiply");;
+	case 0b001: ir.instr = Instructions::STRH; break;
+	case 0b010: throw std::string("UNPREDICTABLE instructions are not supported");
+	case 0b011: throw std::string("UNPREDICTABLE instructions are not supported");
+	case 0b100: ir.instr = Instructions::LDRSB; break;
+	case 0b101: ir.instr = Instructions::LDRH; break;
+	case 0b110: ir.instr = Instructions::LDRSB; break; //TODO: verify. Normaly S = 1 means signed, but byte is always signed
+	case 0b111: ir.instr = Instructions::LDRSH; break;
+	}
+
+	ir.operand1 = (instr >> 12) & 0xF; //Rd
+	ir.operand2 = (instr >> 16) & 0xF; //Rn
+	ir.operand3 = (instr >> 21) & 0xF; //PUIW
+
+	//I
+	switch (getBit(instr, 22)) {
+	//second argument is usually rotate_imm don't have here and don't care since it's used for carry out
+	case 0: ir.shifter_operand = { Shifter_type::Immediate, ((instr & 0xF00) >> 4 )| (instr & 0xF), 0 };  break;
+	case 1: ir.shifter_operand = { Shifter_type::Register, instr & 0xF }; break;
+	}
 
 }
 

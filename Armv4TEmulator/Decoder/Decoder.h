@@ -10,4 +10,5 @@ namespace Decoder {
 	void Decode_Multiply(IR_ARM& ir, u32 instr);
 	void Decode_Status_Register(IR_ARM& ir, u32 instr);
 	void Decode_Load_Store_W_UB(IR_ARM& ir, u32 instr);
+	void Decode_Load_Store_H_SB(IR_ARM& ir, u32 instr);
 }
