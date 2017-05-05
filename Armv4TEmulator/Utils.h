@@ -1,8 +1,8 @@
 #pragma once
 
+#include <string>
 #include "Common.h"
 #include "CPU.h"
-#include <string>
 
 /*
 Code in this file is compiler-specific.
@@ -131,8 +131,8 @@ template <class T>
 u32 getLo(T) = delete;
 
 
-u32 composePSR(PSR psr) {
-	return (psr.flag_N << 31) | (psr.flag_Z << 30) | (psr.flag_C << 29) | (psr.flag_V << 28) | 
+inline u32 composePSR(PSR psr) {
+	return (psr.flag_N << 31) | (psr.flag_Z << 30) | (psr.flag_C << 29) | (psr.flag_V << 28) |
 		((psr.reserved & 0xFFFFF) << 8) | (psr.flag_inter_I << 7) | (psr.flag_inter_F << 6) |
 		(psr.flag_T << 5) | (static_cast<u8>(psr.mode) & 0xF);
 }
