@@ -116,9 +116,9 @@ void Decoder::Decode_Shifter_operand(IR_ARM& ir, u32 instr) {
 				else ir.shifter_operand = { Shifter_type::LSL_imm, Rm, shift_imm };
 				break;
 	case 0b001: ir.shifter_operand = { Shifter_type::LSL_reg, Rm, Rs }; break;
-	case 0b010: ir.shifter_operand = { Shifter_type::LSR_imm, Rm, shift_imm }; break;
+	case 0b010: ir.shifter_operand = { Shifter_type::LSR_imm, Rm, shift_imm == 0 ? 32 : shift_imm }; break;
 	case 0b011: ir.shifter_operand = { Shifter_type::LSR_reg, Rm, Rs }; break;
-	case 0b100: ir.shifter_operand = { Shifter_type::ASR_imm, Rm, shift_imm }; break;
+	case 0b100: ir.shifter_operand = { Shifter_type::ASR_imm, Rm, shift_imm == 0 ? 32: shift_imm }; break;
 	case 0b101: ir.shifter_operand = { Shifter_type::ASR_reg, Rm, Rs }; break;
 	case 0b110: if(shift_imm == 0) ir.shifter_operand = { Shifter_type::RRX, Rm};
 				else ir.shifter_operand = { Shifter_type::ROR_imm, Rm, shift_imm };
