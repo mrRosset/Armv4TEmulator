@@ -32,20 +32,20 @@ void CPU::Step() {
 
 bool CPU::Check_Condition(IR_ARM& ir) {
 	switch (ir.cond) {
-	case Conditions::EQ: return cpsr.flag_Z == 1;
-	case Conditions::NE: return cpsr.flag_Z == 0;
-	case Conditions::CS_HS: return cpsr.flag_C == 1;
-	case Conditions::CC_LO: return cpsr.flag_C == 0;
-	case Conditions::MI: return cpsr.flag_N == 1;
-	case Conditions::PL: return cpsr.flag_N == 0;
-	case Conditions::VS: return cpsr.flag_V == 1;
-	case Conditions::VC: return cpsr.flag_V == 0;
-	case Conditions::HI: return cpsr.flag_C == 1 && cpsr.flag_Z == 0;
-	case Conditions::LS: return cpsr.flag_C == 0 || cpsr.flag_Z == 1;
+	case Conditions::EQ: return cpsr.flag_Z;
+	case Conditions::NE: return !cpsr.flag_Z;
+	case Conditions::CS_HS: return cpsr.flag_C;
+	case Conditions::CC_LO: return !cpsr.flag_C;
+	case Conditions::MI: return cpsr.flag_N;
+	case Conditions::PL: return !cpsr.flag_N;
+	case Conditions::VS: return cpsr.flag_V;
+	case Conditions::VC: return !cpsr.flag_V;
+	case Conditions::HI: return cpsr.flag_C && !cpsr.flag_Z;
+	case Conditions::LS: return !cpsr.flag_C || cpsr.flag_Z;
 	case Conditions::GE: return cpsr.flag_N == cpsr.flag_V;
 	case Conditions::LT: return cpsr.flag_N != cpsr.flag_V;
-	case Conditions::GT: return cpsr.flag_Z == 0 && cpsr.flag_N == cpsr.flag_V;
-	case Conditions::LE: return cpsr.flag_Z == 1 && cpsr.flag_N != cpsr.flag_V;
+	case Conditions::GT: return !cpsr.flag_Z && cpsr.flag_N == cpsr.flag_V;
+	case Conditions::LE: return cpsr.flag_Z && cpsr.flag_N != cpsr.flag_V;
 	case Conditions::AL: return true;
 	case Conditions::NV: throw "Unpredictable instructions are not emulated";
 	}
