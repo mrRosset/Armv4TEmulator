@@ -48,7 +48,7 @@ public:
 	void Step();
 	bool Check_Condition(IR_ARM& ir);
 	void ARM_Execute(IR_ARM& ir);
-	void Status_Regsiter_Access(IR_ARM& ir);
+	void Status_Register_Access(IR_ARM& ir);
 	void Multiply(IR_ARM& ir);
 	void MUL_Instr1(bool S, unsigned Rd, u32 result);
 	void MUL_Instr2(bool S, unsigned RdHi, unsigned RdLo, u32 resultHi, u32 resultLo);

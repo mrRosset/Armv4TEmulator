@@ -58,7 +58,7 @@ void CPU::ARM_Execute(IR_ARM& ir) {
 	case InstructionType::Data_Processing: Data_Processing(ir); break;
 	case InstructionType::Branch: Branch(ir); break;
 	case InstructionType::Multiply: Multiply(ir); break;
-	case InstructionType::Status_Regsiter_Access: Status_Regsiter_Access(ir); break;
+	case InstructionType::Status_Regsiter_Access: Status_Register_Access(ir); break;
 	case InstructionType::Load_Store: throw std::string("Unimplemented opcode"); break;
 	case InstructionType::Load_Store_Multiple: throw std::string("Unimplemented opcode"); break;
 	case InstructionType::Semaphore: throw std::string("Unimplemented opcode"); break;
@@ -68,7 +68,7 @@ void CPU::ARM_Execute(IR_ARM& ir) {
 	}
 }
 
-inline void CPU::Status_Regsiter_Access(IR_ARM& ir) {
+inline void CPU::Status_Register_Access(IR_ARM& ir) {
 	unsigned R = ir.operand1;
 	
 	if (ir.instr == Instructions::MRS) {
