@@ -216,3 +216,41 @@ TEST_CASE("Shifter Operand Immediate shifts works correctly", "[ARM]") {
 		}
 	}
 }
+
+struct shifter_operand_reg_shifts_test {
+	u32 vRs;
+	u32 shift;
+	u32 vRm;
+	bool flag_C;
+	u32 expected_result;
+	bool expected_carry;
+};
+
+static const std::vector<shifter_operand_reg_shifts_test> shifter_operand_reg_shifts_tests = {
+	//5.1.6 - Logical shift left by register
+	{ 0x00000000, 0b00, 0x12345678, false , 0x12345678, false },
+};
+
+TEST_CASE("Shifter Operand Regs shifts works correctly", "[ARM]") {
+	for (auto& test : shifter_operand_reg_shifts_tests) {
+		for (unsigned Rm = 0; Rm < Regs::PC; Rm++) {
+			for (unsigned Rs = 0; Rs < Regs::PC; Rs++) {
+				CPU cpu;
+				cpu.cpsr.flag_C = test.flag_C;
+				cpu.gprs[Rm] = test.vRm;
+				cpu.gprs[Rs] = test.vRs;
+				//S = 1
+				u32 op = 0b11100000000100000001000000010000;
+				u32 opcode = (Rs << 8) | (test.shift << 5) | Rm | op;
+				IR_ARM ir;
+				Decoder::Decode(ir, opcode);
+				u32 shifter_op;
+				bool shifter_carry;
+				std::tie(shifter_op, shifter_carry) = cpu.shifter_operand(ir.shifter_operand, false);
+
+				REQUIRE(shifter_op == test.expected_result);
+				REQUIRE(shifter_carry == test.expected_carry);
+			}
+		}
+	}
+}
