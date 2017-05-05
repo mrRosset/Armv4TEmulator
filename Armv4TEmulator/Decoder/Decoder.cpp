@@ -31,12 +31,13 @@ void Decoder::Decode(IR_ARM & ir, u32 instr) {
 			}
 		}
 		else if (bit7 == 1 && bit4 == 1) {
+			//3-2
 			unsigned bit7_4 = (instr >> 4) & 0xF;
-			if (bit7_4 == 0b1001) {
+			if (bit7_4 == 0b1001) { //should take care of SWP/SWPB
 				Decode_Multiply(ir, instr);
 			}
 			else {
-				throw "3-2 not done";
+				Decode_Load_Store_H_SB(ir, instr);
 			}
 		}
 		else {
