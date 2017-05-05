@@ -2,7 +2,7 @@
 #include <tuple>
 #include "Common.h"
 #include "Memory.h"
-#include "Decoder\IR.h"
+#include "Decoder/IR.h"
 
 //TODO: make sure scope of the elements are appropriate
 
