@@ -59,7 +59,7 @@ std::string Disassembler::Disassemble(IR_ARM & ir) {
 	case Instructions::LDRH: return "ldrh" + Disassemble_Cond(ir) +" " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
 	case Instructions::LDRSH: return "ldrsh" + Disassemble_Cond(ir) +" " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
 	case Instructions::LDRSB: return "ldrsb" + Disassemble_Cond(ir) +" " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
-	case Instructions::STRH: return "ldr" + Disassemble_Cond(ir) +" " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
+	case Instructions::STRH: return "strh" + Disassemble_Cond(ir) +" " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
 	}
 	return std::string();
 }
