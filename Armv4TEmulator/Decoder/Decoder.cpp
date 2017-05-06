@@ -215,6 +215,7 @@ void Decoder::Decode_Load_Store_W_UB(IR_ARM& ir, u32 instr) {
 
 
 void Decoder::Decode_Load_Store_H_SB(IR_ARM& ir, u32 instr) {
+	ir.type = InstructionType::Load_Store;
 	//LSH
 	switch ((getBit(instr, 20) << 2) | (instr >> 5) & 0b11) {
 	case 0b000: throw std::string("Not a valid str instruction should be SWP or multiply");;
