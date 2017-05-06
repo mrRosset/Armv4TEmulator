@@ -235,8 +235,8 @@ void Decoder::Decode_Load_Store_H_SB(IR_ARM& ir, u32 instr) {
 	//I
 	switch (getBit(instr, 22)) {
 	//second argument is usually rotate_imm don't have here and don't care since it's used for carry out
-	case 0: ir.shifter_operand = { Shifter_type::Immediate, ((instr & 0xF00) >> 4 )| (instr & 0xF), 0 };  break;
-	case 1: ir.shifter_operand = { Shifter_type::Register, instr & 0xF }; break;
+	case 1: ir.shifter_operand = { Shifter_type::Immediate, ((instr & 0xF00) >> 4 )| (instr & 0xF), 0 };  break;
+	case 0: ir.shifter_operand = { Shifter_type::Register, instr & 0xF }; break;
 	}
 
 }
