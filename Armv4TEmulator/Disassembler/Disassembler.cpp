@@ -55,7 +55,6 @@ std::string Disassembler::Disassemble(IR_ARM & ir) {
 	case Instructions::STRBT: return "strbt" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", *" + Disassemble_LS_Shifter_Operand(ir); break;
 	
 	//Load/Store signed byte / halfword
-	//TODO:According to the documentation, condition should be written before b/h/sb/sh. Check with IDA, onlinedisassembler and dyarnmic to see what they do.
 	case Instructions::LDRH: return "ldrh" + Disassemble_Cond(ir); +" " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
 	case Instructions::LDRSH: return "ldrsh" + Disassemble_Cond(ir); +" " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
 	case Instructions::LDRSB: return "ldrsb" + Disassemble_Cond(ir); +" " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
