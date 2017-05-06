@@ -57,3 +57,30 @@ TEST_CASE("Disassemble Load/Store unsigned Byte/Word", "[Disassembler]") {
 
 	REQUIRE(Disassemble(0xE5883000) == "str r3, [r8, #0]");
 }
+
+
+TEST_CASE("Disassemble Load/Store signed Byte/ half-word", "[Disassembler]") {
+	//Some of thow have P=0 and W=1 which is unpredictable, those should be removed
+	REQUIRE(Disassemble(0xc01130b5) == "ldrhgt r3, [r1], -r5");
+	REQUIRE(Disassemble(0xc05130b5) == "ldrhgt r3, [r1], #-5");
+	REQUIRE(Disassemble(0xc08130b5) == "strhgt r3, [r1], r5");
+	REQUIRE(Disassemble(0xc09130b5) == "ldrhgt r3, [r1], r5");
+	REQUIRE(Disassemble(0xc0c130b5) == "strhgt r3, [r1], #5");
+	REQUIRE(Disassemble(0xc0d130b5) == "ldrhgt r3, [r1], #5");
+	REQUIRE(Disassemble(0xc10130b5) == "strhgt r3, [r1, -r5]");
+	REQUIRE(Disassemble(0xc11130b5) == "ldrhgt r3, [r1, -r5]");
+	REQUIRE(Disassemble(0xc12130b5) == "strhgt r3, [r1, -r5]!");
+	REQUIRE(Disassemble(0xc13130b5) == "ldrhgt r3, [r1, -r5]!");
+	REQUIRE(Disassemble(0xc14130b5) == "strhgt r3, [r1, #-5]");
+	REQUIRE(Disassemble(0xc15130b5) == "ldrhgt r3, [r1, #-5]");
+	REQUIRE(Disassemble(0xc16130b5) == "strhgt r3, [r1, #-5]!");
+	REQUIRE(Disassemble(0xc17130b5) == "ldrhgt r3, [r1, #-5]!");
+	REQUIRE(Disassemble(0xc18130b5) == "strhgt r3, [r1, r5]");
+	REQUIRE(Disassemble(0xc19130b5) == "ldrhgt r3, [r1, r5]");
+	REQUIRE(Disassemble(0xc1a130b5) == "strhgt r3, [r1, r5]!");
+	REQUIRE(Disassemble(0xc1b130b5) == "ldrhgt r3, [r1, r5]!");
+	REQUIRE(Disassemble(0xc1c130b5) == "strhgt r3, [r1, #5]");
+	REQUIRE(Disassemble(0xc1d130b5) == "ldrhgt r3, [r1, #5]");
+	REQUIRE(Disassemble(0xc1e130b5) == "strhgt r3, [r1, #5]!");
+	REQUIRE(Disassemble(0xc1f130b5) == "ldrhgt r3, [r1, #5]!");
+}
