@@ -98,7 +98,7 @@ std::string Disassembler::Disassemble_Shifter_Operand(Shifter_op& so, bool negat
 	std::string negation = negatif ? "-" : "";
 	switch (so.type) {
 	case Immediate: return "#" + negation + std::to_string(so.operand1);
-	case Register: return Disassemble_Reg(so.operand1);
+	case Register: return negation + Disassemble_Reg(so.operand1);
 	case LSL_imm: return Disassemble_Reg(so.operand1) + ", lsl #" + negation + std::to_string(so.operand2);
 	case LSL_reg: return Disassemble_Reg(so.operand1) + ", lsl " + Disassemble_Reg(so.operand2);
 	case LSR_imm: return Disassemble_Reg(so.operand1) + ", lsr #" + negation + std::to_string(so.operand2);
