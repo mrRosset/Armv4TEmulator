@@ -60,6 +60,25 @@ std::string Disassembler::Disassemble(IR_ARM & ir) {
 	case Instructions::LDRSH: return "ldrsh" + Disassemble_Cond(ir) +" " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
 	case Instructions::LDRSB: return "ldrsb" + Disassemble_Cond(ir) +" " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
 	case Instructions::STRH: return "strh" + Disassemble_Cond(ir) +" " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
+	
+	//Load/Store multiple
+	case Instructions::LDMIA: return "ldmia" + Disassemble_Cond(ir) + " " + Disassemble_Load_Multiple(ir); break;
+	case Instructions::LDMIB: return "ldmib" + Disassemble_Cond(ir) + " " + Disassemble_Load_Multiple(ir); break;
+	case Instructions::LDMDA: return "ldmda" + Disassemble_Cond(ir) + " " + Disassemble_Load_Multiple(ir); break;
+	case Instructions::LDMDB: return "ldmdb" + Disassemble_Cond(ir) + " " + Disassemble_Load_Multiple(ir); break;
+	case Instructions::LDMFD: return "ldmfd" + Disassemble_Cond(ir) + " " + Disassemble_Load_Multiple(ir); break;
+	case Instructions::LDMFA: return "ldmfa" + Disassemble_Cond(ir) + " " + Disassemble_Load_Multiple(ir); break;
+	case Instructions::LDMED: return "ldmed" + Disassemble_Cond(ir) + " " + Disassemble_Load_Multiple(ir); break;
+	case Instructions::LDMEA: return "ldmea" + Disassemble_Cond(ir) + " " + Disassemble_Load_Multiple(ir); break;
+
+	case Instructions::STMIA: return "stmia" + Disassemble_Cond(ir); break;
+	case Instructions::STMIB: return "stmib" + Disassemble_Cond(ir); break;
+	case Instructions::STMDA: return "stmda" + Disassemble_Cond(ir); break;
+	case Instructions::STMDB: return "stmdb" + Disassemble_Cond(ir); break;
+	case Instructions::STMFD: return "stmfd" + Disassemble_Cond(ir); break;
+	case Instructions::STMFA: return "stmfa" + Disassemble_Cond(ir); break;
+	case Instructions::STMED: return "stmed" + Disassemble_Cond(ir); break;
+	case Instructions::STMEA: return "stmea" + Disassemble_Cond(ir); break;
 	}
 	return std::string();
 }
@@ -149,4 +168,39 @@ std::string Disassembler::Disassemble_LS_Shifter_Operand(IR_ARM& ir) {
 	else {
 		return "[" + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand, !U) + "]";
 	}
+}
+
+std::string Disassembler::Disassemble_Load_Multiple(IR_ARM& ir) {
+	bool P = (ir.operand3 & 0b1000) >> 3 == 1;
+	bool U = (ir.operand3 & 0b0100) >> 2 == 1;
+	bool I = (ir.operand3 & 0b0010) >> 1 == 1;
+	bool W = (ir.operand3 & 0b0001) == 1;
+
+	return Disassemble_Reg(ir.operand2) + (W ? "!" : "") + " " + Disassemble_Reg_List(ir.operand1) + (I ? "^" : "");
+}
+
+std::string Disassembler::Disassemble_Reg_List(u32 list) {
+	std::string result = "{";
+	bool current = false;
+	unsigned start = 0;
+	unsigned end = 0;
+	
+	for (int i = 0; i < 16; i++) {
+		if (!current && getBit(list, i) == 1) {
+			current = true;
+			start = i;
+		}
+
+		if (current && getBit(list, i) == 1 && (i == 15 || getBit(list, i + 1) == 0)) {
+			current = false;
+			end = i;
+			if (start == end) {
+				result += Disassemble_Reg(start) + ", ";
+			}
+			else {
+				result += Disassemble_Reg(start) + " - " + Disassemble_Reg(end) + ", ";
+			}
+		}
+	}
+	return result.substr(0, result.length()-2) + "}";
 }
