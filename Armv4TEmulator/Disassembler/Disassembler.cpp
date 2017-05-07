@@ -176,7 +176,7 @@ std::string Disassembler::Disassemble_Load_Multiple(IR_ARM& ir) {
 	bool I = (ir.operand3 & 0b0010) >> 1 == 1;
 	bool W = (ir.operand3 & 0b0001) == 1;
 
-	return Disassemble_Reg(ir.operand2) + (W ? "!" : "") + " " + Disassemble_Reg_List(ir.operand1) + (I ? "^" : "");
+	return Disassemble_Reg(ir.operand2) + (W ? "!" : "") + ", " + Disassemble_Reg_List(ir.operand1) + (I ? "^" : "");
 }
 
 std::string Disassembler::Disassemble_Reg_List(u32 list) {
@@ -195,12 +195,12 @@ std::string Disassembler::Disassemble_Reg_List(u32 list) {
 			current = false;
 			end = i;
 			if (start == end) {
-				result += Disassemble_Reg(start) + ", ";
+				result += Disassemble_Reg(start) + ",";
 			}
 			else {
-				result += Disassemble_Reg(start) + " - " + Disassemble_Reg(end) + ", ";
+				result += Disassemble_Reg(start) + "-" + Disassemble_Reg(end) + ",";
 			}
 		}
 	}
-	return result.substr(0, result.length()-2) + "}";
+	return result.substr(0, result.length()-1) + "}";
 }
