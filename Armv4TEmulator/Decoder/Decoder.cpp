@@ -241,6 +241,36 @@ void Decoder::Decode_Load_Store_H_SB(IR_ARM& ir, u32 instr) {
 
 }
 
+void Decoder::Decode_Load_Store_Multiple(IR_ARM& ir, u32 instr) {
+	ir.type = InstructionType::Load_Store_Multiple;
+
+	ir.operand1 = instr & 0xFFFF; //Regs list
+	ir.operand2 = (instr >> 16) & 0xF; //Rn
+	ir.operand3 = (instr >> 21) & 0xF; //PUIW
+
+	//The ARM is not very clear: When should alternate name be used ?
+	//According to arm it's when the operation if on the stack.
+	//So only when Rn == SP ? It would be hard to statically determine
+	//If any other Register contains a pointer to the stack
+
+	//PUL
+	switch ((instr >> 22) & 0b11 | getBit(instr, 20)) {
+	case 0b001: ir.operand2 == Regs::SP ? Instructions::LDMFA : Instructions::LDMDA; break;
+	case 0b011: ir.operand2 == Regs::SP ? Instructions::LDMFD : Instructions::LDMIA; break;
+	case 0b101: ir.operand2 == Regs::SP ? Instructions::LDMEA : Instructions::LDMDB; break;
+	case 0b111: ir.operand2 == Regs::SP ? Instructions::LDMED : Instructions::LDMIB; break;
+	case 0b000: ir.operand2 == Regs::SP ? Instructions::STMED : Instructions::STMDA; break;
+	case 0b010: ir.operand2 == Regs::SP ? Instructions::STMEA : Instructions::STMIA; break;
+	case 0b100: ir.operand2 == Regs::SP ? Instructions::STMFD : Instructions::STMDB; break;
+	case 0b110: ir.operand2 == Regs::SP ? Instructions::STMFA : Instructions::STMIB; break;
+	}
+
+	if (ir.operand1 == 0) {
+		throw std::string("Unpredictable instructions are not emulated");
+	}
+
+}
+
 
 /*For decoding co-processor:
 TODO: Read and take care if necessary
