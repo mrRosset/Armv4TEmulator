@@ -62,23 +62,23 @@ std::string Disassembler::Disassemble(IR_ARM & ir) {
 	case Instructions::STRH: return "strh" + Disassemble_Cond(ir) +" " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
 	
 	//Load/Store multiple
-	case Instructions::LDMIA: return "ldmia" + Disassemble_Cond(ir) + " " + Disassemble_Load_Multiple(ir); break;
-	case Instructions::LDMIB: return "ldmib" + Disassemble_Cond(ir) + " " + Disassemble_Load_Multiple(ir); break;
-	case Instructions::LDMDA: return "ldmda" + Disassemble_Cond(ir) + " " + Disassemble_Load_Multiple(ir); break;
-	case Instructions::LDMDB: return "ldmdb" + Disassemble_Cond(ir) + " " + Disassemble_Load_Multiple(ir); break;
-	case Instructions::LDMFD: return "ldmfd" + Disassemble_Cond(ir) + " " + Disassemble_Load_Multiple(ir); break;
-	case Instructions::LDMFA: return "ldmfa" + Disassemble_Cond(ir) + " " + Disassemble_Load_Multiple(ir); break;
-	case Instructions::LDMED: return "ldmed" + Disassemble_Cond(ir) + " " + Disassemble_Load_Multiple(ir); break;
-	case Instructions::LDMEA: return "ldmea" + Disassemble_Cond(ir) + " " + Disassemble_Load_Multiple(ir); break;
+	case Instructions::LDMIA: return "ldmia" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
+	case Instructions::LDMIB: return "ldmib" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
+	case Instructions::LDMDA: return "ldmda" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
+	case Instructions::LDMDB: return "ldmdb" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
+	case Instructions::LDMFD: return "ldmfd" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
+	case Instructions::LDMFA: return "ldmfa" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
+	case Instructions::LDMED: return "ldmed" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
+	case Instructions::LDMEA: return "ldmea" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
 
-	case Instructions::STMIA: return "stmia" + Disassemble_Cond(ir); break;
-	case Instructions::STMIB: return "stmib" + Disassemble_Cond(ir); break;
-	case Instructions::STMDA: return "stmda" + Disassemble_Cond(ir); break;
-	case Instructions::STMDB: return "stmdb" + Disassemble_Cond(ir); break;
-	case Instructions::STMFD: return "stmfd" + Disassemble_Cond(ir); break;
-	case Instructions::STMFA: return "stmfa" + Disassemble_Cond(ir); break;
-	case Instructions::STMED: return "stmed" + Disassemble_Cond(ir); break;
-	case Instructions::STMEA: return "stmea" + Disassemble_Cond(ir); break;
+	case Instructions::STMIA: return "stmia" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
+	case Instructions::STMIB: return "stmib" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
+	case Instructions::STMDA: return "stmda" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
+	case Instructions::STMDB: return "stmdb" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
+	case Instructions::STMFD: return "stmfd" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
+	case Instructions::STMFA: return "stmfa" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
+	case Instructions::STMED: return "stmed" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
+	case Instructions::STMEA: return "stmea" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
 	}
 	return std::string();
 }
@@ -170,7 +170,7 @@ std::string Disassembler::Disassemble_LS_Shifter_Operand(IR_ARM& ir) {
 	}
 }
 
-std::string Disassembler::Disassemble_Load_Multiple(IR_ARM& ir) {
+std::string Disassembler::Disassemble_Load_Store_Multiple(IR_ARM& ir) {
 	bool P = (ir.operand3 & 0b1000) >> 3 == 1;
 	bool U = (ir.operand3 & 0b0100) >> 2 == 1;
 	bool I = (ir.operand3 & 0b0010) >> 1 == 1;

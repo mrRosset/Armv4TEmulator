@@ -15,6 +15,6 @@ namespace Disassembler {
 	std::string Disassemble_PSR(u32 R);
 	std::string Disassemble_Fields(u32 fields);
 	std::string Disassemble_LS_Shifter_Operand(IR_ARM& ir);
-	std::string Disassemble_Load_Multiple(IR_ARM& ir);
+	std::string Disassemble_Load_Store_Multiple(IR_ARM& ir);
 	std::string Disassemble_Reg_List(u32 list);
 }
