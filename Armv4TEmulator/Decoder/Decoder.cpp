@@ -16,7 +16,7 @@ void Decoder::Decode(IR_ARM & ir, u32 instr) {
 		unsigned bit22 = (instr >> 22) & 0b1;
 		unsigned bit24_23 = (instr >> 23) & 0b11;
 
-		if (bit24_23 == 0b10 && bit20 == 0 && (bit4 == 0 || (bit4 == 1 && bit7 == 10) )) {
+		if (bit24_23 == 0b10 && bit20 == 0 && (bit4 == 0 || (bit4 == 1 && bit7 == 0) )) {
 			unsigned bit7_4 = (instr >> 4) & 0xF;
 			switch (bit7_4) {
 			case 0b0000: Decode_Status_Register(ir, instr); break;
