@@ -59,7 +59,7 @@ void CPU::ARM_Execute(IR_ARM& ir) {
 	case InstructionType::Branch: Branch(ir); break;
 	case InstructionType::Multiply: Multiply(ir); break;
 	case InstructionType::Status_Regsiter_Access: Status_Register_Access(ir); break;
-	case InstructionType::Load_Store: throw std::string("Unimplemented opcode"); break;
+	case InstructionType::Load_Store: Load_Store(ir); break;
 	case InstructionType::Load_Store_Multiple: throw std::string("Unimplemented opcode"); break;
 	case InstructionType::Semaphore: throw std::string("Unimplemented opcode"); break;
 	case InstructionType::Exception_Generating: throw std::string("Unimplemented opcode"); break;
@@ -69,7 +69,6 @@ void CPU::ARM_Execute(IR_ARM& ir) {
 }
 
 inline void CPU::Load_Store(IR_ARM& ir) {
-	//only do Load store word / unsigned byte for now
 	u32& Rd = ir.operand1;
 	u32& Rn = ir.operand2;
 
@@ -130,8 +129,27 @@ inline void CPU::Load_Store(IR_ARM& ir) {
 		if (Rd == Regs::PC) throw std::string("unpredictable instructions are not emulated");
 		mem.write8(address, gprs[Rd] & 0xFF);
 		break;
-	}
+
+	case Instructions::LDRH: break;
+		if (Rd == Regs::PC || (address & 0b1) == 1) throw std::string("unpredictable instructions are not emulated");
+		gprs[Rd] = mem.read16(address);
+		break;
+
+	case Instructions::STRH: break;
+		if (Rd == Regs::PC || (address & 0b1) == 1) throw std::string("unpredictable instructions are not emulated");
+		mem.write16(address, gprs[Rd] & 0xFFFF);
+		break;
 	
+	case Instructions::LDRSB: break;
+		if (Rd == Regs::PC) throw std::string("unpredictable instructions are not emulated");
+		gprs[Rd] = SignExtend<s32>(mem.read8(address), 8);
+		break;
+
+	case Instructions::LDRSH: break;
+		if (Rd == Regs::PC || (address & 0b1) == 1) throw std::string("unpredictable instructions are not emulated");
+		gprs[Rd] = SignExtend<s32>(mem.read16(address),16);
+		break;
+	}
 }
 
 inline void CPU::Status_Register_Access(IR_ARM& ir) {
