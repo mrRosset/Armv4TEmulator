@@ -82,20 +82,20 @@ inline void CPU::Load_Store(IR_ARM& ir) {
 	u32 address = 0;
 	if (!P) {
 		//post-indexed
-		address = Rn;
-		if (U) Rn = Rn + offset;
-		else Rn = Rn - offset;
+		address = gprs[Rn];
+		if (U) gprs[Rn] = gprs[Rn] + offset;
+		else gprs[Rn] = gprs[Rn] - offset;
 	}
 	else if (P && W) {
 		//pre-indexed
-		if (U) Rn = Rn + offset;
-		else Rn = Rn - offset;
+		if (U) gprs[Rn] = gprs[Rn] + offset;
+		else gprs[Rn] = gprs[Rn] - offset;
 		address = Rn;
 	}
 	else {
 		//offset
-		if (U) address = Rn + offset;
-		else address = Rn - offset;
+		if (U) gprs[Rn] = gprs[Rn] + offset;
+		else address = gprs[Rn] - offset;
 	}
 
 	/*
