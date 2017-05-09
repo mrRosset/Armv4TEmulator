@@ -84,3 +84,8 @@ TEST_CASE("Disassemble Load/Store signed Byte/ half-word", "[Disassembler]") {
 	REQUIRE(Disassemble(0xc1e130b5) == "strhgt r3, [r1, #5]!");
 	REQUIRE(Disassemble(0xc1f130b5) == "ldrhgt r3, [r1, #5]!");
 }
+
+TEST_CASE("Disassemble Load/Store signed Multiple", "[Disassembler]") {
+	REQUIRE(Disassemble(0xE8BD4070) == "ldmfd sp!, {r4-r6,lr}");
+	REQUIRE(Disassemble(0xE92D4070) == "stmfd sp!, {r4-r6,lr}");
+}
