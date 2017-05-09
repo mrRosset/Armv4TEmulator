@@ -69,7 +69,7 @@ void CPU::ARM_Execute(IR_ARM& ir) {
 }
 
 inline void CPU::Status_Register_Access(IR_ARM& ir) {
-	unsigned R = ir.operand1;
+	u32& R = ir.operand1;
 	
 	if (ir.instr == Instructions::MRS) {
 		u32 Rd = ir.operand2;
@@ -100,12 +100,12 @@ inline void CPU::Status_Register_Access(IR_ARM& ir) {
 
 
 inline void CPU::Multiply(IR_ARM& ir) {
-	u32 Rm = ir.operand1;
-	u32 Rs = ir.operand2;
-	u32 Rn = ir.operand3;
-	u32 Rd = ir.operand4;
-	u32 RdLo = ir.operand3;
-	u32 RdHi = ir.operand4;
+	u32& Rm = ir.operand1;
+	u32& Rs = ir.operand2;
+	u32& Rn = ir.operand3;
+	u32& Rd = ir.operand4;
+	u32& RdLo = ir.operand3;
+	u32& RdHi = ir.operand4;
 
 
 	if (Rm == Regs::PC || Rs == Regs::PC || Rd == Regs::PC || Rn == Regs::PC) {
@@ -190,8 +190,8 @@ inline void CPU::Branch(IR_ARM& ir) {
 }
 
 inline void CPU::Data_Processing(IR_ARM& ir) {
-	u32 Rd = ir.operand1;
-	u32 Rn = ir.operand2;
+	u32& Rd = ir.operand1;
+	u32& Rn = ir.operand2;
 	u32 shifter_op;
 	bool shifter_carry;
 	std::tie(shifter_op, shifter_carry) = shifter_operand(ir.shifter_operand, false);
@@ -241,9 +241,9 @@ inline void CPU::DP_Instr2(u32 result, bool N, bool Z, bool C, bool V) {
 
 std::tuple<u32, bool> CPU::shifter_operand(Shifter_op& so, bool negatif) {
 
-	u32 Rm = so.operand1;
-	u32 Rs = so.operand2;
-	u32 shift_imm = so.operand2;
+	u32& Rm = so.operand1;
+	u32& Rs = so.operand2;
+	u32& shift_imm = so.operand2;
 
 	//TODO take care of PC as Rm, Rn, Rd, Rs
 	if (Rm == Regs::PC || (Rs == Regs::PC && so.type != Shifter_type::Immediate && so.type != Shifter_type::LSL_imm && so.type != Shifter_type::LSR_imm && so.type != Shifter_type::ASR_imm && so.type != Shifter_type::ROR_imm && so.type != Shifter_type::RRX) ) {
