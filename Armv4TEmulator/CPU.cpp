@@ -68,6 +68,72 @@ void CPU::ARM_Execute(IR_ARM& ir) {
 	}
 }
 
+inline void CPU::Load_Store(IR_ARM& ir) {
+	//only do Load store word / unsigned byte for now
+	u32& Rd = ir.operand1;
+	u32& Rn = ir.operand2;
+
+	bool P = (ir.operand3 & 0b1000) >> 3 == 1;
+	bool U = (ir.operand3 & 0b0100) >> 2 == 1;
+	bool W = (ir.operand3 & 0b0001) == 1;
+
+	u32 offset;
+	std::tie(offset, std::ignore) = shifter_operand(ir.shifter_operand, false);
+
+	u32 address = 0;
+	if (!P) {
+		//post-indexed
+		address = Rn;
+		if (U) Rn = Rn + offset;
+		else Rn = Rn - offset;
+	}
+	else if (P && W) {
+		//pre-indexed
+		if (U) Rn = Rn + offset;
+		else Rn = Rn - offset;
+		address = Rn;
+	}
+	else {
+		//offset
+		if (U) address = Rn + offset;
+		else address = Rn - offset;
+	}
+
+	/*
+	For all T ending instructions:
+		TODO: take care of translation. The arm arm is not very clear
+		Should also access user mode register even not in user mode
+	*/
+
+	switch (ir.instr) {
+	case Instructions::LDRT:
+	case Instructions::LDR: 
+		gprs[Rd] = mem.read32(ror32(address, 8 * (address & 0b11)));
+		if (Rd == Regs::PC) gprs[Rd] &= 0xFFFFFFFC;
+		if (Rd == Regs::PC && (address & 0b11) != 0b00) throw std::string("unpredictable instructions are not emulated");
+		break;
+
+	case Instructions::LDRBT:
+	case Instructions::LDRB: 
+		if (Rd == Regs::PC) throw std::string("unpredictable instructions are not emulated");
+		gprs[Rd] = mem.read8(address);
+		break;
+
+	case Instructions::STRT:
+	case Instructions::STR: 
+		if(Rd == Regs::PC) throw std::string("implementation defined instructions are not emulated");
+		mem.write32(address, gprs[Rd]);
+		break;
+	
+	case Instructions::STRBT:
+	case Instructions::STRB: 
+		if (Rd == Regs::PC) throw std::string("unpredictable instructions are not emulated");
+		mem.write8(address, gprs[Rd] & 0xFF);
+		break;
+	}
+	
+}
+
 inline void CPU::Status_Register_Access(IR_ARM& ir) {
 	u32& R = ir.operand1;
 	
