@@ -78,6 +78,10 @@ std::string Disassembler::Disassemble(IR_ARM & ir) {
 	case Instructions::STMFA: return "stmfa" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
 	case Instructions::STMED: return "stmed" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
 	case Instructions::STMEA: return "stmea" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
+
+	//Semaphore
+	case Instructions::SWP: return "swp" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Reg(ir.operand1) + ", [" + Disassemble_Reg(ir.operand3) + "]";  break;
+	case Instructions::SWPB: return "swpb" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Reg(ir.operand1) + ", [" + Disassemble_Reg(ir.operand3) + "]";  break;
 	}
 	return std::string();
 }
