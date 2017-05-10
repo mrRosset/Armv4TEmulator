@@ -32,35 +32,32 @@ bool loadFile(std::string path, std::vector<u8>& data) {
 	return true;
 }
 
-int main(int argc, char* argv[])
-{
-	if (argc > 1) {
-		if (std::string(argv[1]) == "-t") {
-			argv[1] = "";
-			int result = Catch::Session().run(argc, argv);
-			return (result < 0xff ? result : 0xff);
+int main(int argc, char* argv[]){
+	if (argc > 1 && std::string(argv[1]) == "-p") {
+
+		std::vector<u8> code;
+		if (!loadFile(argv[2], code)) {
+			return -1;
 		}
-		else {
-			std::vector<u8> code;
-			if (!loadFile(argv[1], code)) {
-				return -1;
+
+		for (int i = 0; i < code.size() / 4; i+=4) {
+			u32 instr = (code[i+3] << 24) | (code[i+2] << 16) | (code[i+1] << 8) | code[i];
+			IR_ARM ir;
+			try {
+				Decoder::Decode(ir, instr);
+				std::cout << Disassembler::Disassemble(ir);
 			}
-
-			for (int i = 0; i < code.size() / 4; i+=4) {
-				u32 instr = (code[i+3] << 24) | (code[i+2] << 16) | (code[i+1] << 8) | code[i];
-				IR_ARM ir;
-				try {
-					Decoder::Decode(ir, instr);
-					std::cout << Disassembler::Disassemble(ir);
-				}
-				catch (...) {
-					std::cout << "Unkown instruction";
-				}
-				std::cin.get();
+			catch (...) {
+				std::cout << "Unkown instruction";
 			}
-
-
+			std::cin.get();
 		}
+
+	}
+	else {
+		//Start catch
+		int result = Catch::Session().run(argc, argv);
+		return (result < 0xff ? result : 0xff);
 	}
 
 
