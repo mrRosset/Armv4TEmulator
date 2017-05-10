@@ -282,8 +282,8 @@ void Decoder::Decode_Semaphore(IR_ARM& ir, u32 instr) {
 	else ir.instr = Instructions::SWPB;
 
 	ir.operand1 = instr & 0xF; //Rm
-	ir.operand2 = (instr >> 12) & 0xF; //Rn
-	ir.operand3 = (instr >> 16) & 0xF; //Rd
+	ir.operand2 = (instr >> 12) & 0xF; //Rd
+	ir.operand3 = (instr >> 16) & 0xF; //Rn
 }
 
 /*For decoding co-processor:
