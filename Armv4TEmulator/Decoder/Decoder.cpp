@@ -70,7 +70,9 @@ void Decoder::Decode(IR_ARM & ir, u32 instr) {
 	case 0b100: Decode_Load_Store_Multiple(ir, instr); break; // Load/store multiple
 	case 0b101: Decode_Branch(ir, instr); break; // Branch and branch with link
 	case 0b110: throw std::string("Unimplemented opcode"); break; // Coprocessor load/store and double register transfers[<- does it exist without the DSP extension ?
-	case 0b111: throw std::string("Unimplemented opcode"); break; // Coprocessor + Software interrupts
+	case 0b111: if (getBit(instr, 24) == 1) Decode_Exception_Generating(ir, instr);
+		else throw std::string("Unimplemented opcode"); // Coprocessor
+		break; 
 	default: throw std::string("Unimplemented opcode");
 	}
 
@@ -284,6 +286,12 @@ void Decoder::Decode_Semaphore(IR_ARM& ir, u32 instr) {
 	ir.operand1 = instr & 0xF; //Rm
 	ir.operand2 = (instr >> 12) & 0xF; //Rd
 	ir.operand3 = (instr >> 16) & 0xF; //Rn
+}
+
+void Decoder::Decode_Exception_Generating(IR_ARM& ir, u32 instr) {
+	ir.type = InstructionType::Exception_Generating;
+	ir.instr = Instructions::SWI;
+	ir.operand1 = instr & 0xFFFFFF;
 }
 
 /*For decoding co-processor:
