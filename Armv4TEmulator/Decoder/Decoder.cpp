@@ -34,7 +34,11 @@ void Decoder::Decode(IR_ARM & ir, u32 instr) {
 			//3-2
 			unsigned bit7_4 = (instr >> 4) & 0xF;
 			if (bit7_4 == 0b1001) { //should take care of SWP/SWPB
-				Decode_Multiply(ir, instr);
+				if (getBit(instr, 24) == 0) {
+					Decode_Multiply(ir, instr);
+				} else {
+					Decode_Semaphore(ir, instr);
+				}
 			}
 			else {
 				Decode_Load_Store_H_SB(ir, instr);
@@ -271,6 +275,16 @@ void Decoder::Decode_Load_Store_Multiple(IR_ARM& ir, u32 instr) {
 
 }
 
+void Decoder::Decode_Semaphore(IR_ARM& ir, u32 instr) {
+	ir.type = InstructionType::Semaphore;
+	
+	if (getBit(instr, 22) == 0) ir.instr = Instructions::SWP;
+	else ir.instr = Instructions::SWPB;
+
+	ir.operand1 = instr & 0xF; //Rm
+	ir.operand2 = (instr >> 12) & 0xF; //Rn
+	ir.operand3 = (instr >> 16) & 0xF; //Rd
+}
 
 /*For decoding co-processor:
 TODO: Read and take care if necessary
