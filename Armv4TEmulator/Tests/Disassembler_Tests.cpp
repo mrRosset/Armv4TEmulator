@@ -90,7 +90,9 @@ TEST_CASE("Disassemble Load/Store signed Multiple", "[Disassembler]") {
 	REQUIRE(Disassemble(0xE92D4070) == "stmfd sp!, {r4-r6,lr}");
 }
 
-
 TEST_CASE("Disassemble Semaphore", "[Disassembler]") {
 	REQUIRE(Disassemble(0xE10A5098) == "swp r5, r8, [r10]");
+	REQUIRE(Disassemble(0xE1031092) == "swp r1, r2, [r3]");
+	REQUIRE(Disassemble(0xE14A509C) == "swpb r5, r12, [r10]");
+	REQUIRE(Disassemble(0xE1431092) == "swpb r1, r2, [r3]");
 }
