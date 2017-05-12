@@ -178,8 +178,6 @@ std::string Disassembler::Disassemble_LS_Shifter_Operand(IR_ARM& ir) {
 }
 
 std::string Disassembler::Disassemble_Load_Store_Multiple(IR_ARM& ir) {
-	bool P = (ir.operand3 & 0b1000) >> 3 == 1;
-	bool U = (ir.operand3 & 0b0100) >> 2 == 1;
 	bool I = (ir.operand3 & 0b0010) >> 1 == 1;
 	bool W = (ir.operand3 & 0b0001) == 1;
 
