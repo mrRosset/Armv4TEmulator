@@ -117,6 +117,7 @@ std::string Disassembler::Disassemble_Cond(IR_ARM & ir) {
 	case Conditions::AL: return "";
 	case Conditions::NV: return "nv";
 	}
+	throw std::string("invalid condition");
 }
 
 std::string Disassembler::Disassemble_Shifter_Operand(Shifter_op& so, bool negatif) {
@@ -134,6 +135,7 @@ std::string Disassembler::Disassemble_Shifter_Operand(Shifter_op& so, bool negat
 	case ROR_reg: return Disassemble_Reg(so.operand1) + ", ror " + Disassemble_Reg(so.operand2);
 	case RRX: return Disassemble_Reg(so.operand1) + ", rrx";
 	}
+	throw std::string("invalid shifter operand");
 }
 
 std::string Disassembler::Disassemble_Shifter_Operand(Shifter_op& so) {
