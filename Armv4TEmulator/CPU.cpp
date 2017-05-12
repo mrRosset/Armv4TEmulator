@@ -335,7 +335,7 @@ std::tuple<u32, bool> CPU::shifter_operand(Shifter_op& so, bool negatif) {
 	}
 
 	unsigned vRs7_0 = gprs[Rs] & 0xFF;
-	unsigned vRs4_0 = Rs & 0b11111;
+	unsigned vRs4_0 = gprs[Rs] & 0b11111;
 
 	switch (so.type) {
 	case Shifter_type::Immediate: 
