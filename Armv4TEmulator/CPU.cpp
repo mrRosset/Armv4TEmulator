@@ -130,22 +130,22 @@ inline void CPU::Load_Store(IR_ARM& ir) {
 		mem.write8(address, gprs[Rd] & 0xFF);
 		break;
 
-	case Instructions::LDRH: break;
+	case Instructions::LDRH:
 		if (Rd == Regs::PC || (address & 0b1) == 1) throw std::string("unpredictable instructions are not emulated");
 		gprs[Rd] = mem.read16(address);
 		break;
 
-	case Instructions::STRH: break;
+	case Instructions::STRH:
 		if (Rd == Regs::PC || (address & 0b1) == 1) throw std::string("unpredictable instructions are not emulated");
 		mem.write16(address, gprs[Rd] & 0xFFFF);
 		break;
 	
-	case Instructions::LDRSB: break;
+	case Instructions::LDRSB:
 		if (Rd == Regs::PC) throw std::string("unpredictable instructions are not emulated");
 		gprs[Rd] = SignExtend<s32>(mem.read8(address), 8);
 		break;
 
-	case Instructions::LDRSH: break;
+	case Instructions::LDRSH:
 		if (Rd == Regs::PC || (address & 0b1) == 1) throw std::string("unpredictable instructions are not emulated");
 		gprs[Rd] = SignExtend<s32>(mem.read16(address),16);
 		break;
