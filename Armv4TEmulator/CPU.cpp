@@ -12,7 +12,7 @@ Not tested in any other compiler,
 
 
 
-CPU::CPU() : gprs{} {
+CPU::CPU() : gprs{}, spsr{} {
 	//TODO: Seriously think about initialization values
 	cpsr.flag_N = cpsr.flag_Z = cpsr.flag_C = cpsr.flag_V = cpsr.flag_inter_I = cpsr.flag_inter_F = cpsr.flag_T = false;
 	cpsr.reserved = 0;
