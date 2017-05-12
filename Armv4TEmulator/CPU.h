@@ -57,5 +57,5 @@ public:
 	void Data_Processing(IR_ARM& ir);
 	void DP_Instr1(bool S, unsigned Rd, u32 result, bool N, bool Z, bool C, bool V);
 	void DP_Instr2(u32 result, bool N, bool Z, bool C, bool V);
-	std::tuple<u32, bool> CPU::shifter_operand(Shifter_op& so, bool negatif);
+	std::tuple<u32, bool> shifter_operand(Shifter_op& so, bool negatif);
 };
