@@ -223,7 +223,7 @@ void Decoder::Decode_Load_Store_W_UB(IR_ARM& ir, u32 instr) {
 void Decoder::Decode_Load_Store_H_SB(IR_ARM& ir, u32 instr) {
 	ir.type = InstructionType::Load_Store;
 	//LSH
-	switch ((getBit(instr, 20) << 2) | (instr >> 5) & 0b11) {
+	switch ((getBit(instr, 20) << 2) | ((instr >> 5) & 0b11)) {
 	case 0b000: throw std::string("Not a valid str instruction should be SWP or multiply");;
 	case 0b001: ir.instr = Instructions::STRH; break;
 	case 0b010: throw std::string("UNPREDICTABLE instructions are not supported");
@@ -260,7 +260,7 @@ void Decoder::Decode_Load_Store_Multiple(IR_ARM& ir, u32 instr) {
 	//If any other Register contains a pointer to the stack
 
 	//PUL
-	switch ((instr >> 22) & 0b110 | getBit(instr, 20)) {
+	switch (((instr >> 22) & 0b110) | getBit(instr, 20)) {
 	case 0b001: ir.instr = ir.operand2 == Regs::SP ? Instructions::LDMFA : Instructions::LDMDA; break;
 	case 0b011: ir.instr = ir.operand2 == Regs::SP ? Instructions::LDMFD : Instructions::LDMIA; break;
 	case 0b101: ir.instr = ir.operand2 == Regs::SP ? Instructions::LDMEA : Instructions::LDMDB; break;
