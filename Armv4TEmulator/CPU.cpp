@@ -353,7 +353,7 @@ std::tuple<u32, bool> CPU::shifter_operand(Shifter_op& so, bool negatif) {
 		else return std::make_tuple(0, false);
 
 	case Shifter_type::LSR_imm: //>> is logical because gprs are unsigned
-		if (shift_imm == 32)	return std::make_tuple(0, getBit(gprs[Rm], 31) == 1);
+		if (shift_imm == 32) return std::make_tuple(0, getBit(gprs[Rm], 31) == 1);
 		else return std::make_tuple(gprs[Rm] >> shift_imm, getBit(gprs[Rm], shift_imm - 1) == 1);
 
 	case Shifter_type::LSR_reg:

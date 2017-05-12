@@ -210,10 +210,10 @@ void Decoder::Decode_Load_Store_W_UB(IR_ARM& ir, u32 instr) {
 		}
 		else {
 			switch (shift) {
-			case 0b00: ir.shifter_operand = { Shifter_type::LSL_imm, instr & 0xF,  shift_imm };
-			case 0b01: ir.shifter_operand = { Shifter_type::LSR_imm, instr & 0xF,  shift_imm == 0 ? 32 : shift_imm };
-			case 0b10: ir.shifter_operand = { Shifter_type::ASR_imm, instr & 0xF,  shift_imm == 0 ? 32 : shift_imm };
-			case 0b11: ir.shifter_operand = { shift_imm == 0 ? Shifter_type::RRX : Shifter_type::ROR_imm, instr & 0xF,  shift_imm };
+			case 0b00: ir.shifter_operand = { Shifter_type::LSL_imm, instr & 0xF,  shift_imm }; break;
+			case 0b01: ir.shifter_operand = { Shifter_type::LSR_imm, instr & 0xF,  shift_imm == 0 ? 32 : shift_imm }; break;
+			case 0b10: ir.shifter_operand = { Shifter_type::ASR_imm, instr & 0xF,  shift_imm == 0 ? 32 : shift_imm }; break;
+			case 0b11: ir.shifter_operand = { shift_imm == 0 ? Shifter_type::RRX : Shifter_type::ROR_imm, instr & 0xF,  shift_imm }; break;
 			}
 		}
 	}
