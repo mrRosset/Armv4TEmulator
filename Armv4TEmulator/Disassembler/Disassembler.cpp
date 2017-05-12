@@ -166,7 +166,6 @@ std::string Disassembler::Disassemble_LS_Shifter_Operand(IR_ARM& ir) {
 	bool U = (ir.operand3 & 0b0100) >> 2== 1;
 	bool W = (ir.operand3 & 0b0001) == 1;
 
-	auto preindexed = (ir.operand3 & 0b1001) == 0b1001 ? "!" : "";
 	if (!P) {
 		return "[" + Disassemble_Reg(ir.operand2) + "], " + Disassemble_Shifter_Operand(ir.shifter_operand, !U);
 	}
