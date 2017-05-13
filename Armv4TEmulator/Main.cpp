@@ -10,35 +10,30 @@
 #include "catch/catch.hpp"
 
 
-bool loadFile(std::string path, std::vector<u8>& data) {
+void loadFile(std::string path, std::vector<u8>& data) {
 
-	std::ifstream stream(path, std::ios::binary);
+	std::ifstream stream(path, std::ios::binary | std::ios::ate);
 	if (!stream) {
-		return false;
+		throw std::string("Impossible to open file");
 	}
 
-	stream.seekg(0, std::ios::end);
 	u64 length = stream.tellg();
 	stream.seekg(0, std::ios::beg);
 
 	data.resize(length);
-
-	for (u64 i = 0; i < length; i++)
+	if (!stream.read((char*)data.data(), length))
 	{
-		data[i] = stream.get();
+		throw std::string("Error reading bytes from file");
 	}
 
 	stream.close();
-	return true;
 }
 
 int main(int argc, char* argv[]){
 	if (argc > 1 && std::string(argv[1]) == "-p") {
 
 		std::vector<u8> code;
-		if (!loadFile(argv[2], code)) {
-			return -1;
-		}
+		loadFile(argv[2], code);
 
 		for (int i = 0; i < code.size() / 4; i+=4) {
 			u32 instr = (code[i+3] << 24) | (code[i+2] << 16) | (code[i+1] << 8) | code[i];
