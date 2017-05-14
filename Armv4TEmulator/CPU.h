@@ -2,7 +2,6 @@
 #include <tuple>
 #include "Common.h"
 #include "Memory.h"
-#include "Decoder/IR.h"
 
 //TODO: make sure scope of the elements are appropriate
 
@@ -26,6 +25,10 @@ struct PSR {
 	bool flag_T; //bit 5
 	CpuMode mode; //bits 4-0
 };
+
+//Forward declaration
+struct IR_ARM;
+struct Shifter_op;
 
 class CPU {
 public:
