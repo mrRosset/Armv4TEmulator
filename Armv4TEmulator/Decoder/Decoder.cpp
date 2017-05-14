@@ -84,22 +84,22 @@ void Decoder::Decode_Data_Processing(IR_ARM & ir, u32 instr) {
 	Decode_Shifter_operand(ir, instr);
 	
 	switch ((instr >> 21) & 0xF) {
-	case 0b0000: ir.instr = Instructions::AND; break;
-	case 0b0001: ir.instr = Instructions::EOR; break;
-	case 0b0010: ir.instr = Instructions::SUB; break;
-	case 0b0011: ir.instr = Instructions::RSB; break;
-	case 0b0100: ir.instr = Instructions::ADD; break;
-	case 0b0101: ir.instr = Instructions::ADC; break;
-	case 0b0110: ir.instr = Instructions::SBC; break;
-	case 0b0111: ir.instr = Instructions::RSC; break;
-	case 0b1000: ir.instr = Instructions::TST; break;
-	case 0b1001: ir.instr = Instructions::TEQ; break;
-	case 0b1010: ir.instr = Instructions::CMP; break;
-	case 0b1011: ir.instr = Instructions::CMN; break;
-	case 0b1100: ir.instr = Instructions::ORR; break;
-	case 0b1101: ir.instr = Instructions::MOV; break;
-	case 0b1110: ir.instr = Instructions::BIC; break;
-	case 0b1111: ir.instr = Instructions::MVN; break;
+	case 0b0000: ir.instr = AInstructions::AND; break;
+	case 0b0001: ir.instr = AInstructions::EOR; break;
+	case 0b0010: ir.instr = AInstructions::SUB; break;
+	case 0b0011: ir.instr = AInstructions::RSB; break;
+	case 0b0100: ir.instr = AInstructions::ADD; break;
+	case 0b0101: ir.instr = AInstructions::ADC; break;
+	case 0b0110: ir.instr = AInstructions::SBC; break;
+	case 0b0111: ir.instr = AInstructions::RSC; break;
+	case 0b1000: ir.instr = AInstructions::TST; break;
+	case 0b1001: ir.instr = AInstructions::TEQ; break;
+	case 0b1010: ir.instr = AInstructions::CMP; break;
+	case 0b1011: ir.instr = AInstructions::CMN; break;
+	case 0b1100: ir.instr = AInstructions::ORR; break;
+	case 0b1101: ir.instr = AInstructions::MOV; break;
+	case 0b1110: ir.instr = AInstructions::BIC; break;
+	case 0b1111: ir.instr = AInstructions::MVN; break;
 	}
 
 	ir.s = ((instr >> 20) & 0b1) == 1; //S
@@ -136,9 +136,9 @@ void Decoder::Decode_Shifter_operand(IR_ARM& ir, u32 instr) {
 void Decoder::Decode_Branch(IR_ARM& ir, u32 instr) {
 	ir.type = InstructionType::Branch;
 	switch ((instr >> 24) & 0xF) {
-	case 0b1010: ir.instr = Instructions::B; ir.operand1 = instr & 0xFFFFFF; break;
-	case 0b1011: ir.instr = Instructions::BL; ir.operand1 = instr & 0xFFFFFF; break;
-	case 0b0001: ir.instr = Instructions::BX; ir.operand1 = instr & 0xF; break;
+	case 0b1010: ir.instr = AInstructions::B; ir.operand1 = instr & 0xFFFFFF; break;
+	case 0b1011: ir.instr = AInstructions::BL; ir.operand1 = instr & 0xFFFFFF; break;
+	case 0b0001: ir.instr = AInstructions::BX; ir.operand1 = instr & 0xF; break;
 	}
 }
 
@@ -146,12 +146,12 @@ void Decoder::Decode_Multiply(IR_ARM& ir, u32 instr) {
 	ir.type = InstructionType::Multiply;
 
 	switch ((instr >> 21) & 0xF) {
-	case 0b0000: ir.instr = Instructions::MUL; break;
-	case 0b0001: ir.instr = Instructions::MLA; break;
-	case 0b0100: ir.instr = Instructions::UMULL; break;
-	case 0b0101: ir.instr = Instructions::UMLAL; break;
-	case 0b0110: ir.instr = Instructions::SMULL; break;
-	case 0b0111: ir.instr = Instructions::SMLAL; break;
+	case 0b0000: ir.instr = AInstructions::MUL; break;
+	case 0b0001: ir.instr = AInstructions::MLA; break;
+	case 0b0100: ir.instr = AInstructions::UMULL; break;
+	case 0b0101: ir.instr = AInstructions::UMLAL; break;
+	case 0b0110: ir.instr = AInstructions::SMULL; break;
+	case 0b0111: ir.instr = AInstructions::SMLAL; break;
 	}
 
 	ir.s = ((instr >> 20) & 0b1) == 1; //S
@@ -164,9 +164,9 @@ void Decoder::Decode_Multiply(IR_ARM& ir, u32 instr) {
 void Decoder::Decode_Status_Register(IR_ARM& ir, u32 instr) {
 	ir.type = InstructionType::Status_Regsiter_Access;
 	switch ((instr >> 20) & 0b11111011) {
-	case 0b00010000: ir.instr = Instructions::MRS; ir.operand2 = (instr >> 12) & 0xF; break;
-	case 0b00110010: ir.instr = Instructions::MSR; ir.operand2 = (instr >> 16) & 0xF; ir.shifter_operand = { Shifter_type::Immediate, ror32(instr & 0xFF, ((instr >> 8) & 0xF) * 2), (instr >> 8) & 0xF}; break;
-	case 0b00010010: ir.instr = Instructions::MSR; ir.operand2 = (instr >> 16) & 0xF; ir.shifter_operand = { Shifter_type::Register,  instr & 0xFF }; break;
+	case 0b00010000: ir.instr = AInstructions::MRS; ir.operand2 = (instr >> 12) & 0xF; break;
+	case 0b00110010: ir.instr = AInstructions::MSR; ir.operand2 = (instr >> 16) & 0xF; ir.shifter_operand = { Shifter_type::Immediate, ror32(instr & 0xFF, ((instr >> 8) & 0xF) * 2), (instr >> 8) & 0xF}; break;
+	case 0b00010010: ir.instr = AInstructions::MSR; ir.operand2 = (instr >> 16) & 0xF; ir.shifter_operand = { Shifter_type::Register,  instr & 0xFF }; break;
 	}
 
 	ir.operand1 = (instr >> 22) & 0b1; //R
@@ -175,22 +175,22 @@ void Decoder::Decode_Status_Register(IR_ARM& ir, u32 instr) {
 void Decoder::Decode_Load_Store_W_UB(IR_ARM& ir, u32 instr) {
 	ir.type = InstructionType::Load_Store;
 	switch ((instr >> 20) & 0b10111) {
-	case 0b00000: ir.instr = Instructions::STR; break;
-	case 0b00001: ir.instr = Instructions::LDR; break;
-	case 0b00010: ir.instr = Instructions::STRT; break;
-	case 0b00011: ir.instr = Instructions::LDRT; break;
-	case 0b00100: ir.instr = Instructions::STRB; break;
-	case 0b00101: ir.instr = Instructions::LDRB; break;
-	case 0b00110: ir.instr = Instructions::STRBT; break;
-	case 0b00111: ir.instr = Instructions::LDRBT; break;
-	case 0b10000: ir.instr = Instructions::STR; break;
-	case 0b10001: ir.instr = Instructions::LDR; break;
-	case 0b10010: ir.instr = Instructions::STR; break;
-	case 0b10011: ir.instr = Instructions::LDR; break;
-	case 0b10100: ir.instr = Instructions::STRB; break;
-	case 0b10101: ir.instr = Instructions::LDRB; break;
-	case 0b10110: ir.instr = Instructions::STRB; break;
-	case 0b10111: ir.instr = Instructions::LDRB; break;
+	case 0b00000: ir.instr = AInstructions::STR; break;
+	case 0b00001: ir.instr = AInstructions::LDR; break;
+	case 0b00010: ir.instr = AInstructions::STRT; break;
+	case 0b00011: ir.instr = AInstructions::LDRT; break;
+	case 0b00100: ir.instr = AInstructions::STRB; break;
+	case 0b00101: ir.instr = AInstructions::LDRB; break;
+	case 0b00110: ir.instr = AInstructions::STRBT; break;
+	case 0b00111: ir.instr = AInstructions::LDRBT; break;
+	case 0b10000: ir.instr = AInstructions::STR; break;
+	case 0b10001: ir.instr = AInstructions::LDR; break;
+	case 0b10010: ir.instr = AInstructions::STR; break;
+	case 0b10011: ir.instr = AInstructions::LDR; break;
+	case 0b10100: ir.instr = AInstructions::STRB; break;
+	case 0b10101: ir.instr = AInstructions::LDRB; break;
+	case 0b10110: ir.instr = AInstructions::STRB; break;
+	case 0b10111: ir.instr = AInstructions::LDRB; break;
 	}
 
 	ir.operand1 = (instr >> 12) & 0xF; //Rd
@@ -225,13 +225,13 @@ void Decoder::Decode_Load_Store_H_SB(IR_ARM& ir, u32 instr) {
 	//LSH
 	switch ((getBit(instr, 20) << 2) | ((instr >> 5) & 0b11)) {
 	case 0b000: throw std::string("Not a valid str instruction should be SWP or multiply");;
-	case 0b001: ir.instr = Instructions::STRH; break;
+	case 0b001: ir.instr = AInstructions::STRH; break;
 	case 0b010: throw std::string("UNPREDICTABLE instructions are not supported");
 	case 0b011: throw std::string("UNPREDICTABLE instructions are not supported");
-	case 0b100: ir.instr = Instructions::LDRSB; break;
-	case 0b101: ir.instr = Instructions::LDRH; break;
-	case 0b110: ir.instr = Instructions::LDRSB; break; //TODO: verify. Normaly S = 1 means signed, but byte is always signed
-	case 0b111: ir.instr = Instructions::LDRSH; break;
+	case 0b100: ir.instr = AInstructions::LDRSB; break;
+	case 0b101: ir.instr = AInstructions::LDRH; break;
+	case 0b110: ir.instr = AInstructions::LDRSB; break; //TODO: verify. Normaly S = 1 means signed, but byte is always signed
+	case 0b111: ir.instr = AInstructions::LDRSH; break;
 	}
 
 	ir.operand1 = (instr >> 12) & 0xF; //Rd
@@ -261,14 +261,14 @@ void Decoder::Decode_Load_Store_Multiple(IR_ARM& ir, u32 instr) {
 
 	//PUL
 	switch (((instr >> 22) & 0b110) | getBit(instr, 20)) {
-	case 0b001: ir.instr = ir.operand2 == Regs::SP ? Instructions::LDMFA : Instructions::LDMDA; break;
-	case 0b011: ir.instr = ir.operand2 == Regs::SP ? Instructions::LDMFD : Instructions::LDMIA; break;
-	case 0b101: ir.instr = ir.operand2 == Regs::SP ? Instructions::LDMEA : Instructions::LDMDB; break;
-	case 0b111: ir.instr = ir.operand2 == Regs::SP ? Instructions::LDMED : Instructions::LDMIB; break;
-	case 0b000: ir.instr = ir.operand2 == Regs::SP ? Instructions::STMED : Instructions::STMDA; break;
-	case 0b010: ir.instr = ir.operand2 == Regs::SP ? Instructions::STMEA : Instructions::STMIA; break;
-	case 0b100: ir.instr = ir.operand2 == Regs::SP ? Instructions::STMFD : Instructions::STMDB; break;
-	case 0b110: ir.instr = ir.operand2 == Regs::SP ? Instructions::STMFA : Instructions::STMIB; break;
+	case 0b001: ir.instr = ir.operand2 == Regs::SP ? AInstructions::LDMFA : AInstructions::LDMDA; break;
+	case 0b011: ir.instr = ir.operand2 == Regs::SP ? AInstructions::LDMFD : AInstructions::LDMIA; break;
+	case 0b101: ir.instr = ir.operand2 == Regs::SP ? AInstructions::LDMEA : AInstructions::LDMDB; break;
+	case 0b111: ir.instr = ir.operand2 == Regs::SP ? AInstructions::LDMED : AInstructions::LDMIB; break;
+	case 0b000: ir.instr = ir.operand2 == Regs::SP ? AInstructions::STMED : AInstructions::STMDA; break;
+	case 0b010: ir.instr = ir.operand2 == Regs::SP ? AInstructions::STMEA : AInstructions::STMIA; break;
+	case 0b100: ir.instr = ir.operand2 == Regs::SP ? AInstructions::STMFD : AInstructions::STMDB; break;
+	case 0b110: ir.instr = ir.operand2 == Regs::SP ? AInstructions::STMFA : AInstructions::STMIB; break;
 	}
 
 	if (ir.operand1 == 0) {
@@ -280,8 +280,8 @@ void Decoder::Decode_Load_Store_Multiple(IR_ARM& ir, u32 instr) {
 void Decoder::Decode_Semaphore(IR_ARM& ir, u32 instr) {
 	ir.type = InstructionType::Semaphore;
 	
-	if (getBit(instr, 22) == 0) ir.instr = Instructions::SWP;
-	else ir.instr = Instructions::SWPB;
+	if (getBit(instr, 22) == 0) ir.instr = AInstructions::SWP;
+	else ir.instr = AInstructions::SWPB;
 
 	ir.operand1 = instr & 0xF; //Rm
 	ir.operand2 = (instr >> 12) & 0xF; //Rd
@@ -290,7 +290,7 @@ void Decoder::Decode_Semaphore(IR_ARM& ir, u32 instr) {
 
 void Decoder::Decode_Exception_Generating(IR_ARM& ir, u32 instr) {
 	ir.type = InstructionType::Exception_Generating;
-	ir.instr = Instructions::SWI;
+	ir.instr = AInstructions::SWI;
 	ir.operand1 = instr & 0xFFFFFF;
 }
 

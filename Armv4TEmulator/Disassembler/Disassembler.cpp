@@ -10,81 +10,81 @@ std::string Disassembler::Disassemble(IR_ARM & ir) {
 	switch (ir.instr) {
 
 	//Data Processing Instructions
-	case Instructions::TST: return "tst" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::TEQ: return "teq" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::CMP: return "cmp" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::CMN: return "cmn" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::MOV: return "mov" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::MVN: return "mvn" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::AND: return "and" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::EOR: return "eor" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::SUB: return "sub" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::RSB: return "rsb" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::ADD: return "add" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::ADC: return "adc" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::SBC: return "sbc" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::RSC: return "rsc" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::ORR: return "orr" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
-	case Instructions::BIC: return "bic" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case AInstructions::TST: return "tst" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case AInstructions::TEQ: return "teq" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case AInstructions::CMP: return "cmp" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case AInstructions::CMN: return "cmn" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case AInstructions::MOV: return "mov" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case AInstructions::MVN: return "mvn" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case AInstructions::AND: return "and" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case AInstructions::EOR: return "eor" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case AInstructions::SUB: return "sub" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case AInstructions::RSB: return "rsb" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case AInstructions::ADD: return "add" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case AInstructions::ADC: return "adc" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case AInstructions::SBC: return "sbc" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case AInstructions::RSC: return "rsc" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case AInstructions::ORR: return "orr" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
+	case AInstructions::BIC: return "bic" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand);
 
 	//Branch Instructions
-	case Instructions::B: return "b" + Disassemble_Cond(ir) + " " + Disassemble_Branch_Offset(ir.operand1);
-	case Instructions::BL: return "bl" + Disassemble_Cond(ir) + " " + Disassemble_Branch_Offset(ir.operand1) ;
-	case Instructions::BX: return "bx" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1);
+	case AInstructions::B: return "b" + Disassemble_Cond(ir) + " " + Disassemble_Branch_Offset(ir.operand1);
+	case AInstructions::BL: return "bl" + Disassemble_Cond(ir) + " " + Disassemble_Branch_Offset(ir.operand1) ;
+	case AInstructions::BX: return "bx" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1);
 
 	//Multiply Instructions
-	case Instructions::MUL: return "mul" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand4) + ", " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2); break;
-	case Instructions::MLA: return "mla" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand4) + ", " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Reg(ir.operand3); break;
-	case Instructions::UMULL: return "umull" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand3) + ", " + Disassemble_Reg(ir.operand4) + ", " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2); break;
-	case Instructions::UMLAL: return "umlal" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand3) + ", " + Disassemble_Reg(ir.operand4) + ", " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2); break;
-	case Instructions::SMULL: return "smull" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand3) + ", " + Disassemble_Reg(ir.operand4) + ", " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2); break;
-	case Instructions::SMLAL: return "smlal" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand3) + ", " + Disassemble_Reg(ir.operand4) + ", " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2); break;
+	case AInstructions::MUL: return "mul" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand4) + ", " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2); break;
+	case AInstructions::MLA: return "mla" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand4) + ", " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Reg(ir.operand3); break;
+	case AInstructions::UMULL: return "umull" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand3) + ", " + Disassemble_Reg(ir.operand4) + ", " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2); break;
+	case AInstructions::UMLAL: return "umlal" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand3) + ", " + Disassemble_Reg(ir.operand4) + ", " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2); break;
+	case AInstructions::SMULL: return "smull" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand3) + ", " + Disassemble_Reg(ir.operand4) + ", " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2); break;
+	case AInstructions::SMLAL: return "smlal" + s + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand3) + ", " + Disassemble_Reg(ir.operand4) + ", " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2); break;
 
 	//Status Register Access Instructions
-	case Instructions::MRS: return "mrs" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_PSR(ir.operand1); break;
-	case Instructions::MSR: return "msr" + Disassemble_Cond(ir) + " " + Disassemble_PSR(ir.operand1) + "_" + Disassemble_Fields(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand); break;
+	case AInstructions::MRS: return "mrs" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_PSR(ir.operand1); break;
+	case AInstructions::MSR: return "msr" + Disassemble_Cond(ir) + " " + Disassemble_PSR(ir.operand1) + "_" + Disassemble_Fields(ir.operand2) + ", " + Disassemble_Shifter_Operand(ir.shifter_operand); break;
 	
 	//Load/Store unsigned byte/word
-	case Instructions::LDR: return "ldr" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
-	case Instructions::STR: return "str" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
-	case Instructions::LDRT: return "ldrt" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
-	case Instructions::STRT: return "strt" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
-	case Instructions::LDRB: return "ldrb" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
-	case Instructions::STRB: return "strb" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
-	case Instructions::LDRBT: return "ldrbt" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
-	case Instructions::STRBT: return "strbt" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", *" + Disassemble_LS_Shifter_Operand(ir); break;
+	case AInstructions::LDR: return "ldr" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
+	case AInstructions::STR: return "str" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
+	case AInstructions::LDRT: return "ldrt" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
+	case AInstructions::STRT: return "strt" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
+	case AInstructions::LDRB: return "ldrb" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
+	case AInstructions::STRB: return "strb" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
+	case AInstructions::LDRBT: return "ldrbt" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
+	case AInstructions::STRBT: return "strbt" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand1) + ", *" + Disassemble_LS_Shifter_Operand(ir); break;
 	
 	//Load/Store signed byte / halfword
-	case Instructions::LDRH: return "ldrh" + Disassemble_Cond(ir) +" " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
-	case Instructions::LDRSH: return "ldrsh" + Disassemble_Cond(ir) +" " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
-	case Instructions::LDRSB: return "ldrsb" + Disassemble_Cond(ir) +" " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
-	case Instructions::STRH: return "strh" + Disassemble_Cond(ir) +" " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
+	case AInstructions::LDRH: return "ldrh" + Disassemble_Cond(ir) +" " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
+	case AInstructions::LDRSH: return "ldrsh" + Disassemble_Cond(ir) +" " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
+	case AInstructions::LDRSB: return "ldrsb" + Disassemble_Cond(ir) +" " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
+	case AInstructions::STRH: return "strh" + Disassemble_Cond(ir) +" " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_LS_Shifter_Operand(ir); break;
 	
 	//Load/Store multiple
-	case Instructions::LDMIA: return "ldmia" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
-	case Instructions::LDMIB: return "ldmib" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
-	case Instructions::LDMDA: return "ldmda" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
-	case Instructions::LDMDB: return "ldmdb" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
-	case Instructions::LDMFD: return "ldmfd" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
-	case Instructions::LDMFA: return "ldmfa" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
-	case Instructions::LDMED: return "ldmed" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
-	case Instructions::LDMEA: return "ldmea" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
+	case AInstructions::LDMIA: return "ldmia" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
+	case AInstructions::LDMIB: return "ldmib" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
+	case AInstructions::LDMDA: return "ldmda" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
+	case AInstructions::LDMDB: return "ldmdb" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
+	case AInstructions::LDMFD: return "ldmfd" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
+	case AInstructions::LDMFA: return "ldmfa" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
+	case AInstructions::LDMED: return "ldmed" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
+	case AInstructions::LDMEA: return "ldmea" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
 
-	case Instructions::STMIA: return "stmia" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
-	case Instructions::STMIB: return "stmib" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
-	case Instructions::STMDA: return "stmda" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
-	case Instructions::STMDB: return "stmdb" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
-	case Instructions::STMFD: return "stmfd" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
-	case Instructions::STMFA: return "stmfa" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
-	case Instructions::STMED: return "stmed" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
-	case Instructions::STMEA: return "stmea" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
+	case AInstructions::STMIA: return "stmia" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
+	case AInstructions::STMIB: return "stmib" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
+	case AInstructions::STMDA: return "stmda" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
+	case AInstructions::STMDB: return "stmdb" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
+	case AInstructions::STMFD: return "stmfd" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
+	case AInstructions::STMFA: return "stmfa" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
+	case AInstructions::STMED: return "stmed" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
+	case AInstructions::STMEA: return "stmea" + Disassemble_Cond(ir) + " " + Disassemble_Load_Store_Multiple(ir); break;
 
 	//Semaphore
-	case Instructions::SWP: return "swp" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Reg(ir.operand1) + ", [" + Disassemble_Reg(ir.operand3) + "]";  break;
-	case Instructions::SWPB: return "swpb" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Reg(ir.operand1) + ", [" + Disassemble_Reg(ir.operand3) + "]";  break;
+	case AInstructions::SWP: return "swp" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Reg(ir.operand1) + ", [" + Disassemble_Reg(ir.operand3) + "]";  break;
+	case AInstructions::SWPB: return "swpb" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Reg(ir.operand1) + ", [" + Disassemble_Reg(ir.operand3) + "]";  break;
 
 	//Exception Generating
-	case Instructions::SWI: return "swi" + Disassemble_Cond(ir) + " " + std::to_string(ir.operand1);
+	case AInstructions::SWI: return "swi" + Disassemble_Cond(ir) + " " + std::to_string(ir.operand1);
 	}
 	return std::string();
 }

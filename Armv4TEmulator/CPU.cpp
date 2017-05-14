@@ -105,47 +105,47 @@ inline void CPU::Load_Store(IR_ARM& ir) {
 	*/
 
 	switch (ir.instr) {
-	case Instructions::LDRT:
-	case Instructions::LDR: 
+	case AInstructions::LDRT:
+	case AInstructions::LDR: 
 		gprs[Rd] = mem.read32(ror32(address, 8 * (address & 0b11)));
 		if (Rd == Regs::PC) gprs[Rd] &= 0xFFFFFFFC;
 		if (Rd == Regs::PC && (address & 0b11) != 0b00) throw std::string("unpredictable instructions are not emulated");
 		break;
 
-	case Instructions::LDRBT:
-	case Instructions::LDRB: 
+	case AInstructions::LDRBT:
+	case AInstructions::LDRB: 
 		if (Rd == Regs::PC) throw std::string("unpredictable instructions are not emulated");
 		gprs[Rd] = mem.read8(address);
 		break;
 
-	case Instructions::STRT:
-	case Instructions::STR: 
+	case AInstructions::STRT:
+	case AInstructions::STR: 
 		if(Rd == Regs::PC) throw std::string("implementation defined instructions are not emulated");
 		mem.write32(address, gprs[Rd]);
 		break;
 	
-	case Instructions::STRBT:
-	case Instructions::STRB: 
+	case AInstructions::STRBT:
+	case AInstructions::STRB: 
 		if (Rd == Regs::PC) throw std::string("unpredictable instructions are not emulated");
 		mem.write8(address, gprs[Rd] & 0xFF);
 		break;
 
-	case Instructions::LDRH:
+	case AInstructions::LDRH:
 		if (Rd == Regs::PC || (address & 0b1) == 1) throw std::string("unpredictable instructions are not emulated");
 		gprs[Rd] = mem.read16(address);
 		break;
 
-	case Instructions::STRH:
+	case AInstructions::STRH:
 		if (Rd == Regs::PC || (address & 0b1) == 1) throw std::string("unpredictable instructions are not emulated");
 		mem.write16(address, gprs[Rd] & 0xFFFF);
 		break;
 	
-	case Instructions::LDRSB:
+	case AInstructions::LDRSB:
 		if (Rd == Regs::PC) throw std::string("unpredictable instructions are not emulated");
 		gprs[Rd] = SignExtend<s32>(mem.read8(address), 8);
 		break;
 
-	case Instructions::LDRSH:
+	case AInstructions::LDRSH:
 		if (Rd == Regs::PC || (address & 0b1) == 1) throw std::string("unpredictable instructions are not emulated");
 		gprs[Rd] = SignExtend<s32>(mem.read16(address),16);
 		break;
@@ -155,7 +155,7 @@ inline void CPU::Load_Store(IR_ARM& ir) {
 inline void CPU::Status_Register_Access(IR_ARM& ir) {
 	u32& R = ir.operand1;
 	
-	if (ir.instr == Instructions::MRS) {
+	if (ir.instr == AInstructions::MRS) {
 		u32 Rd = ir.operand2;
 
 		if (Rd == Regs::PC) {
@@ -172,7 +172,7 @@ inline void CPU::Status_Register_Access(IR_ARM& ir) {
 			gprs[Rd] = composePSR(cpsr);
 		}
 	}
-	else if (ir.instr == Instructions::MSR) {
+	else if (ir.instr == AInstructions::MSR) {
 		unsigned field_mask = ir.operand2;
 
 		u32 shifter_op;
@@ -208,28 +208,28 @@ inline void CPU::Multiply(IR_ARM& ir) {
 	// instructions
 
 	switch (ir.instr) {
-	case Instructions::MUL: MUL_Instr1(ir.s, Rd, getLo(static_cast<u64>(Rm) * static_cast<u64>(Rs)) ); break;
-	case Instructions::MLA: MUL_Instr1(ir.s, Rd, getLo(static_cast<u64>(Rm) * static_cast<u64>(Rs)) + Rn); break;
+	case AInstructions::MUL: MUL_Instr1(ir.s, Rd, getLo(static_cast<u64>(Rm) * static_cast<u64>(Rs)) ); break;
+	case AInstructions::MLA: MUL_Instr1(ir.s, Rd, getLo(static_cast<u64>(Rm) * static_cast<u64>(Rs)) + Rn); break;
 
-	case Instructions::UMULL: {
+	case AInstructions::UMULL: {
 		u64 result = static_cast<u64>(Rm) * static_cast<u64>(Rs);
 		MUL_Instr2(ir.s, RdHi, RdLo, getHi(result), getLo(result));
 		break;
 	}
 
-	case Instructions::UMLAL: {
+	case AInstructions::UMLAL: {
 		u64 result = static_cast<u64>(Rm) * static_cast<u64>(Rs);
 		MUL_Instr2(ir.s, RdHi, RdLo, getHi(result) + gprs[RdHi] + CarryFrom(getLo(result), gprs[RdLo]) , getLo(result) + gprs[RdLo]);
 		break;
 	}
 
-	case Instructions::SMULL: {
+	case AInstructions::SMULL: {
 		s64 result = static_cast<s64>(Rm) * static_cast<s64>(Rs);
 		MUL_Instr2(ir.s, RdHi, RdLo, getHi(result), getLo(result));
 		break;
 	}
 
-	case Instructions::SMLAL: {
+	case AInstructions::SMLAL: {
 		s64 result = static_cast<s64>(Rm) * static_cast<s64>(Rs);
 		MUL_Instr2(ir.s, RdHi, RdLo, getHi(result) + gprs[RdHi] + CarryFrom(getLo(result), gprs[RdLo]), getLo(result) + gprs[RdLo]);
 		break;
@@ -257,16 +257,16 @@ inline void CPU::MUL_Instr2(bool S, unsigned RdHi, unsigned RdLo, u32 resultHi, 
 
 inline void CPU::Branch(IR_ARM& ir) {
 	switch (ir.instr) {
-	case Instructions::B: 
+	case AInstructions::B: 
 		gprs[Regs::PC] += SignExtend<s32>(ir.operand1 << 2, 26) + 8;
 		break;
 	
-	case Instructions::BL:
+	case AInstructions::BL:
 		gprs[Regs::LR] = gprs[Regs::PC] + 4;
 		gprs[Regs::PC] += SignExtend<s32>(ir.operand1 << 2, 26) + 8;
 		break;
 
-	case Instructions::BX:
+	case AInstructions::BX:
 		if ((gprs[ir.operand1] & 0b1) == 1) throw std::string("change to Thumb instructions is not supported");
 		gprs[Regs::PC] += gprs[ir.operand1] & 0xFFFFFFFE;
 		break;
@@ -281,22 +281,22 @@ inline void CPU::Data_Processing(IR_ARM& ir) {
 	std::tie(shifter_op, shifter_carry) = shifter_operand(ir.shifter_operand, false);
 
 	switch (ir.instr) {
-	case Instructions::AND: DP_Instr1(ir.s, Rd, gprs[Rn] & shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break; //AND
-	case Instructions::EOR: DP_Instr1(ir.s, Rd, gprs[Rn] ^ shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break;
-	case Instructions::SUB: DP_Instr1(ir.s, Rd, gprs[Rn] - shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, !BorrowFromSub(gprs[Rn], shifter_op), OverflowFromSub(gprs[Rn], shifter_op)); break;
-	case Instructions::RSB: DP_Instr1(ir.s, Rd, shifter_op - gprs[Rn], !!getBit(gprs[Rd], 31), gprs[Rd] == 0, !BorrowFromSub(shifter_op, gprs[Rn]), OverflowFromSub(shifter_op, gprs[Rn])); break;
-	case Instructions::ADD: DP_Instr1(ir.s, Rd, gprs[Rn] + shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, CarryFrom(gprs[Rn], shifter_op), OverflowFromAdd(gprs[Rn], shifter_op)); break;
-	case Instructions::ADC: DP_Instr1(ir.s, Rd, gprs[Rn] + shifter_op + cpsr.flag_C, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, CarryFrom(gprs[Rn], shifter_op, cpsr.flag_C), OverflowFromAdd(gprs[Rn], shifter_op, cpsr.flag_C)); break;
-	case Instructions::SBC: DP_Instr1(ir.s, Rd, gprs[Rn] - shifter_op - !cpsr.flag_C, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, !BorrowFromSub(gprs[Rn], shifter_op, !cpsr.flag_C), OverflowFromSub(gprs[Rn], shifter_op, !cpsr.flag_C)); break;
-	case Instructions::RSC: DP_Instr1(ir.s, Rd, shifter_op - gprs[Rn] - !cpsr.flag_C, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, !BorrowFromSub(shifter_op, gprs[Rn], !cpsr.flag_C), OverflowFromSub(shifter_op, gprs[Rn], !cpsr.flag_C)); break;
-	case Instructions::TST: DP_Instr2(gprs[Rn] & shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break;
-	case Instructions::TEQ: DP_Instr2(gprs[Rn] ^ shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break;
-	case Instructions::CMP: DP_Instr2(gprs[Rn] - shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, !BorrowFromSub(gprs[Rn], shifter_op), OverflowFromSub(gprs[Rn], shifter_op)); break;
-	case Instructions::CMN: DP_Instr2(gprs[Rn] + shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, CarryFrom(gprs[Rn], shifter_op), OverflowFromAdd(gprs[Rn], shifter_op)); break;
-	case Instructions::ORR: DP_Instr1(ir.s, Rd, gprs[Rn] | shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break;
-	case Instructions::MOV: DP_Instr1(ir.s, Rd, shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break;
-	case Instructions::BIC: DP_Instr1(ir.s, Rd, gprs[Rn] & ~shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break;
-	case Instructions::MVN: DP_Instr1(ir.s, Rd, ~shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break;
+	case AInstructions::AND: DP_Instr1(ir.s, Rd, gprs[Rn] & shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break; //AND
+	case AInstructions::EOR: DP_Instr1(ir.s, Rd, gprs[Rn] ^ shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break;
+	case AInstructions::SUB: DP_Instr1(ir.s, Rd, gprs[Rn] - shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, !BorrowFromSub(gprs[Rn], shifter_op), OverflowFromSub(gprs[Rn], shifter_op)); break;
+	case AInstructions::RSB: DP_Instr1(ir.s, Rd, shifter_op - gprs[Rn], !!getBit(gprs[Rd], 31), gprs[Rd] == 0, !BorrowFromSub(shifter_op, gprs[Rn]), OverflowFromSub(shifter_op, gprs[Rn])); break;
+	case AInstructions::ADD: DP_Instr1(ir.s, Rd, gprs[Rn] + shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, CarryFrom(gprs[Rn], shifter_op), OverflowFromAdd(gprs[Rn], shifter_op)); break;
+	case AInstructions::ADC: DP_Instr1(ir.s, Rd, gprs[Rn] + shifter_op + cpsr.flag_C, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, CarryFrom(gprs[Rn], shifter_op, cpsr.flag_C), OverflowFromAdd(gprs[Rn], shifter_op, cpsr.flag_C)); break;
+	case AInstructions::SBC: DP_Instr1(ir.s, Rd, gprs[Rn] - shifter_op - !cpsr.flag_C, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, !BorrowFromSub(gprs[Rn], shifter_op, !cpsr.flag_C), OverflowFromSub(gprs[Rn], shifter_op, !cpsr.flag_C)); break;
+	case AInstructions::RSC: DP_Instr1(ir.s, Rd, shifter_op - gprs[Rn] - !cpsr.flag_C, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, !BorrowFromSub(shifter_op, gprs[Rn], !cpsr.flag_C), OverflowFromSub(shifter_op, gprs[Rn], !cpsr.flag_C)); break;
+	case AInstructions::TST: DP_Instr2(gprs[Rn] & shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break;
+	case AInstructions::TEQ: DP_Instr2(gprs[Rn] ^ shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break;
+	case AInstructions::CMP: DP_Instr2(gprs[Rn] - shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, !BorrowFromSub(gprs[Rn], shifter_op), OverflowFromSub(gprs[Rn], shifter_op)); break;
+	case AInstructions::CMN: DP_Instr2(gprs[Rn] + shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, CarryFrom(gprs[Rn], shifter_op), OverflowFromAdd(gprs[Rn], shifter_op)); break;
+	case AInstructions::ORR: DP_Instr1(ir.s, Rd, gprs[Rn] | shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break;
+	case AInstructions::MOV: DP_Instr1(ir.s, Rd, shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break;
+	case AInstructions::BIC: DP_Instr1(ir.s, Rd, gprs[Rn] & ~shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break;
+	case AInstructions::MVN: DP_Instr1(ir.s, Rd, ~shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break;
 		//TODO verify negation for MVN and BIC
 	}
 }

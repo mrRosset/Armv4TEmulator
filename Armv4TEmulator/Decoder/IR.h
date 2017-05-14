@@ -34,7 +34,7 @@ enum class InstructionType {
 };
 
 //see "4.2 ARM instructions and architecture versions" page 213
-enum class Instructions {
+enum class AInstructions {
 	ADC,
 	ADD,
 	AND,
@@ -146,7 +146,7 @@ struct Shifter_op {
 
 struct IR_ARM {
 	InstructionType type;
-	Instructions instr;
+	AInstructions instr;
 	Conditions cond;
 	bool s;
 	u32 operand1;
