@@ -155,3 +155,49 @@ struct IR_ARM {
 	u32 operand4;
 	Shifter_op shifter_operand;
 };
+
+enum class TInstructions {
+	ADC,
+	ADD,
+	AND,
+	ASR,
+	B,
+	BIC,
+	BL,
+	BX,
+	CMN,
+	CMP,
+	EOR,
+	LDMIA,
+	LDR,
+	LDRB,
+	LDRH,
+	LDRSB,
+	LDRSH,
+	LSL,
+	LSR,
+	MOV,
+	MUL,
+	MVN,
+	NEG,
+	ORR,
+	POP,
+	PUSH,
+	ROR,
+	SBC,
+	STMIA,
+	STR,
+	STRB,
+	STRH,
+	SUB,
+	SWI,
+	TST
+};
+
+struct IR_Thumb {
+	InstructionType type;
+	TInstructions instr;
+	u16 operand1;
+	u16 operand2;
+	u16 operand3;
+};

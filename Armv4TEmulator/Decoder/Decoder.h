@@ -3,6 +3,7 @@
 #include "IR.h"
 
 namespace Decoder {
+	//ARM
 	void Decode(IR_ARM& ir, u32 instr);
 	void Decode_Data_Processing(IR_ARM& ir, u32 instr);
 	void Decode_Shifter_operand(IR_ARM& ir, u32 instr);
@@ -14,4 +15,7 @@ namespace Decoder {
 	void Decode_Load_Store_Multiple(IR_ARM& ir, u32 instr);
 	void Decode_Semaphore(IR_ARM& ir, u32 instr);
 	void Decode_Exception_Generating(IR_ARM& ir, u32 instr);
+
+	//THUMB
+	void Decode(IR_Thumb& ir, u16 instr);
 }
