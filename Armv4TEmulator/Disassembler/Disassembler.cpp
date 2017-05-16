@@ -85,6 +85,14 @@ std::string Disassembler::Disassemble(IR_ARM & ir) {
 
 	//Exception Generating
 	case AInstructions::SWI: return "swi" + Disassemble_Cond(ir) + " #" + std::to_string(ir.operand1);
+
+	//Coprocessor
+	case AInstructions::CDP: return "cdp" + Disassemble_Cond(ir) + " p" + std::to_string(ir.operand3 & 0xF) + ", " + std::to_string(ir.operand4) + ", " + Disassemble_Reg((ir.operand3 >> 4) & 0xF) + ", c" + std::to_string((ir.operand3 >> 8) & 0xF) + ", c" + std::to_string(ir.operand1) + ", " + std::to_string(ir.operand2); break;
+	case AInstructions::MCR: return "mcr" + Disassemble_Cond(ir) + " p" + std::to_string(ir.operand3 & 0xF) + ", " + std::to_string(ir.operand4) + ", " + Disassemble_Reg((ir.operand3 >> 4) & 0xF) + ", c" + std::to_string((ir.operand3 >> 8) & 0xF) + ", c" + std::to_string(ir.operand1) + ", " + std::to_string(ir.operand2); break;
+	case AInstructions::MRC: return "mrc" + Disassemble_Cond(ir) + " p" + std::to_string(ir.operand3 & 0xF) + ", " + std::to_string(ir.operand4) + ", " + Disassemble_Reg((ir.operand3 >> 4) & 0xF) + ", c" + std::to_string((ir.operand3 >> 8) & 0xF) + ", c" + std::to_string(ir.operand1) + ", " + std::to_string(ir.operand2); break;
+
+	case AInstructions::STC: return "stc" + Disassemble_Cond(ir); break;
+	case AInstructions::LDC: return "ldc" + Disassemble_Cond(ir); break;
 	}
 	return std::string();
 }
