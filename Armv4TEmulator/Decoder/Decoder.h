@@ -15,6 +15,7 @@ namespace Decoder {
 	void Decode_Load_Store_Multiple(IR_ARM& ir, u32 instr);
 	void Decode_Semaphore(IR_ARM& ir, u32 instr);
 	void Decode_Exception_Generating(IR_ARM& ir, u32 instr);
+	void Decode_Coprocessor(IR_ARM& ir, u32 instr);
 
 	//THUMB
 	void Decode(IR_Thumb& ir, u16 instr);

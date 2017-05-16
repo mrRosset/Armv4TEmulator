@@ -294,6 +294,39 @@ void Decoder::Decode_Exception_Generating(IR_ARM& ir, u32 instr) {
 	ir.operand1 = instr & 0xFFFFFF;
 }
 
+void Decoder::Decode_Coprocessor(IR_ARM& ir, u32 instr) {
+	ir.type = InstructionType::Coprocessor;
+	
+	if (getBit(instr, 25) == 1) {
+		if (getBit(instr, 4) == 0) {
+			ir.operand4 = (instr >> 20) & 0xF; //opcode_1
+			ir.instr = AInstructions::CDP;
+		} else {
+			ir.operand4 = (instr >> 21) & 0b111; //opcode_1
+			if (getBit(instr, 20) == 0) {
+				ir.instr == AInstructions::MCR;
+			} else {
+				ir.instr == AInstructions::MRC;
+			}
+		}
+		ir.operand1 = instr & 0xF; //CRm
+		ir.operand2 = (instr >> 5) & 0b111; //opcode_2
+		ir.operand3 = (instr >> 8) & 0xFFF; //Crn | CRd | cp_num
+
+	} else {
+		if (getBit(instr, 20) == 0) {
+			ir.instr = AInstructions::STC;
+		} else {
+			ir.instr = AInstructions::LDC;
+		}
+		ir.operand1 = (instr >> 8) & 0xF; //cp_num
+		ir.operand2 = (instr >> 16) & 0xF; //Rn
+		ir.operand3 = (instr >> 21) & 0xF; //PUNW
+		ir.operand4 = (instr >> 12) & 0xF; //CRd
+		ir.shifter_operand = { Shifter_type::Immediate, instr & 0xFF, 0 }; 
+	}
+}
+
 /*For decoding co-processor:
 TODO: Read and take care if necessary
 	"The coprocessor double register transfer instructions are described in Chapter A10 Enhanced DSP Extension."
