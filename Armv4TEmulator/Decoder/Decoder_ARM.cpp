@@ -304,9 +304,9 @@ void Decoder::Decode_Coprocessor(IR_ARM& ir, u32 instr) {
 		} else {
 			ir.operand4 = (instr >> 21) & 0b111; //opcode_1
 			if (getBit(instr, 20) == 0) {
-				ir.instr == AInstructions::MCR;
+				ir.instr = AInstructions::MCR;
 			} else {
-				ir.instr == AInstructions::MRC;
+				ir.instr = AInstructions::MRC;
 			}
 		}
 		ir.operand1 = instr & 0xF; //CRm
