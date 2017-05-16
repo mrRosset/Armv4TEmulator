@@ -84,7 +84,7 @@ std::string Disassembler::Disassemble(IR_ARM & ir) {
 	case AInstructions::SWPB: return "swpb" + Disassemble_Cond(ir) + " " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Reg(ir.operand1) + ", [" + Disassemble_Reg(ir.operand3) + "]";  break;
 
 	//Exception Generating
-	case AInstructions::SWI: return "swi" + Disassemble_Cond(ir) + " " + std::to_string(ir.operand1);
+	case AInstructions::SWI: return "swi" + Disassemble_Cond(ir) + " #" + std::to_string(ir.operand1);
 	}
 	return std::string();
 }

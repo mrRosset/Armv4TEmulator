@@ -96,3 +96,10 @@ TEST_CASE("Disassemble Semaphore", "[Disassembler]") {
 	REQUIRE(Disassemble(0xE14A509C) == "swpb r5, r12, [r10]");
 	REQUIRE(Disassemble(0xE1431092) == "swpb r1, r2, [r3]");
 }
+
+TEST_CASE("Disassemble SWI", "[Disassembler]") {
+	REQUIRE(Disassemble(0xEFB3B3B3) == "swi #11776947");
+	REQUIRE(Disassemble(0xEF5CB35C) == "swi #6075228");
+	REQUIRE(Disassemble(0xEF00006C) == "swi #108");
+
+}
