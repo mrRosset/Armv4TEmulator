@@ -323,7 +323,7 @@ void Decoder::Decode_Coprocessor(IR_ARM& ir, u32 instr) {
 		ir.operand2 = (instr >> 16) & 0xF; //Rn
 		ir.operand3 = (instr >> 21) & 0xF; //PUNW
 		ir.operand4 = (instr >> 12) & 0xF; //CRd
-		ir.shifter_operand = { Shifter_type::Immediate, instr & 0xFF, 0 }; 
+		ir.shifter_operand = { Shifter_type::Immediate, (instr & 0xFF) * 4, 0 }; 
 	}
 }
 
