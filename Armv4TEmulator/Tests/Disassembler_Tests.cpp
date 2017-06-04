@@ -101,5 +101,4 @@ TEST_CASE("Disassemble SWI", "[Disassembler]") {
 	REQUIRE(Disassemble(0xEFB3B3B3) == "swi #11776947");
 	REQUIRE(Disassemble(0xEF5CB35C) == "swi #6075228");
 	REQUIRE(Disassemble(0xEF00006C) == "swi #108");
-
 }

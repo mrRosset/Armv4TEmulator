@@ -10,8 +10,6 @@ In VC++ it's arithmetic. https://msdn.microsoft.com/en-us/library/336xbhcz.aspx
 Not tested in any other compiler,
 */
 
-
-
 CPU::CPU() : gprs{}, spsr{} {
 	//TODO: Seriously think about initialization values
 	cpsr.flag_N = cpsr.flag_Z = cpsr.flag_C = cpsr.flag_V = cpsr.flag_inter_I = cpsr.flag_inter_F = cpsr.flag_T = false;
@@ -49,8 +47,7 @@ bool CPU::Check_Condition(IR_ARM& ir) {
 	case Conditions::AL: return true;
 	case Conditions::NV: throw "Unpredictable instructions are not emulated";
 	}
-
-	return false;
+	throw "Invlid condition";
 }
 
 void CPU::ARM_Execute(IR_ARM& ir) {
@@ -297,7 +294,7 @@ inline void CPU::Data_Processing(IR_ARM& ir) {
 	case AInstructions::MOV: DP_Instr1(ir.s, Rd, shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break;
 	case AInstructions::BIC: DP_Instr1(ir.s, Rd, gprs[Rn] & ~shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break;
 	case AInstructions::MVN: DP_Instr1(ir.s, Rd, ~shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break;
-		//TODO verify negation for MVN and BIC
+	//TODO verify negation for MVN and BIC
 	}
 }
 
