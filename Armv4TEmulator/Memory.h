@@ -1,12 +1,15 @@
 #pragma once
 
-#include <array>
+#include <vector>
 #include "Common.h"
 
 class Memory {
-	std::array<u8, 0x100> mem{};
+	std::vector<u8> mem;
 
 public:
+
+	Memory() : mem(0x100) {}
+
 	inline u8 read8(u32 address)
 	{
 		return mem[address];
