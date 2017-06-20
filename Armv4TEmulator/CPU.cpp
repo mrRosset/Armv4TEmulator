@@ -22,6 +22,9 @@ void CPU::Step() {
 	IR_ARM ir;
 	Decoder::Decode(ir, instr);
 
+	//verify where pc is incremented
+	gprs[Regs::PC] += 4;
+
 	if (Check_Condition(ir)) {
 		ARM_Execute(ir);
 	}
