@@ -389,7 +389,7 @@ inline void CPU::Branch(IR_ARM& ir) {
 
 	case AInstructions::BX:
 		if ((gprs[ir.operand1] & 0b1) == 1) throw std::string("change to Thumb instructions is not supported");
-		gprs[Regs::PC] += gprs[ir.operand1] & 0xFFFFFFFE;
+		gprs[Regs::PC] = gprs[ir.operand1] & 0xFFFFFFFE;
 		break;
 	}
 }
