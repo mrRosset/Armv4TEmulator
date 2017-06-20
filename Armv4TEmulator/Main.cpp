@@ -34,6 +34,9 @@ void emulate(std::string path) {
 	CPU cpu;
 	loadFile(path, cpu.mem.mem);
 
+	//test
+	cpu.gprs[Regs::PC] = 0x627c0;
+	//cpu.gprs[Regs::PC] = 0x62744;
 
 	while (true) {
 		for (int i = 0; i < 5; i++) {
@@ -41,10 +44,10 @@ void emulate(std::string path) {
 			IR_ARM ir;
 			try {
 				Decoder::Decode(ir, instr);
-				std::cout << std::hex << cpu.gprs[Regs::PC] + i*4 << std::dec << ": " << Disassembler::Disassemble(ir) << std::endl;
+				std::cout << std::hex << cpu.gprs[Regs::PC] + i*4 << " - " << instr << std::dec << ": " << std::hex << Disassembler::Disassemble(ir) << std::endl;
 			}
 			catch (...) {
-				std::cout << std::hex << cpu.gprs[Regs::PC] + i*4 << std::dec << ": " << "Unkown instruction" << std::endl;
+				std::cout << std::hex << cpu.gprs[Regs::PC] + i*4 << " - " << instr << std::dec << ": " << "Unkown instruction" << std::endl;
 			}
 		}
 
