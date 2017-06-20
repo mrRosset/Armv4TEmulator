@@ -2,7 +2,7 @@
 #include <iostream>
 
 #include "Common.h"
-#include "Memory.h"
+#include "CPU.h"
 #include "Decoder\IR.h"
 #include "Decoder\Decoder.h"
 #include "Disassembler\Disassembler.h"
@@ -31,11 +31,36 @@ void loadFile(std::string path, std::vector<u8>& data) {
 }
 
 void emulate(std::string path) {
-	Memory mem;
-	loadFile(path, mem.mem);
+	CPU cpu;
+	loadFile(path, cpu.mem.mem);
 
-	for (int i = 0; i < mem.mem.size() / 4; i += 4) {
-		u32 instr = mem.read32(i);
+
+	while (true) {
+		for (int i = 0; i < 5; i++) {
+			u32 instr = cpu.mem.read32(cpu.gprs[Regs::PC] + i*4);
+			IR_ARM ir;
+			try {
+				Decoder::Decode(ir, instr);
+				std::cout << std::hex << cpu.gprs[Regs::PC] + i*4 << std::dec << ": " << Disassembler::Disassemble(ir) << std::endl;
+			}
+			catch (...) {
+				std::cout << std::hex << cpu.gprs[Regs::PC] + i*4 << std::dec << ": " << "Unkown instruction" << std::endl;
+			}
+		}
+
+		std::cout << "\n\n\n";
+
+		for (int i = 0; i < 15; i++) {
+			std::cout << Disassembler::Disassemble_Reg(i) << ": " << std::hex << cpu.gprs[i] << std::dec << std::endl;
+		}
+
+		std::cin.get();
+		system("cls");
+		cpu.Step();
+	}
+
+	for (int i = 0; i < cpu.mem.mem.size() / 4; i += 4) {
+		u32 instr = cpu.mem.read32(i);
 		IR_ARM ir;
 		try {
 			Decoder::Decode(ir, instr);
@@ -48,7 +73,7 @@ void emulate(std::string path) {
 	}
 }
 
-int main(int argc, char* argv[]){
+int main(int argc, char* argv[]) {
 	if (argc > 1 && std::string(argv[1]) == "-p") {
 		emulate(std::string(argv[2]));
 	}

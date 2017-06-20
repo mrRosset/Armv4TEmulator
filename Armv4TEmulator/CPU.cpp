@@ -22,12 +22,17 @@ void CPU::Step() {
 	IR_ARM ir;
 	Decoder::Decode(ir, instr);
 
-	//verify where pc is incremented
-	gprs[Regs::PC] += 4;
+	//Find where and how pc is incremented
+	u32 old_pc = gprs[Regs::PC];
 
 	if (Check_Condition(ir)) {
 		ARM_Execute(ir);
 	}
+
+	if (gprs[Regs::PC] == old_pc) {
+		gprs[Regs::PC] += 4;
+	}
+
 	// interrupts and prefetch aborts exist whether or not conditions are met 
 }
 
