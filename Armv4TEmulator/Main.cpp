@@ -29,25 +29,27 @@ void loadFile(std::string path, std::vector<u8>& data) {
 	stream.close();
 }
 
+void emulate(std::string path) {
+	std::vector<u8> code;
+	loadFile(path, code);
+
+	for (int i = 0; i < code.size() / 4; i += 4) {
+		u32 instr = (code[i + 3] << 24) | (code[i + 2] << 16) | (code[i + 1] << 8) | code[i];
+		IR_ARM ir;
+		try {
+			Decoder::Decode(ir, instr);
+			std::cout << Disassembler::Disassemble(ir);
+		}
+		catch (...) {
+			std::cout << "Unkown instruction";
+		}
+		std::cin.get();
+	}
+}
+
 int main(int argc, char* argv[]){
 	if (argc > 1 && std::string(argv[1]) == "-p") {
-
-		std::vector<u8> code;
-		loadFile(argv[2], code);
-
-		for (int i = 0; i < code.size() / 4; i+=4) {
-			u32 instr = (code[i+3] << 24) | (code[i+2] << 16) | (code[i+1] << 8) | code[i];
-			IR_ARM ir;
-			try {
-				Decoder::Decode(ir, instr);
-				std::cout << Disassembler::Disassemble(ir);
-			}
-			catch (...) {
-				std::cout << "Unkown instruction";
-			}
-			std::cin.get();
-		}
-
+		emulate(std::string(argv[2]));
 	}
 	else {
 		//Start catch
