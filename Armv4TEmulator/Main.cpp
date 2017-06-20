@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "Common.h"
+#include "Memory.h"
 #include "Decoder\IR.h"
 #include "Decoder\Decoder.h"
 #include "Disassembler\Disassembler.h"
@@ -30,11 +31,11 @@ void loadFile(std::string path, std::vector<u8>& data) {
 }
 
 void emulate(std::string path) {
-	std::vector<u8> code;
-	loadFile(path, code);
+	Memory mem;
+	loadFile(path, mem.mem);
 
-	for (int i = 0; i < code.size() / 4; i += 4) {
-		u32 instr = (code[i + 3] << 24) | (code[i + 2] << 16) | (code[i + 1] << 8) | code[i];
+	for (int i = 0; i < mem.mem.size() / 4; i += 4) {
+		u32 instr = mem.read32(i);
 		IR_ARM ir;
 		try {
 			Decoder::Decode(ir, instr);

@@ -4,9 +4,8 @@
 #include "Common.h"
 
 class Memory {
-	std::vector<u8> mem;
-
 public:
+	std::vector<u8> mem;
 
 	Memory() : mem(0x100) {}
 
