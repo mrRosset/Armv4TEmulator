@@ -51,6 +51,7 @@ public:
 	void Step();
 	bool Check_Condition(IR_ARM& ir);
 	void ARM_Execute(IR_ARM& ir);
+	void Load_Store_Multiple(IR_ARM& ir);
 	void Load_Store(IR_ARM& ir);
 	void Status_Register_Access(IR_ARM& ir);
 	void Multiply(IR_ARM& ir);

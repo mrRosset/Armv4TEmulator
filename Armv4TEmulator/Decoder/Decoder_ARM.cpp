@@ -252,7 +252,7 @@ void Decoder::Decode_Load_Store_Multiple(IR_ARM& ir, u32 instr) {
 
 	ir.operand1 = instr & 0xFFFF; //Regs list
 	ir.operand2 = (instr >> 16) & 0xF; //Rn
-	ir.operand3 = (instr >> 21) & 0xF; //PUIW
+	ir.operand3 = (instr >> 21) & 0xF; //PUSW
 
 	//The ARM is not very clear: When should alternate name be used ?
 	//According to arm it's when the operation if on the stack.

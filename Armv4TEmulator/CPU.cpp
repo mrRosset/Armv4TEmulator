@@ -65,6 +65,122 @@ void CPU::ARM_Execute(IR_ARM& ir) {
 	}
 }
 
+inline void CPU::Load_Store_Multiple(IR_ARM& ir) {
+	u32& reg_list = ir.operand1;
+	u32& Rn = ir.operand2;
+
+	bool P = (ir.operand3 & 0b1000) >> 3 == 1;
+	bool U = (ir.operand3 & 0b0100) >> 2 == 1;
+	bool S = (ir.operand3 & 0b0010) >> 1 == 1;
+	bool W = (ir.operand3 & 0b0001) == 1;
+
+	unsigned number_regs_modified = 0;
+
+	for (int i = 0; i < 16; i++) {
+		if (getBit(reg_list, i) == 1) {
+			number_regs_modified++;
+		}
+	}
+
+	u32 start_address = 0;
+	u32 end_address = 0;
+
+	switch (ir.instr) {
+	case AInstructions::STMEA:
+	case AInstructions::STMIA:
+	case AInstructions::LDMFD:
+	case AInstructions::LDMIA:
+		start_address = Rn;
+		end_address = Rn + (number_regs_modified * 4) - 4;
+		if (W == 1) {
+			Rn = Rn + (number_regs_modified * 4);
+		}
+		break;
+
+	case AInstructions::STMFA:
+	case AInstructions::STMIB:
+	case AInstructions::LDMED:
+	case AInstructions::LDMIB:
+		start_address = Rn + 4;
+		end_address = Rn + (number_regs_modified * 4);
+		if (W == 1) {
+			Rn = Rn + (number_regs_modified * 4);
+		}
+		break;
+
+	case AInstructions::STMED:
+	case AInstructions::STMDA:
+	case AInstructions::LDMFA:
+	case AInstructions::LDMDA:
+		start_address = Rn - (number_regs_modified * 4) + 4;
+		end_address = Rn;
+		if (W == 1) {
+			Rn = Rn - (number_regs_modified * 4);
+		}
+		break;
+
+	case AInstructions::STMFD:
+	case AInstructions::STMDB:
+	case AInstructions::LDMEA:
+	case AInstructions::LDMDB:
+		start_address = Rn - (number_regs_modified * 4);
+		end_address = Rn - 4;
+		if (W == 1) {
+			Rn = Rn - (number_regs_modified * 4);
+		}
+		break;
+	}
+
+	switch (ir.instr) {
+
+		//Load
+	case AInstructions::LDMFA: case AInstructions::LDMDA: case AInstructions::LDMFD: case AInstructions::LDMIA:
+	case AInstructions::LDMEA: case AInstructions::LDMDB: case AInstructions::LDMED: case AInstructions::LDMIB:
+
+		//Doesn't do the second form of the LDM instructions
+		//because other cpu mode are not emulated
+		u32 address = start_address;
+		for (int i = 0; i <= 14; i++) {
+			if (getBit(reg_list, i) == 1) {
+				gprs[i] = mem.read32(address);
+				address = address + 4;
+			}
+		}
+		if (S == 1) {
+			cpsr = spsr;
+		}
+		if (getBit(reg_list, 15) == 1) {
+			u32 value = mem.read32(address);
+			gprs[Regs::PC] = value & 0xFFFFFFFC;
+			address = address + 4;
+		}
+		if (!(end_address == address - 4)) {
+			throw std::string("Something went wrong in Load multiple");
+		}
+		break;
+
+	//Store
+	case AInstructions::STMED: case AInstructions::STMDA: case AInstructions::STMEA: case AInstructions::STMIA:
+	case AInstructions::STMFD: case AInstructions::STMDB: case AInstructions::STMFA: case AInstructions::STMIB:
+
+		//Doesn't do the second form of the Store instructions
+		//because other cpu mode are not emulated
+		u32 address = start_address;
+		for (int i = 0; i <= 15; i++) {
+			if (getBit(reg_list, i) == 1) {
+				mem.write32(address, gprs[i]);
+				address = address + 4;
+			}
+		}
+		if (!(end_address == address - 4)) {
+			throw std::string("Something went wrong in Store multiple");
+		}
+
+		break;
+	}
+
+}
+
 inline void CPU::Load_Store(IR_ARM& ir) {
 	u32& Rd = ir.operand1;
 	u32& Rn = ir.operand2;
