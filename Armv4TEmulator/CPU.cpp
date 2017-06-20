@@ -136,7 +136,7 @@ inline void CPU::Load_Store_Multiple(IR_ARM& ir) {
 		//Load
 	case AInstructions::LDMFA: case AInstructions::LDMDA: case AInstructions::LDMFD: case AInstructions::LDMIA:
 	case AInstructions::LDMEA: case AInstructions::LDMDB: case AInstructions::LDMED: case AInstructions::LDMIB:
-
+	{
 		//Doesn't do the second form of the LDM instructions
 		//because other cpu mode are not emulated
 		u32 address = start_address;
@@ -158,11 +158,11 @@ inline void CPU::Load_Store_Multiple(IR_ARM& ir) {
 			throw std::string("Something went wrong in Load multiple");
 		}
 		break;
-
+	}
 	//Store
 	case AInstructions::STMED: case AInstructions::STMDA: case AInstructions::STMEA: case AInstructions::STMIA:
 	case AInstructions::STMFD: case AInstructions::STMDB: case AInstructions::STMFA: case AInstructions::STMIB:
-
+	{
 		//Doesn't do the second form of the Store instructions
 		//because other cpu mode are not emulated
 		u32 address = start_address;
@@ -178,7 +178,7 @@ inline void CPU::Load_Store_Multiple(IR_ARM& ir) {
 
 		break;
 	}
-
+	}
 }
 
 inline void CPU::Load_Store(IR_ARM& ir) {
