@@ -217,6 +217,10 @@ inline void CPU::Load_Store(IR_ARM& ir) {
 		//offset
 		if (U) address = gprs[Rn] + offset;
 		else address = gprs[Rn] - offset;
+		if (Rn == Regs::PC) {
+			//To change if the pc is incremented before the instruction is executed
+			address += 8;
+		}
 	}
 
 	/*
