@@ -57,7 +57,7 @@ void CPU::ARM_Execute(IR_ARM& ir) {
 	case InstructionType::Multiply: Multiply(ir); break;
 	case InstructionType::Status_Regsiter_Access: Status_Register_Access(ir); break;
 	case InstructionType::Load_Store: Load_Store(ir); break;
-	case InstructionType::Load_Store_Multiple: throw std::string("Unimplemented opcode"); break;
+	case InstructionType::Load_Store_Multiple: Load_Store_Multiple(ir); break;
 	case InstructionType::Semaphore: throw std::string("Unimplemented opcode"); break;
 	case InstructionType::Exception_Generating: throw std::string("Unimplemented opcode"); break;
 	case InstructionType::Coprocessor: throw std::string("Unimplemented opcode"); break;
