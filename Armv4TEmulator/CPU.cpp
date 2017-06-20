@@ -215,7 +215,7 @@ inline void CPU::Load_Store(IR_ARM& ir) {
 	}
 	else {
 		//offset
-		if (U) gprs[Rn] = gprs[Rn] + offset;
+		if (U) address = gprs[Rn] + offset;
 		else address = gprs[Rn] - offset;
 	}
 
