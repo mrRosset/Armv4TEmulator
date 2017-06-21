@@ -254,3 +254,28 @@ TEST_CASE("Shifter Operand Regs shifts works correctly", "[ARM]") {
 		}
 	}
 }
+
+
+struct data_processing_test {
+	AInstructions op;
+	bool S;
+	u32 shifter_result;
+	u32 operand1;
+	u32 operand2;
+	u32 expected_result;
+};
+
+static const std::vector<data_processing_test> data_processing_tests = {
+	{AInstructions::ADD, false, 0x2cc, 10, 0, 0x2D6},
+};
+
+TEST_CASE("Data Processing", "[ARM]"){
+	for (auto& test : data_processing_tests) {
+		CPU cpu;
+		IR_ARM instr = { InstructionType::Data_Processing, test.op, Conditions::AL, test.S,  1, 0};
+		instr.shifter_operand = { Shifter_type::Immediate, test.shifter_result, 0};
+		cpu.gprs[0] = test.operand1;
+		cpu.ARM_Execute(instr);
+		REQUIRE(cpu.gprs[1] == test.expected_result);
+	}
+}
