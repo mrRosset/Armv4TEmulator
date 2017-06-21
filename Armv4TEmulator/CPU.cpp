@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <functional>
 #include "CPU.h"
 #include "Utils.h"
 #include "Decoder/Decoder.h"

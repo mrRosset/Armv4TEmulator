@@ -35,8 +35,8 @@ void emulate(std::string path) {
 	loadFile(path, cpu.mem.mem);
 
 	//test
-	cpu.gprs[Regs::PC] = 0x627c0;
-	//cpu.gprs[Regs::PC] = 0x62744;
+	cpu.gprs[Regs::PC] = 0x622CC; //0x62230
+	//cpu.gprs[Regs::PC] = 0x627c0; // 0x62744
 
 	while (true) {
 		for (int i = 0; i < 5; i++) {
@@ -51,11 +51,13 @@ void emulate(std::string path) {
 			}
 		}
 
-		std::cout << "\n\n\n";
+		std::cout << "\n\n";
 
 		for (int i = 0; i < 15; i++) {
 			std::cout << Disassembler::Disassemble_Reg(i) << ": " << std::hex << cpu.gprs[i] << std::dec << std::endl;
 		}
+
+		std::cout << "N:" << cpu.cpsr.flag_N << " Z:" <<cpu.cpsr.flag_Z << " C:" << cpu.cpsr.flag_C << " V:" << cpu.cpsr.flag_V << std::endl;
 
 		std::cin.get();
 		system("cls");

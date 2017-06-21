@@ -1,5 +1,6 @@
 #pragma once
 #include <tuple>
+#include <functional>
 #include "Common.h"
 #include "Memory.h"
 
