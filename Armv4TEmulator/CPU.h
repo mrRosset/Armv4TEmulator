@@ -59,7 +59,7 @@ public:
 	void MUL_Instr2(bool S, unsigned RdHi, unsigned RdLo, u32 resultHi, u32 resultLo);
 	void Branch(IR_ARM& ir);
 	void Data_Processing(IR_ARM& ir);
-	void DP_Instr1(bool S, unsigned Rd, u32 result, bool N, bool Z, bool C, bool V);
-	void DP_Instr2(u32 result, bool N, bool Z, bool C, bool V);
+	void DP_Instr1(bool S, unsigned Rd, u32 result, std::function<bool()> N, std::function<bool()> Z, std::function<bool()> C, std::function<bool()> V);
+	void DP_Instr2(u32 result, std::function<bool(u32)> N, std::function<bool(u32)> Z, std::function<bool(u32)> C, std::function<bool(u32)> V);
 	std::tuple<u32, bool> shifter_operand(Shifter_op& so, bool negatif);
 };

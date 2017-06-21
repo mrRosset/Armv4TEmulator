@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <functional>
 #include "CPU.h"
 #include "Utils.h"
 #include "Decoder/Decoder.h"
@@ -406,46 +407,46 @@ inline void CPU::Data_Processing(IR_ARM& ir) {
 	std::tie(shifter_op, shifter_carry) = shifter_operand(ir.shifter_operand, false);
 
 	switch (ir.instr) {
-	case AInstructions::AND: DP_Instr1(ir.s, Rd, gprs[Rn] & shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break; //AND
-	case AInstructions::EOR: DP_Instr1(ir.s, Rd, gprs[Rn] ^ shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break;
-	case AInstructions::SUB: DP_Instr1(ir.s, Rd, gprs[Rn] - shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, !BorrowFromSub(gprs[Rn], shifter_op), OverflowFromSub(gprs[Rn], shifter_op)); break;
-	case AInstructions::RSB: DP_Instr1(ir.s, Rd, shifter_op - gprs[Rn], !!getBit(gprs[Rd], 31), gprs[Rd] == 0, !BorrowFromSub(shifter_op, gprs[Rn]), OverflowFromSub(shifter_op, gprs[Rn])); break;
-	case AInstructions::ADD: DP_Instr1(ir.s, Rd, gprs[Rn] + shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, CarryFrom(gprs[Rn], shifter_op), OverflowFromAdd(gprs[Rn], shifter_op)); break;
-	case AInstructions::ADC: DP_Instr1(ir.s, Rd, gprs[Rn] + shifter_op + cpsr.flag_C, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, CarryFrom(gprs[Rn], shifter_op, cpsr.flag_C), OverflowFromAdd(gprs[Rn], shifter_op, cpsr.flag_C)); break;
-	case AInstructions::SBC: DP_Instr1(ir.s, Rd, gprs[Rn] - shifter_op - !cpsr.flag_C, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, !BorrowFromSub(gprs[Rn], shifter_op, !cpsr.flag_C), OverflowFromSub(gprs[Rn], shifter_op, !cpsr.flag_C)); break;
-	case AInstructions::RSC: DP_Instr1(ir.s, Rd, shifter_op - gprs[Rn] - !cpsr.flag_C, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, !BorrowFromSub(shifter_op, gprs[Rn], !cpsr.flag_C), OverflowFromSub(shifter_op, gprs[Rn], !cpsr.flag_C)); break;
-	case AInstructions::TST: DP_Instr2(gprs[Rn] & shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break;
-	case AInstructions::TEQ: DP_Instr2(gprs[Rn] ^ shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break;
-	case AInstructions::CMP: DP_Instr2(gprs[Rn] - shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, !BorrowFromSub(gprs[Rn], shifter_op), OverflowFromSub(gprs[Rn], shifter_op)); break;
-	case AInstructions::CMN: DP_Instr2(gprs[Rn] + shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, CarryFrom(gprs[Rn], shifter_op), OverflowFromAdd(gprs[Rn], shifter_op)); break;
-	case AInstructions::ORR: DP_Instr1(ir.s, Rd, gprs[Rn] | shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break;
-	case AInstructions::MOV: DP_Instr1(ir.s, Rd, shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break;
-	case AInstructions::BIC: DP_Instr1(ir.s, Rd, gprs[Rn] & ~shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break;
-	case AInstructions::MVN: DP_Instr1(ir.s, Rd, ~shifter_op, !!getBit(gprs[Rd], 31), gprs[Rd] == 0, shifter_carry, cpsr.flag_V); break;
+	case AInstructions::AND: DP_Instr1(ir.s, Rd, gprs[Rn] & shifter_op, [&]()->bool{return !!getBit(gprs[Rd], 31);}, [&]()->bool{return gprs[Rd] == 0;}, [&](){return shifter_carry;}, [&](){return cpsr.flag_V;}); break; //AND
+	case AInstructions::EOR: DP_Instr1(ir.s, Rd, gprs[Rn] ^ shifter_op, [&]()->bool{return !!getBit(gprs[Rd], 31);}, [&]()->bool{return gprs[Rd] == 0;}, [&](){return shifter_carry;}, [&](){return cpsr.flag_V;}); break;
+	case AInstructions::SUB: DP_Instr1(ir.s, Rd, gprs[Rn] - shifter_op, [&]()->bool{return !!getBit(gprs[Rd], 31);}, [&]()->bool{return gprs[Rd] == 0;}, [&]()->bool{return !BorrowFromSub(gprs[Rn], shifter_op);}, [&]()->bool{return OverflowFromSub(gprs[Rn], shifter_op);}); break;
+	case AInstructions::RSB: DP_Instr1(ir.s, Rd, shifter_op - gprs[Rn], [&]()->bool{return !!getBit(gprs[Rd], 31);}, [&]()->bool{return gprs[Rd] == 0;}, [&]()->bool{return !BorrowFromSub(shifter_op, gprs[Rn]);}, [&]()->bool{return OverflowFromSub(shifter_op, gprs[Rn]);}); break;
+	case AInstructions::ADD: DP_Instr1(ir.s, Rd, gprs[Rn] + shifter_op, [&]()->bool{return !!getBit(gprs[Rd], 31);}, [&]()->bool{return gprs[Rd] == 0;}, [&]()->bool{return CarryFrom(gprs[Rn], shifter_op);}, [&](){return OverflowFromAdd(gprs[Rn], shifter_op);}); break;
+	case AInstructions::ADC: DP_Instr1(ir.s, Rd, gprs[Rn] + shifter_op + cpsr.flag_C, [&]()->bool{return !!getBit(gprs[Rd], 31);}, [&]()->bool{return gprs[Rd] == 0;}, [&]()->bool{return CarryFrom(gprs[Rn], shifter_op, cpsr.flag_C);}, [&]()->bool{return OverflowFromAdd(gprs[Rn], shifter_op, cpsr.flag_C);}); break;
+	case AInstructions::SBC: DP_Instr1(ir.s, Rd, gprs[Rn] - shifter_op - !cpsr.flag_C, [&]()->bool{return !!getBit(gprs[Rd], 31);}, [&]()->bool{return gprs[Rd] == 0;}, [&]()->bool{return !BorrowFromSub(gprs[Rn], shifter_op, !cpsr.flag_C);}, [&]()->bool{return OverflowFromSub(gprs[Rn], shifter_op, !cpsr.flag_C);}); break;
+	case AInstructions::RSC: DP_Instr1(ir.s, Rd, shifter_op - gprs[Rn] - !cpsr.flag_C, [&]()->bool{return !!getBit(gprs[Rd], 31);}, [&]()->bool{return gprs[Rd] == 0;}, [&]()->bool{return !BorrowFromSub(shifter_op, gprs[Rn], !cpsr.flag_C);}, [&]()->bool{return OverflowFromSub(shifter_op, gprs[Rn], !cpsr.flag_C);}); break;
+	case AInstructions::TST: DP_Instr2(gprs[Rn] & shifter_op, [&](u32 r)->bool {return !!getBit(r, 31); }, [&](u32 r)->bool {return r == 0; }, [&](u32 r)->bool {return shifter_carry; }, [&](u32 r)->bool {return cpsr.flag_V; }); break;
+	case AInstructions::CMP: DP_Instr2(gprs[Rn] - shifter_op, [&](u32 r)->bool {return !!getBit(r, 31); }, [&](u32 r)->bool {return r == 0; }, [&](u32 r)->bool {return !BorrowFromSub(gprs[Rn], shifter_op); }, [&](u32 r)->bool {return OverflowFromSub(gprs[Rn], shifter_op); }); break;
+	case AInstructions::CMN: DP_Instr2(gprs[Rn] + shifter_op, [&](u32 r)->bool {return !!getBit(r, 31); }, [&](u32 r)->bool {return r == 0; }, [&](u32 r)->bool {return CarryFrom(gprs[Rn], shifter_op); }, [&](u32 r)->bool {return OverflowFromAdd(gprs[Rn], shifter_op); }); break;
+	case AInstructions::TEQ: DP_Instr2(gprs[Rn] ^ shifter_op, [&](u32 r)->bool {return !!getBit(r, 31); }, [&](u32 r)->bool {return r == 0; }, [&](u32 r)->bool {return shifter_carry; }, [&](u32 r)->bool {return cpsr.flag_V; }); break;
+	case AInstructions::ORR: DP_Instr1(ir.s, Rd, gprs[Rn] | shifter_op, [&]()->bool{return !!getBit(gprs[Rd], 31);}, [&]()->bool{return gprs[Rd] == 0;}, [&]()->bool{return shifter_carry;}, [&]()->bool{return cpsr.flag_V;}); break;
+	case AInstructions::MOV: DP_Instr1(ir.s, Rd, shifter_op, [&]()->bool{return !!getBit(gprs[Rd], 31);}, [&]()->bool{return gprs[Rd] == 0;}, [&]()->bool{return shifter_carry;}, [&]()->bool{return cpsr.flag_V;}); break;
+	case AInstructions::BIC: DP_Instr1(ir.s, Rd, gprs[Rn] & ~shifter_op, [&]()->bool{return !!getBit(gprs[Rd], 31);}, [&]()->bool{return gprs[Rd] == 0;}, [&]()->bool{return shifter_carry;}, [&]()->bool{return cpsr.flag_V;}); break;
+	case AInstructions::MVN: DP_Instr1(ir.s, Rd, ~shifter_op, [&]()->bool{return !!getBit(gprs[Rd], 31);}, [&]()->bool{return gprs[Rd] == 0;}, [&]()->bool{return shifter_carry;}, [&]()->bool{return cpsr.flag_V;}); break;
 	//TODO verify negation for MVN and BIC
 	}
 }
 
-inline void CPU::DP_Instr1(bool S, unsigned Rd, u32 result, bool N, bool Z, bool C, bool V) {
+inline void CPU::DP_Instr1(bool S, unsigned Rd, u32 result, std::function<bool()> N, std::function<bool()> Z, std::function<bool()> C, std::function<bool()> V) {
 	gprs[Rd] = result;
 	if (S && Rd == Regs::PC) {
 		throw("no sprs in user/system mode, other mode not implemented yet");
 	}
 	else if (S) {
-		cpsr.flag_N = N;
-		cpsr.flag_Z = Z;
-		cpsr.flag_C = C;
-		cpsr.flag_V = V;
+		cpsr.flag_N = N();
+		cpsr.flag_Z = Z();
+		cpsr.flag_C = C();
+		cpsr.flag_V = V();
 	}
 }
 
-inline void CPU::DP_Instr2(u32 result, bool N, bool Z, bool C, bool V) {
+inline void CPU::DP_Instr2(u32 result, std::function<bool(u32)> N, std::function<bool(u32)> Z, std::function<bool(u32)> C, std::function<bool(u32)> V) {
 	//TODO: What is alu_out ? what's supposed to happens to the result ?
 	u32 alu_out = result;
-	cpsr.flag_N = N;
-	cpsr.flag_Z = Z;
-	cpsr.flag_C = C;
-	cpsr.flag_V = V;
+	cpsr.flag_N = N(result);
+	cpsr.flag_Z = Z(result);
+	cpsr.flag_C = C(result);
+	cpsr.flag_V = V(result);
 }
 
 std::tuple<u32, bool> CPU::shifter_operand(Shifter_op& so, bool negatif) {
