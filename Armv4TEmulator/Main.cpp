@@ -3,9 +3,9 @@
 
 #include "Common.h"
 #include "CPU.h"
-#include "Decoder\IR.h"
-#include "Decoder\Decoder.h"
-#include "Disassembler\Disassembler.h"
+#include "Decoder/IR.h"
+#include "Decoder/Decoder.h"
+#include "Disassembler/Disassembler.h"
 
 #define CATCH_CONFIG_RUNNER
 #include "catch/catch.hpp"
