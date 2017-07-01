@@ -13,6 +13,10 @@
 
 void loadFile(std::string path, std::vector<u8>& data) {
 
+	#if defined(_WIN32)
+	path = "\\\\?\\" + path;
+	#endif
+
 	std::ifstream stream(path, std::ios::binary | std::ios::ate);
 	if (!stream) {
 		throw std::string("Impossible to open file");
@@ -35,7 +39,8 @@ void emulate(std::string path) {
 	loadFile(path, cpu.mem.mem);
 
 	//test
-	cpu.gprs[Regs::PC] = 0x622CC; //0x62230
+	cpu.gprs[Regs::PC] = 0x7c;
+	//cpu.gprs[Regs::PC] = 0x622CC; //0x62230
 	//cpu.gprs[Regs::PC] = 0x627c0; // 0x62744
 
 	while (true) {
