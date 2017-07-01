@@ -266,7 +266,8 @@ struct data_processing_test {
 };
 
 static const std::vector<data_processing_test> data_processing_tests = {
-	{AInstructions::ADD, false, 0x2cc, 10, 0, 0x2D6},
+	{ AInstructions::ADD, false, 0x2cc, 10, 0, 0x2D6 },
+	{ AInstructions::ADD, false, 53005, 2550, 0, 55555 },
 };
 
 TEST_CASE("Data Processing", "[ARM]"){
