@@ -55,7 +55,7 @@ bool CPU::Check_Condition(IR_ARM& ir) {
 	case Conditions::AL: return true;
 	case Conditions::NV: throw "Unpredictable instructions are not emulated";
 	}
-	throw "Invlid condition";
+	throw "Invalid condition";
 }
 
 void CPU::ARM_Execute(IR_ARM& ir) {
