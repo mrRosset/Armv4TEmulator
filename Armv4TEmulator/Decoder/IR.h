@@ -213,6 +213,7 @@ enum class TInstructions {
 struct IR_Thumb {
 	InstructionType type;
 	TInstructions instr;
+	Conditions cond;
 	u16 operand1;
 	u16 operand2;
 	u16 operand3;
