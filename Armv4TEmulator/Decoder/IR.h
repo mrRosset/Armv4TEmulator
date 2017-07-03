@@ -171,6 +171,7 @@ enum class TInstructions {
 	B,
 	BIC,
 	BL,
+	BLX,
 	BX,
 	CMN,
 	CMP_imm,

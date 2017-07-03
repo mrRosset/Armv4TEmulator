@@ -6,6 +6,7 @@ void Decoder::Decode(IR_Thumb& ir, u16 instr){
 	ir.cond = Conditions::AL;
 
 	switch ((instr >> 13) & 0b111) {
+	case 0b111: Decode_Branch(ir, instr);  return;
 	}
 	
 	switch ((instr >> 12) & 0b1111) {
@@ -26,9 +27,25 @@ void Decoder::Decode(IR_Thumb& ir, u16 instr){
 			ir.type = InstructionType::Branch;
 			ir.instr = TInstructions::B;
 			ir.cond = static_cast<Conditions>(bits11_8);
-			ir.operand1 = instr & 0xFF;
+			ir.operand1 = instr & 0xFF; // signed immed
 		}
 		return;
 	}
 
+}
+
+void Decoder::Decode_Branch(IR_Thumb& ir, u16 instr) {
+	//TODO: 6.3.3
+	ir.type = InstructionType::Branch;
+	unsigned H = (instr >> 11) & 0b11;
+
+	switch (H) {
+	case 0b00: ir.instr = TInstructions::B; break;
+	case 0b10: ir.instr = TInstructions::BL; break;
+	case 0b01: ir.instr = TInstructions::BLX; break;
+	case 0b11: ir.instr = TInstructions::BL; break;
+	}
+
+	ir.operand1 = instr & 0x7FF; //immed
+	ir.operand2 = H;
 }

@@ -19,4 +19,5 @@ namespace Decoder {
 
 	//THUMB
 	void Decode(IR_Thumb& ir, u16 instr);
+	void Decode_Branch(IR_Thumb& ir, u16 instr);
 }
