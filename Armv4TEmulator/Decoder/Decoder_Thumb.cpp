@@ -63,6 +63,5 @@ void Decoder::Decode_Branch_With_Exchange(IR_Thumb& ir, u16 instr) {
 	case 1: ir.instr = TInstructions::BLX_reg;
 	}
 
-	ir.operand1 = (instr >> 3) & 0b111; //Rm
-	ir.operand2 = getBit(instr, 6); //H2
+	ir.operand1 = (instr >> 3) & 0xF; //H2|Rm
 }
