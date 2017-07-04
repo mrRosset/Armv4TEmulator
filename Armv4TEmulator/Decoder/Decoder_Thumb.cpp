@@ -1,5 +1,6 @@
 #include <string>
 #include "Decoder.h"
+#include "../Utils.h"
 
 void Decoder::Decode(IR_Thumb& ir, u16 instr){
 	//TODO: find a better way to detect if there is a condition field.
@@ -55,5 +56,13 @@ void Decoder::Decode_Unconditionnal_Branch(IR_Thumb& ir, u16 instr) {
 }
 
 void Decoder::Decode_Branch_With_Exchange(IR_Thumb& ir, u16 instr) {
+	ir.type = InstructionType::Branch;
 
+	switch (getBit(instr, 7)) {
+	case 0: ir.instr == TInstructions::BX;
+	case 1: ir.instr == TInstructions::BLX_reg;
+	}
+
+	ir.operand1 = (instr >> 3) & 0b111; //Rm
+	ir.operand2 = getBit(instr, 6); //H2
 }
