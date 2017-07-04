@@ -170,7 +170,6 @@ enum class TInstructions {
 	ASR_reg,
 	B_cond,
 	B_imm,
-	B_reg,
 	BIC,
 	BL,
 	BL_high,
