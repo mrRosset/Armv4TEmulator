@@ -13,11 +13,13 @@ void Decoder::Decode(IR_Thumb& ir, u16 instr){
 		}
 		else {
 			Decode_Shift_Imm(ir, instr);
+			return;
 		}
 	}
 	
 	switch ((instr >> 13) & 0b111) {
-		case 0b111: Decode_Unconditionnal_Branch(ir, instr);  return;
+	case 0b001: Decoder_Add_Sub_Mov_Cmp_imm(ir, instr); return;
+	case 0b111: Decode_Unconditionnal_Branch(ir, instr);  return;
 	}
 	
 	if (((instr >> 8) & 0b11111111) == 0b01000111) {
@@ -25,7 +27,7 @@ void Decoder::Decode(IR_Thumb& ir, u16 instr){
 		return;
 	}
 
-	switch ((instr >> 12) & 0b1111) {	
+	switch ((instr >> 12) & 0b1111) {
 	case 0b0101: return;
 	case 0b0110:
 	case 0b0111: return;
@@ -103,4 +105,18 @@ void Decoder::Decode_Shift_Imm(IR_Thumb& ir, u16 instr) {
 	ir.operand1 = instr & 0b111; //Rd
 	ir.operand2 = (instr >> 3) & 0b111; //Rm
 	ir.operand3 = (instr >> 6) & 0b11111; //shift imm
+}
+
+void Decoder::Decoder_Add_Sub_Mov_Cmp_imm(IR_Thumb& ir, u16 instr) {
+	ir.type = InstructionType::Data_Processing;
+
+	switch ((instr >> 11) & 0b11) {
+	case 0b00: ir.instr = TInstructions::MOV_imm; break;
+	case 0b01: ir.instr = TInstructions::CMP_imm; break;
+	case 0b10: ir.instr = TInstructions::ADD_lar_imm; break;
+	case 0b11: ir.instr = TInstructions::SUB_lar_imm; break;
+	}
+
+	ir.operand1 = instr & 0xFF; //immed
+	ir.operand2 = (instr >> 8) & 0b111; //Rd/Rn
 }
