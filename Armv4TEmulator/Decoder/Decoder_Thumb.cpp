@@ -11,6 +11,9 @@ void Decoder::Decode(IR_Thumb& ir, u16 instr){
 			Decode_Add_Sub_reg_imm(ir, instr);
 			return;
 		}
+		else {
+			Decode_Shift_Imm(ir, instr);
+		}
 	}
 	
 	switch ((instr >> 13) & 0b111) {
@@ -66,8 +69,8 @@ void Decoder::Decode_Branch_With_Exchange(IR_Thumb& ir, u16 instr) {
 	ir.type = InstructionType::Branch;
 
 	switch (getBit(instr, 7)) {
-	case 0: ir.instr = TInstructions::BX;
-	case 1: ir.instr = TInstructions::BLX_reg;
+	case 0: ir.instr = TInstructions::BX; break;
+	case 1: ir.instr = TInstructions::BLX_reg; break;
 	}
 
 	ir.operand1 = (instr >> 3) & 0xF; //H2|Rm
@@ -77,13 +80,27 @@ void Decoder::Decode_Add_Sub_reg_imm(IR_Thumb& ir, u16 instr) {
 	ir.type = InstructionType::Data_Processing;
 	
 	switch ((instr >> 9) & 0b11) {
-	case 0b00: ir.instr = TInstructions::ADD_reg;
-	case 0b01: ir.instr = TInstructions::SUB_reg;
-	case 0b10: ir.instr = TInstructions::ADD_imm;
-	case 0b11: ir.instr = TInstructions::SUB_imm;
+	case 0b00: ir.instr = TInstructions::ADD_reg; break;
+	case 0b01: ir.instr = TInstructions::SUB_reg; break;
+	case 0b10: ir.instr = TInstructions::ADD_imm; break;
+	case 0b11: ir.instr = TInstructions::SUB_imm; break;
 	}
 
 	ir.operand1 = instr & 0b111; //Rd
 	ir.operand2 = (instr >> 3) & 0b111; //Rn
 	ir.operand3 = (instr >> 6) & 0b111; //Rm or immed
+}
+
+void Decoder::Decode_Shift_Imm(IR_Thumb& ir, u16 instr) {
+	ir.type = InstructionType::Data_Processing;
+
+	switch ((instr >> 11) & 0b11) {
+	case 0b00: ir.instr = TInstructions::LSL_imm; break;
+	case 0b01: ir.instr = TInstructions::LSR_imm; break;
+	case 0b10: ir.instr = TInstructions::ASR_imm; break;
+	}
+
+	ir.operand1 = instr & 0b111; //Rd
+	ir.operand2 = (instr >> 3) & 0b111; //Rm
+	ir.operand3 = (instr >> 6) & 0b11111; //shift imm
 }
