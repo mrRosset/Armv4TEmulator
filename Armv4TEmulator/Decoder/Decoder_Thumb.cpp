@@ -10,7 +10,7 @@ void Decoder::Decode(IR_Thumb& ir, u16 instr){
 	case 0b111: Decode_Unconditionnal_Branch(ir, instr);  return;
 	}
 	
-	if ((instr >> 8) & 0b11111111 == 0b01000111) {
+	if (((instr >> 8) & 0b11111111) == 0b01000111) {
 		Decode_Branch_With_Exchange(ir, instr);
 		return;
 	}
@@ -59,8 +59,8 @@ void Decoder::Decode_Branch_With_Exchange(IR_Thumb& ir, u16 instr) {
 	ir.type = InstructionType::Branch;
 
 	switch (getBit(instr, 7)) {
-	case 0: ir.instr == TInstructions::BX;
-	case 1: ir.instr == TInstructions::BLX_reg;
+	case 0: ir.instr = TInstructions::BX;
+	case 1: ir.instr = TInstructions::BLX_reg;
 	}
 
 	ir.operand1 = (instr >> 3) & 0b111; //Rm
