@@ -6,10 +6,15 @@ void Decoder::Decode(IR_Thumb& ir, u16 instr){
 	ir.cond = Conditions::AL;
 
 	switch ((instr >> 13) & 0b111) {
-	case 0b111: Decode_Branch(ir, instr);  return;
+	case 0b111: Decode_Unconditionnal_Branch(ir, instr);  return;
 	}
 	
-	switch ((instr >> 12) & 0b1111) {
+	if ((instr >> 8) & 0b11111111 == 0b01000111) {
+		Decode_Branch_With_Exchange(ir, instr);
+		return;
+	}
+
+	switch ((instr >> 12) & 0b1111) {	
 	case 0b0101: return;
 	case 0b0110:
 	case 0b0111: return;
@@ -25,7 +30,7 @@ void Decoder::Decode(IR_Thumb& ir, u16 instr){
 		case 0b1111: break; //Software interrupts
 		default:
 			ir.type = InstructionType::Branch;
-			ir.instr = TInstructions::B;
+			ir.instr = TInstructions::B_cond;
 			ir.cond = static_cast<Conditions>(bits11_8);
 			ir.operand1 = instr & 0xFF; // signed immed
 		}
@@ -34,18 +39,21 @@ void Decoder::Decode(IR_Thumb& ir, u16 instr){
 
 }
 
-void Decoder::Decode_Branch(IR_Thumb& ir, u16 instr) {
-	//TODO: 6.3.3
+void Decoder::Decode_Unconditionnal_Branch(IR_Thumb& ir, u16 instr) {
 	ir.type = InstructionType::Branch;
 	unsigned H = (instr >> 11) & 0b11;
 
 	switch (H) {
-	case 0b00: ir.instr = TInstructions::B; break;
-	case 0b10: ir.instr = TInstructions::BL; break;
-	case 0b01: ir.instr = TInstructions::BLX; break;
+	case 0b00: ir.instr = TInstructions::B_imm; break;
+	case 0b10: ir.instr = TInstructions::BL_high; break;
+	case 0b01: ir.instr = TInstructions::BLX_imm; break;
 	case 0b11: ir.instr = TInstructions::BL; break;
 	}
 
 	ir.operand1 = instr & 0x7FF; //immed
 	ir.operand2 = H;
+}
+
+void Decoder::Decode_Branch_With_Exchange(IR_Thumb& ir, u16 instr) {
+
 }
