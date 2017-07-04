@@ -25,8 +25,10 @@ void loadFile(std::string path, std::vector<u8>& data) {
 	u64 length = stream.tellg();
 	stream.seekg(0, std::ios::beg);
 
-	data.resize(length);
-	if (!stream.read((char*)data.data(), length))
+	if (data.size() < length) {
+		data.resize(length);
+	}
+	if (!stream.read((char*)data.data() + 0x40'000 - 0x7c, length))
 	{
 		throw std::string("Error reading bytes from file");
 	}
@@ -36,12 +38,15 @@ void loadFile(std::string path, std::vector<u8>& data) {
 
 void emulate(std::string path) {
 	CPU cpu;
+	cpu.mem.mem.resize(0x2FFF'FFFF);
 	loadFile(path, cpu.mem.mem);
 
 	//test
-	cpu.gprs[Regs::PC] = 0x7c;
+	cpu.gprs[Regs::PC] = 0x40'000;//0x7c;
 	//cpu.gprs[Regs::PC] = 0x622CC; //0x62230
 	//cpu.gprs[Regs::PC] = 0x627c0; // 0x62744
+	
+	cpu.gprs[Regs::SP] = 0x6c;
 
 	while (true) {
 		for (int i = 0; i < 5; i++) {
@@ -92,7 +97,6 @@ int main(int argc, char* argv[]) {
 		int result = Catch::Session().run(argc, argv);
 		return (result < 0xff ? result : 0xff);
 	}
-
 
 	return 0;
 }
