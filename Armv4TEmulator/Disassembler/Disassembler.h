@@ -6,6 +6,7 @@
 
 
 namespace Disassembler {
+	//ARM
 	std::string Disassemble(IR_ARM& ir);
 	std::string Disassemble_Reg(u32 reg);
 	std::string Disassemble_Cond(IR_ARM& ir);
@@ -17,4 +18,7 @@ namespace Disassembler {
 	std::string Disassemble_LS_Shifter_Operand(IR_ARM& ir);
 	std::string Disassemble_Load_Store_Multiple(IR_ARM& ir);
 	std::string Disassemble_Reg_List(u32 list);
+
+	//THUMB
+	std::string Disassemble(IR_Thumb& ir);
 }
