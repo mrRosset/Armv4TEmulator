@@ -6,8 +6,15 @@ void Decoder::Decode(IR_Thumb& ir, u16 instr){
 	//TODO: find a better way to detect if there is a condition field.
 	ir.cond = Conditions::AL;
 
+	if (((instr >> 13) & 0b111) == 0b000) {
+		if (((instr >> 11) & 0b11) == 0b11) {
+			Decode_Add_Sub_reg_imm(ir, instr);
+			return;
+		}
+	}
+	
 	switch ((instr >> 13) & 0b111) {
-	case 0b111: Decode_Unconditionnal_Branch(ir, instr);  return;
+		case 0b111: Decode_Unconditionnal_Branch(ir, instr);  return;
 	}
 	
 	if (((instr >> 8) & 0b11111111) == 0b01000111) {
@@ -64,4 +71,19 @@ void Decoder::Decode_Branch_With_Exchange(IR_Thumb& ir, u16 instr) {
 	}
 
 	ir.operand1 = (instr >> 3) & 0xF; //H2|Rm
+}
+
+void Decoder::Decode_Add_Sub_reg_imm(IR_Thumb& ir, u16 instr) {
+	ir.type = InstructionType::Data_Processing;
+	
+	switch ((instr >> 9) & 0b11) {
+	case 0b00: ir.instr = TInstructions::ADD_reg;
+	case 0b01: ir.instr = TInstructions::SUB_reg;
+	case 0b10: ir.instr = TInstructions::ADD_imm;
+	case 0b11: ir.instr = TInstructions::SUB_imm;
+	}
+
+	ir.operand1 = instr & 0b111; //Rd
+	ir.operand2 = (instr >> 3) & 0b111; //Rn
+	ir.operand3 = (instr >> 6) & 0b111; //Rm or immed
 }

@@ -21,4 +21,5 @@ namespace Decoder {
 	void Decode(IR_Thumb& ir, u16 instr);
 	void Decode_Unconditionnal_Branch(IR_Thumb& ir, u16 instr);
 	void Decode_Branch_With_Exchange(IR_Thumb& ir, u16 instr);
+	void Decode_Add_Sub_reg_imm(IR_Thumb& ir, u16 instr);
 }
