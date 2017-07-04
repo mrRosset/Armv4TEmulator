@@ -13,7 +13,8 @@ std::string Disassembler::Disassemble(IR_Thumb& ir) {
 	case TInstructions::BL:      return "bl #" + (ir.operand1 << 1);
 	case TInstructions::BLX_imm: return "blx #" + (ir.operand1 << 1);
 	case TInstructions::BLX_reg: return "blx " + Disassemble_Reg(ir.operand1);
-}
+	case TInstructions::BX:      return "bx " + Disassemble_Reg(ir.operand1);
+	}
 	
 	return std::string();
 }
