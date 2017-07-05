@@ -27,4 +27,5 @@ namespace Decoder {
 	void Decode_Data_Processing_Register(IR_Thumb& ir, u16 instr);
 	void Decode_Add_To_PC_SP(IR_Thumb& ir, u16 instr);
 	void Decode_Adjust_SP(IR_Thumb& ir, u16 instr);
+	void Decode_Special_Data_Processing(IR_Thumb& ir, u16 instr);
 }

@@ -27,9 +27,13 @@ void Decoder::Decode(IR_Thumb& ir, u16 instr){
 		return;
 	}
 
-
 	if (((instr >> 8) & 0b11111111) == 0b01000111) {
 		Decode_Branch_With_Exchange(ir, instr);
+		return;
+	}
+
+	if (((instr >> 10) & 0b111111) == 0b010001) {
+		Decode_Special_Data_Processing(ir, instr);
 		return;
 	}
 
@@ -180,4 +184,17 @@ void Decoder::Decode_Adjust_SP(IR_Thumb& ir, u16 instr) {
 	}
 
 	ir.operand1 = instr & 0b111'1111;
-}2
+}
+
+void Decoder::Decode_Special_Data_Processing(IR_Thumb& ir, u16 instr) {
+	ir.type = InstructionType::Data_Processing;
+
+	switch ((instr >> 8) & 0b11) {
+	case 0b00: ir.instr = TInstructions::ADD_hig_reg; break;
+	case 0b01: ir.instr = TInstructions::CMP_hig_reg; break;
+	case 0b10: ir.instr = TInstructions::MOV_hig_reg; break;
+	}
+
+	ir.operand1 = (getBit(instr, 7) << 3) | (instr & 0b111); // H1|Rd/Rn
+	ir.operand2 = (instr >> 3) & 0xF; // H2|Rm
+}
