@@ -38,7 +38,7 @@ void Decoder::Decode(IR_Thumb& ir, u16 instr){
 	case 0b0111: return;
 	case 0b1000: return;
 	case 0b1001: return;
-	case 0b1010: return;
+	case 0b1010: Decode_Add_To_PC_SP(ir, instr); return;
 	case 0b1011: return;
 	case 0b1100: return;
 	case 0b1101: 
@@ -150,4 +150,16 @@ void Decoder::Decode_Data_Processing_Register(IR_Thumb& ir, u16 instr) {
 
 	ir.operand1 = instr & 0b111; // Rd/Rn
 	ir.operand2 = (instr >> 3) & 0b111; // Rm/Rs
+}
+
+void Decoder::Decode_Add_To_PC_SP(IR_Thumb& ir, u16 instr) {
+	ir.type = InstructionType::Data_Processing;
+	
+	switch (getBit(instr, 11)) {
+	case 0: ir.instr = TInstructions::ADD_imm_pc; break;
+	case 1: ir.instr = TInstructions::ADD_imm_sp; break;
+	}
+
+	ir.operand1 = instr & 0xFF; //immed
+	ir.operand2 = (instr >> 8) & 0b111; //Rd
 }
