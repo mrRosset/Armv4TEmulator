@@ -27,6 +27,7 @@ void Decoder::Decode(IR_Thumb& ir, u16 instr){
 		return;
 	}
 
+
 	if (((instr >> 8) & 0b11111111) == 0b01000111) {
 		Decode_Branch_With_Exchange(ir, instr);
 		return;
@@ -39,7 +40,13 @@ void Decoder::Decode(IR_Thumb& ir, u16 instr){
 	case 0b1000: return;
 	case 0b1001: return;
 	case 0b1010: Decode_Add_To_PC_SP(ir, instr); return;
-	case 0b1011: return;
+	case 0b1011: 
+		switch ((instr >> 8) & 0xF) {
+		case 0b0000: Decode_Adjust_SP(ir, instr); break;
+		case 0b1110: break;
+		default: break;
+		}
+		return;
 	case 0b1100: return;
 	case 0b1101: 
 		unsigned bits11_8 = (instr >> 8) & 0xF;
@@ -163,3 +170,14 @@ void Decoder::Decode_Add_To_PC_SP(IR_Thumb& ir, u16 instr) {
 	ir.operand1 = instr & 0xFF; //immed
 	ir.operand2 = (instr >> 8) & 0b111; //Rd
 }
+
+void Decoder::Decode_Adjust_SP(IR_Thumb& ir, u16 instr) {
+	ir.type = InstructionType::Data_Processing;
+
+	switch (getBit(instr, 7)) {
+	case 0: ir.instr = TInstructions::ADD_inc_sp; break;
+	case 1: ir.instr = TInstructions::SUB_dec_sp; break;
+	}
+
+	ir.operand1 = instr & 0b111'1111;
+}2
