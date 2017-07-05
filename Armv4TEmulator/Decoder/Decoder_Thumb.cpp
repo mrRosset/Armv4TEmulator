@@ -18,10 +18,15 @@ void Decoder::Decode(IR_Thumb& ir, u16 instr){
 	}
 	
 	switch ((instr >> 13) & 0b111) {
-	case 0b001: Decoder_Add_Sub_Mov_Cmp_imm(ir, instr); return;
-	case 0b111: Decode_Unconditionnal_Branch(ir, instr);  return;
+	case 0b001: Decode_Add_Sub_Mov_Cmp_imm(ir, instr); return;
+	case 0b111: Decode_Unconditionnal_Branch(ir, instr); return;
 	}
 	
+	if (((instr >> 10) & 0b111111) == 0b010000) {
+		Decode_Data_Processing_Register(ir, instr);
+		return;
+	}
+
 	if (((instr >> 8) & 0b11111111) == 0b01000111) {
 		Decode_Branch_With_Exchange(ir, instr);
 		return;
@@ -107,7 +112,7 @@ void Decoder::Decode_Shift_Imm(IR_Thumb& ir, u16 instr) {
 	ir.operand3 = (instr >> 6) & 0b11111; //shift imm
 }
 
-void Decoder::Decoder_Add_Sub_Mov_Cmp_imm(IR_Thumb& ir, u16 instr) {
+void Decoder::Decode_Add_Sub_Mov_Cmp_imm(IR_Thumb& ir, u16 instr) {
 	ir.type = InstructionType::Data_Processing;
 
 	switch ((instr >> 11) & 0b11) {
@@ -119,4 +124,30 @@ void Decoder::Decoder_Add_Sub_Mov_Cmp_imm(IR_Thumb& ir, u16 instr) {
 
 	ir.operand1 = instr & 0xFF; //immed
 	ir.operand2 = (instr >> 8) & 0b111; //Rd/Rn
+}
+
+void Decoder::Decode_Data_Processing_Register(IR_Thumb& ir, u16 instr) {
+	ir.type = InstructionType::Data_Processing;
+
+	switch ((instr >> 6) & 0xF) {
+	case 0b0000: ir.instr = TInstructions::AND; break;
+	case 0b0001: ir.instr = TInstructions::EOR; break;
+	case 0b0010: ir.instr = TInstructions::LSL_reg; break;
+	case 0b0011: ir.instr = TInstructions::LSR_reg; break;
+	case 0b0100: ir.instr = TInstructions::ASR_reg; break;
+	case 0b0101: ir.instr = TInstructions::ADC; break;
+	case 0b0110: ir.instr = TInstructions::SBC; break;
+	case 0b0111: ir.instr = TInstructions::ROR; break;
+	case 0b1000: ir.instr = TInstructions::TST; break;
+	case 0b1001: ir.instr = TInstructions::NEG; break;
+	case 0b1010: ir.instr = TInstructions::CMP_reg; break;
+	case 0b1011: ir.instr = TInstructions::CMN; break;
+	case 0b1100: ir.instr = TInstructions::ORR; break;
+	case 0b1101: ir.instr = TInstructions::MUL; break;
+	case 0b1110: ir.instr = TInstructions::BIC; break;
+	case 0b1111: ir.instr = TInstructions::MVN; break;
+	}
+
+	ir.operand1 = instr & 0b111; // Rd/Rn
+	ir.operand2 = (instr >> 3) & 0b111; // Rm/Rs
 }

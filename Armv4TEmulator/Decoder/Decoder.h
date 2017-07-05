@@ -23,5 +23,6 @@ namespace Decoder {
 	void Decode_Branch_With_Exchange(IR_Thumb& ir, u16 instr);
 	void Decode_Add_Sub_reg_imm(IR_Thumb& ir, u16 instr);
 	void Decode_Shift_Imm(IR_Thumb &ir, u16 instr);
-	void Decoder_Add_Sub_Mov_Cmp_imm(IR_Thumb& ir, u16 instr);
+	void Decode_Add_Sub_Mov_Cmp_imm(IR_Thumb& ir, u16 instr);
+	void Decode_Data_Processing_Register(IR_Thumb & ir, u16 instr);
 }
