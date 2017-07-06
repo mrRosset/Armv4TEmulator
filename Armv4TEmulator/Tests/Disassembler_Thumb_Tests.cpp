@@ -26,3 +26,4 @@ TEST_CASE("Branch", "[Disassembler][Thumb]") {
 	REQUIRE(Disassemble(0x4770) == "bx lr");
 	REQUIRE(Disassemble(0x4730) == "bx r6");
 }
+

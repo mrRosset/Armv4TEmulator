@@ -18,6 +18,17 @@ std::string Disassembler::Disassemble(IR_Thumb& ir) {
 	case TInstructions::SUB_reg: return "sub " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Reg(ir.operand3);
 	case TInstructions::ADD_imm: return "add " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", #" + std::to_string(ir.operand3);
 	case TInstructions::SUB_imm: return "sub " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", #" + std::to_string(ir.operand3);
+
+	case TInstructions::LSL_imm: return "lsl " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", #" + std::to_string(ir.operand3);
+	case TInstructions::LSR_imm: return "lsr " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", #" + std::to_string(ir.operand3);
+	case TInstructions::ASR_imm: return "asr " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", #" + std::to_string(ir.operand3);
+	
+	case TInstructions::MOV_imm: return "mov " + Disassemble_Reg(ir.operand2) + ", #" + std::to_string(ir.operand1);
+	case TInstructions::CMP_imm: return "cmp " + Disassemble_Reg(ir.operand2) + ", #" + std::to_string(ir.operand1);
+	case TInstructions::ADD_lar_imm: return "add " + Disassemble_Reg(ir.operand2) + ", #" + std::to_string(ir.operand1);
+	case TInstructions::SUB_lar_imm: return "sub " + Disassemble_Reg(ir.operand2) + ", #" + std::to_string(ir.operand1);
+
+
 	}
 
 	return std::string();
