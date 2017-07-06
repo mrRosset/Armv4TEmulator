@@ -218,7 +218,8 @@
     <ClCompile Include="Tests\CPU_Tests.cpp" />
     <ClCompile Include="CPU.cpp" />
     <ClCompile Include="Tests\Decoder_Tests.cpp" />
-    <ClCompile Include="Tests\Disassembler_Tests.cpp" />
+    <ClCompile Include="Tests\Disassembler_ARM_Tests.cpp" />
+    <ClCompile Include="Tests\Disassembler_Thumb_Tests.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

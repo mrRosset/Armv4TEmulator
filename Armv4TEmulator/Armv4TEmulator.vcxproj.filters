@@ -15,10 +15,11 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Tests\CPU_Tests.cpp" />
     <ClCompile Include="Tests\Decoder_Tests.cpp" />
-    <ClCompile Include="Tests\Disassembler_Tests.cpp" />
     <ClCompile Include="Decoder\Decoder_ARM.cpp" />
     <ClCompile Include="Decoder\Decoder_Thumb.cpp" />
     <ClCompile Include="Disassembler\Disassembler_ARM.cpp" />
     <ClCompile Include="Disassembler\Disassembler_Thumb.cpp" />
+    <ClCompile Include="Tests\Disassembler_ARM_Tests.cpp" />
+    <ClCompile Include="Tests\Disassembler_Thumb_Tests.cpp" />
   </ItemGroup>
 </Project>
