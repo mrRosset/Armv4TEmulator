@@ -173,8 +173,6 @@ enum class TInstructions {
 	BIC,
 	BL,
 	BL_high,
-	BLX_imm,
-	BLX_reg,
 	BX,
 	CMN,
 	CMP_imm,

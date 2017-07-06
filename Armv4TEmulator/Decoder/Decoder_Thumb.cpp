@@ -75,7 +75,6 @@ void Decoder::Decode_Unconditionnal_Branch(IR_Thumb& ir, u16 instr) {
 	switch (H) {
 	case 0b00: ir.instr = TInstructions::B_imm; break;
 	case 0b10: ir.instr = TInstructions::BL_high; break;
-	case 0b01: ir.instr = TInstructions::BLX_imm; break;
 	case 0b11: ir.instr = TInstructions::BL; break;
 	}
 
@@ -88,7 +87,6 @@ void Decoder::Decode_Branch_With_Exchange(IR_Thumb& ir, u16 instr) {
 
 	switch (getBit(instr, 7)) {
 	case 0: ir.instr = TInstructions::BX; break;
-	case 1: ir.instr = TInstructions::BLX_reg; break;
 	}
 
 	ir.operand1 = (instr >> 3) & 0xF; //H2|Rm
