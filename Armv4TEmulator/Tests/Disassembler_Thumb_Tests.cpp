@@ -23,8 +23,6 @@ TEST_CASE("Branch", "[Disassembler][Thumb]") {
 	REQUIRE(Disassemble(0xFAAA) == "bl #1364");
 	REQUIRE(Disassemble(0xF2AA) == "bl high +#2793476");
 
-	REQUIRE(Disassemble(0xD450) == "bmi +#164");
-	REQUIRE(Disassemble(0xD450) == "bmi +#164");
-	REQUIRE(Disassemble(0xD450) == "bmi +#164");
-
+	REQUIRE(Disassemble(0x4770) == "bx lr");
+	REQUIRE(Disassemble(0x4730) == "bx r6");
 }
