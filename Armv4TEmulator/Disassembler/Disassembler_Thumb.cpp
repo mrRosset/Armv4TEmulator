@@ -14,8 +14,14 @@ std::string Disassembler::Disassemble(IR_Thumb& ir) {
 	case TInstructions::BLX_imm: return "blx #" + std::to_string(ir.operand1 << 1);
 	case TInstructions::BLX_reg: return "blx " + Disassemble_Reg(ir.operand1);
 	case TInstructions::BX:      return "bx " + Disassemble_Reg(ir.operand1);
-	}
 	
+	//Data Processing Instructions
+	case TInstructions::ADD_reg: return "add " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Reg(ir.operand3);
+	case TInstructions::SUB_reg: return "sub " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Reg(ir.operand3);
+	case TInstructions::ADD_imm: return "add " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", #" + std::to_string(ir.operand3);
+	case TInstructions::SUB_imm: return "sub " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2) + ", #" + std::to_string(ir.operand3);
+	}
+
 	return std::string();
 }
 
