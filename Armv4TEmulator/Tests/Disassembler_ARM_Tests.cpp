@@ -13,12 +13,12 @@ std::string Disassemble(u32 instr) {
 	return Disassembler::Disassemble(ir);
 }
 
-TEST_CASE("Disassemble Data Processing instr", "[Disassembler]") {
+TEST_CASE("Disassemble Data Processing instr", "[Disassembler][ARM]") {
 	REQUIRE(Disassemble(0x2201230F) == "andcs r2, r1, #1006632960");
 	REQUIRE(Disassemble(0xA0731048) == "rsbsge r1, r3, r8, asr #32");
 }
 
-TEST_CASE("Disassemble Branch instr", "[Disassembler]") {
+TEST_CASE("Disassemble Branch instr", "[Disassembler][ARM]") {
 	REQUIRE(Disassemble(0xEA000000) == "b +#8");
 	REQUIRE(Disassemble(0xEAFFFFFE) == "b +#0");
 	REQUIRE(Disassemble(0xEA000076) == "b +#480");
@@ -32,7 +32,7 @@ TEST_CASE("Disassemble Branch instr", "[Disassembler]") {
 	REQUIRE(Disassemble(0xEB000248) == "bl +#2344");
 }
 
-TEST_CASE("Disassemble Status Register access instr", "[Disassembler]") {
+TEST_CASE("Disassemble Status Register access instr", "[Disassembler][ARM]") {
 	REQUIRE(Disassemble(0xE14F3000) == "mrs r3, SPSR");
 	REQUIRE(Disassemble(0xE10FD000) == "mrs sp, CPSR");
 
@@ -42,7 +42,7 @@ TEST_CASE("Disassemble Status Register access instr", "[Disassembler]") {
 	REQUIRE(Disassemble(0xE320FA23) == "msr CPSR_, #143360");
 }
 
-TEST_CASE("Disassemble Load/Store unsigned Byte/Word", "[Disassembler]") {
+TEST_CASE("Disassemble Load/Store unsigned Byte/Word", "[Disassembler][ARM]") {
 	REQUIRE(Disassemble(0xE5331048) == "ldr r1, [r3, #-72]!");
 	REQUIRE(Disassemble(0xE5B31048) == "ldr r1, [r3, #72]!");
 	REQUIRE(Disassemble(0xE4331048) == "ldrt r1, [r3], #-72");
@@ -59,7 +59,7 @@ TEST_CASE("Disassemble Load/Store unsigned Byte/Word", "[Disassembler]") {
 }
 
 
-TEST_CASE("Disassemble Load/Store signed Byte/ half-word", "[Disassembler]") {
+TEST_CASE("Disassemble Load/Store signed Byte/ half-word", "[Disassembler][ARM]") {
 	//Some of thow have P=0 and W=1 which is unpredictable, those should be removed
 	REQUIRE(Disassemble(0xc01130b5) == "ldrhgt r3, [r1], -r5");
 	REQUIRE(Disassemble(0xc05130b5) == "ldrhgt r3, [r1], #-5");
@@ -85,19 +85,19 @@ TEST_CASE("Disassemble Load/Store signed Byte/ half-word", "[Disassembler]") {
 	REQUIRE(Disassemble(0xc1f130b5) == "ldrhgt r3, [r1, #5]!");
 }
 
-TEST_CASE("Disassemble Load/Store signed Multiple", "[Disassembler]") {
+TEST_CASE("Disassemble Load/Store signed Multiple", "[Disassembler][ARM]") {
 	REQUIRE(Disassemble(0xE8BD4070) == "ldmfd sp!, {r4-r6,lr}");
 	REQUIRE(Disassemble(0xE92D4070) == "stmfd sp!, {r4-r6,lr}");
 }
 
-TEST_CASE("Disassemble Semaphore", "[Disassembler]") {
+TEST_CASE("Disassemble Semaphore", "[Disassembler][ARM]") {
 	REQUIRE(Disassemble(0xE10A5098) == "swp r5, r8, [r10]");
 	REQUIRE(Disassemble(0xE1031092) == "swp r1, r2, [r3]");
 	REQUIRE(Disassemble(0xE14A509C) == "swpb r5, r12, [r10]");
 	REQUIRE(Disassemble(0xE1431092) == "swpb r1, r2, [r3]");
 }
 
-TEST_CASE("Disassemble SWI", "[Disassembler]") {
+TEST_CASE("Disassemble SWI", "[Disassembler][ARM]") {
 	REQUIRE(Disassemble(0xEFB3B3B3) == "swi #11776947");
 	REQUIRE(Disassemble(0xEF5CB35C) == "swi #6075228");
 	REQUIRE(Disassemble(0xEF00006C) == "swi #108");
