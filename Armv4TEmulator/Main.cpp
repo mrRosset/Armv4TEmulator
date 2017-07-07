@@ -46,9 +46,10 @@ void emulate(std::string path) {
 	cpu.gprs[Regs::SP] = 0x3F'FFF;
 
 	while (true) {
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 23; i++) {
 			u16 instr = cpu.mem.read16(cpu.gprs[Regs::PC] + i*2);
 			IR_Thumb ir;
+			ir.instr = TInstructions::SWI;
 			try {
 				Decoder::Decode(ir, instr);
 				std::string text = Disassembler::Disassemble(ir);
@@ -59,13 +60,13 @@ void emulate(std::string path) {
 			}
 		}
 
-		std::cout << "\n\n";
+		/*std::cout << "\n\n";
 
 		for (int i = 0; i < 15; i++) {
 			std::cout << Disassembler::Disassemble_Reg(i) << ": " << std::hex << cpu.gprs[i] << std::dec << std::endl;
 		}
 
-		std::cout << "N:" << cpu.cpsr.flag_N << " Z:" <<cpu.cpsr.flag_Z << " C:" << cpu.cpsr.flag_C << " V:" << cpu.cpsr.flag_V << std::endl;
+		std::cout << "N:" << cpu.cpsr.flag_N << " Z:" <<cpu.cpsr.flag_Z << " C:" << cpu.cpsr.flag_C << " V:" << cpu.cpsr.flag_V << std::endl;*/
 
 		std::cin.get();
 		system("cls");

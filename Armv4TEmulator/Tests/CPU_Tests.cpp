@@ -273,7 +273,7 @@ static const std::vector<data_processing_test> data_processing_tests = {
 TEST_CASE("Data Processing", "[ARM]"){
 	for (auto& test : data_processing_tests) {
 		CPU cpu;
-		IR_ARM instr = { InstructionType::Data_Processing, test.op, Conditions::AL, test.S,  1, 0};
+		IR_ARM instr = { AInstructionType::Data_Processing, test.op, Conditions::AL, test.S,  1, 0};
 		instr.shifter_operand = { Shifter_type::Immediate, test.shifter_result, 0};
 		cpu.gprs[0] = test.operand1;
 		cpu.Execute(instr);

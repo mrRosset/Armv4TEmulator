@@ -70,5 +70,6 @@ public:
 
 	//Thumb
 	void Execute(IR_Thumb & ir);
+	void Data_Processing(IR_Thumb & ir);
 
 };

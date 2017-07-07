@@ -5,16 +5,16 @@
 
 void CPU::Execute(IR_ARM& ir) {
 	switch (ir.type) {
-	case InstructionType::Data_Processing: Data_Processing(ir); break;
-	case InstructionType::Branch: Branch(ir); break;
-	case InstructionType::Multiply: Multiply(ir); break;
-	case InstructionType::Status_Regsiter_Access: Status_Register_Access(ir); break;
-	case InstructionType::Load_Store: Load_Store(ir); break;
-	case InstructionType::Load_Store_Multiple: Load_Store_Multiple(ir); break;
-	case InstructionType::Semaphore: throw std::string("Unimplemented opcode"); break;
-	case InstructionType::Exception_Generating: throw std::string("Unimplemented opcode"); break;
-	case InstructionType::Coprocessor: throw std::string("Unimplemented opcode"); break;
-	case InstructionType::Extensions: throw std::string("Unimplemented opcode"); break;
+	case AInstructionType::Data_Processing: Data_Processing(ir); break;
+	case AInstructionType::Branch: Branch(ir); break;
+	case AInstructionType::Multiply: Multiply(ir); break;
+	case AInstructionType::Status_Regsiter_Access: Status_Register_Access(ir); break;
+	case AInstructionType::Load_Store: Load_Store(ir); break;
+	case AInstructionType::Load_Store_Multiple: Load_Store_Multiple(ir); break;
+	case AInstructionType::Semaphore: throw std::string("Unimplemented opcode"); break;
+	case AInstructionType::Exception_Generating: throw std::string("Unimplemented opcode"); break;
+	case AInstructionType::Coprocessor: throw std::string("Unimplemented opcode"); break;
+	case AInstructionType::Extensions: throw std::string("Unimplemented opcode"); break;
 	}
 }
 

@@ -70,14 +70,14 @@ void Decoder::Decode(IR_Thumb& ir, u16 instr){
 }
 
 void Decoder::Decode_Conditional_Branch(IR_Thumb& ir, u16 instr) {
-	ir.type = InstructionType::Branch;
+	ir.type = TInstructionType::Branch;
 	ir.instr = TInstructions::B_cond;
 	ir.cond = static_cast<Conditions>((instr >> 8) & 0xF);
 	ir.operand1 = instr & 0xFF; // signed immed
 }
 
 void Decoder::Decode_Unconditionnal_Branch(IR_Thumb& ir, u16 instr) {
-	ir.type = InstructionType::Branch;
+	ir.type = TInstructionType::Branch;
 	unsigned H = (instr >> 11) & 0b11;
 
 	switch (H) {
@@ -91,7 +91,7 @@ void Decoder::Decode_Unconditionnal_Branch(IR_Thumb& ir, u16 instr) {
 }
 
 void Decoder::Decode_Branch_With_Exchange(IR_Thumb& ir, u16 instr) {
-	ir.type = InstructionType::Branch;
+	ir.type = TInstructionType::Branch;
 
 	switch (getBit(instr, 7)) {
 	case 0: ir.instr = TInstructions::BX; break;
@@ -101,7 +101,7 @@ void Decoder::Decode_Branch_With_Exchange(IR_Thumb& ir, u16 instr) {
 }
 
 void Decoder::Decode_Add_Sub_reg_imm(IR_Thumb& ir, u16 instr) {
-	ir.type = InstructionType::Data_Processing;
+	ir.type = getBit(instr, 10) == 1 ? TInstructionType::Data_Processing_2 : TInstructionType::Data_Processing_1;
 	
 	switch ((instr >> 9) & 0b11) {
 	case 0b00: ir.instr = TInstructions::ADD_reg; break;
@@ -116,7 +116,7 @@ void Decoder::Decode_Add_Sub_reg_imm(IR_Thumb& ir, u16 instr) {
 }
 
 void Decoder::Decode_Shift_Imm(IR_Thumb& ir, u16 instr) {
-	ir.type = InstructionType::Data_Processing;
+	ir.type = TInstructionType::Data_Processing_4;
 
 	switch ((instr >> 11) & 0b11) {
 	case 0b00: ir.instr = TInstructions::LSL_imm; break;
@@ -130,7 +130,7 @@ void Decoder::Decode_Shift_Imm(IR_Thumb& ir, u16 instr) {
 }
 
 void Decoder::Decode_Add_Sub_Mov_Cmp_imm(IR_Thumb& ir, u16 instr) {
-	ir.type = InstructionType::Data_Processing;
+	ir.type = TInstructionType::Data_Processing_3;
 
 	switch ((instr >> 11) & 0b11) {
 	case 0b00: ir.instr = TInstructions::MOV_imm; break;
@@ -144,7 +144,7 @@ void Decoder::Decode_Add_Sub_Mov_Cmp_imm(IR_Thumb& ir, u16 instr) {
 }
 
 void Decoder::Decode_Data_Processing_Register(IR_Thumb& ir, u16 instr) {
-	ir.type = InstructionType::Data_Processing;
+	ir.type = TInstructionType::Data_Processing_5;
 
 	switch ((instr >> 6) & 0xF) {
 	case 0b0000: ir.instr = TInstructions::AND; break;
@@ -170,7 +170,7 @@ void Decoder::Decode_Data_Processing_Register(IR_Thumb& ir, u16 instr) {
 }
 
 void Decoder::Decode_Add_To_PC_SP(IR_Thumb& ir, u16 instr) {
-	ir.type = InstructionType::Data_Processing;
+	ir.type = TInstructionType::Data_Processing_6;
 	
 	switch (getBit(instr, 11)) {
 	case 0: ir.instr = TInstructions::ADD_imm_pc; break;
@@ -182,7 +182,7 @@ void Decoder::Decode_Add_To_PC_SP(IR_Thumb& ir, u16 instr) {
 }
 
 void Decoder::Decode_Adjust_SP(IR_Thumb& ir, u16 instr) {
-	ir.type = InstructionType::Data_Processing;
+	ir.type = TInstructionType::Data_Processing_7;
 
 	switch (getBit(instr, 7)) {
 	case 0: ir.instr = TInstructions::ADD_inc_sp; break;
@@ -193,7 +193,7 @@ void Decoder::Decode_Adjust_SP(IR_Thumb& ir, u16 instr) {
 }
 
 void Decoder::Decode_Special_Data_Processing(IR_Thumb& ir, u16 instr) {
-	ir.type = InstructionType::Data_Processing;
+	ir.type = TInstructionType::Data_Processing_8;
 
 	switch ((instr >> 8) & 0b11) {
 	case 0b00: ir.instr = TInstructions::ADD_hig_reg; break;
@@ -206,7 +206,7 @@ void Decoder::Decode_Special_Data_Processing(IR_Thumb& ir, u16 instr) {
 }
 
 void Decoder::Decoder_Load_Store_W_B_H_imm(IR_Thumb& ir, u16 instr) {
-	ir.type = InstructionType::Load_Store;
+	ir.type = TInstructionType::Load_Store;
 
 	switch ((instr >> 11) & 0b1'1111) {
 	case 0b01100: ir.instr = TInstructions::STR_imm; break;
@@ -223,7 +223,7 @@ void Decoder::Decoder_Load_Store_W_B_H_imm(IR_Thumb& ir, u16 instr) {
 }
 
 void Decoder::Decode_Load_Store_Reg_offset(IR_Thumb& ir, u16 instr) {
-	ir.type = InstructionType::Load_Store;
+	ir.type = TInstructionType::Load_Store;
 
 	switch ((instr >> 9) & 0b111) {
 	case 0b000: ir.instr = TInstructions::STR_reg; break;
@@ -242,28 +242,28 @@ void Decoder::Decode_Load_Store_Reg_offset(IR_Thumb& ir, u16 instr) {
 }
 
 void Decoder::Decode_Load_PC(IR_Thumb& ir, u16 instr) {
-	ir.type = InstructionType::Load_Store;
+	ir.type = TInstructionType::Load_Store;
 	ir.instr = TInstructions::LDR_pc;
 	ir.operand1 = instr & 0xFF; //immed
 	ir.operand2 = (instr >> 8) & 0b111; //Rd
 }
 
 void Decoder::Decode_Load_Store_SP(IR_Thumb& ir, u16 instr) {
-	ir.type = InstructionType::Load_Store;
+	ir.type = TInstructionType::Load_Store;
 	ir.instr = getBit(instr, 11) == 1 ? TInstructions::LDR_sp : TInstructions::STR_sp;
 	ir.operand1 = instr & 0xFF; //immed
 	ir.operand2 = (instr >> 8) & 0b111; //Rd
 }
 
 void Decoder::Decode_Load_Store_Multiple(IR_Thumb& ir, u16 instr) {
-	ir.type = InstructionType::Load_Store_Multiple;
+	ir.type = TInstructionType::Load_Store_Multiple;
 	ir.instr = getBit(instr, 11) == 1 ? TInstructions::LDMIA : TInstructions::STMIA;
 	ir.operand1 = instr & 0xFF; //reg_list
 	ir.operand2 = (instr >> 8) & 0b111; //Rn
 }
 
 void Decoder::Decode_Push_Pop(IR_Thumb& ir, u16 instr) {
-	ir.type = InstructionType::Load_Store_Multiple;
+	ir.type = TInstructionType::Load_Store_Multiple;
 	ir.instr = getBit(instr, 11) == 1 ? TInstructions::POP : TInstructions::PUSH;
 	ir.operand1 = instr & 0xFF; //reg_list
 	ir.operand2 = getBit(instr, 8); //R

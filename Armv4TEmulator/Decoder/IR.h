@@ -20,7 +20,7 @@ namespace Regs {
 	};
 }
 
-enum class InstructionType {
+enum class AInstructionType {
 	Data_Processing,
 	Branch,
 	Multiply,
@@ -145,7 +145,7 @@ struct Shifter_op {
 };
 
 struct IR_ARM {
-	InstructionType type;
+	AInstructionType type;
 	AInstructions instr;
 	Conditions cond;
 	bool s;
@@ -154,6 +154,23 @@ struct IR_ARM {
 	u32 operand3;
 	u32 operand4;
 	Shifter_op shifter_operand;
+};
+
+enum class TInstructionType {
+	Data_Processing_1,
+	Data_Processing_2,
+	Data_Processing_3,
+	Data_Processing_4,
+	Data_Processing_5,
+	Data_Processing_6,
+	Data_Processing_7,
+	Data_Processing_8,
+	Branch,
+	Multiply,
+	Status_Regsiter_Access,
+	Load_Store,
+	Load_Store_Multiple,
+	Exception_Generating,
 };
 
 enum class TInstructions {
@@ -222,7 +239,7 @@ enum class TInstructions {
 };
 
 struct IR_Thumb {
-	InstructionType type;
+	TInstructionType type;
 	TInstructions instr;
 	Conditions cond;
 	u16 operand1;
