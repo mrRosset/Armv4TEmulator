@@ -270,7 +270,7 @@ static const std::vector<data_processing_test> data_processing_tests = {
 	{ AInstructions::ADD, false, 53005, 2550, 0, 55555 },
 };
 
-TEST_CASE("Data Processing", "[ARM]"){
+TEST_CASE("Data Processing", "[ARM]") {
 	for (auto& test : data_processing_tests) {
 		CPU cpu;
 		IR_ARM instr = { AInstructionType::Data_Processing, test.op, Conditions::AL, test.S,  1, 0};
@@ -279,4 +279,19 @@ TEST_CASE("Data Processing", "[ARM]"){
 		cpu.Execute(instr);
 		REQUIRE(cpu.gprs[1] == test.expected_result);
 	}
+}
+
+TEST_CASE("Simple AND test case", "[ARM]") {
+	CPU cpu;
+	IR_ARM instr = { AInstructionType::Data_Processing, AInstructions::AND, Conditions::AL, true,  1, 0 };
+	instr.shifter_operand = { Shifter_type::Immediate, 0b11010, 0 };	
+	cpu.gprs[0] = 0b10110;
+	cpu.cpsr.flag_N = true;
+	cpu.cpsr.flag_Z = true;
+	cpu.cpsr.flag_C = true;
+	cpu.Execute(instr);
+	REQUIRE(cpu.gprs[1] == 0b10010);
+	REQUIRE(cpu.cpsr.flag_N == false);
+	REQUIRE(cpu.cpsr.flag_Z == false);
+	REQUIRE(cpu.cpsr.flag_C == true);
 }
