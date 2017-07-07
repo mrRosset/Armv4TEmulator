@@ -356,6 +356,7 @@ inline void CPU::Data_Processing(IR_ARM& ir) {
 	auto fun_V = [&]()->bool {return cpsr.flag_V; };
 	auto fun_r_31 = [&](u32 r)->bool {return !!getBit(r, 31); };
 	auto fun_r_0 = [&](u32 r)->bool {return r == 0; };
+	auto fun_r_V = [&](u32 r)->bool {return cpsr.flag_V; };
 
 	switch (ir.instr) {
 	case AInstructions::AND: DP_Instr1(ir.s, Rd, gprs[Rn] & shifter_op, fun_Rd_31, fun_Rd_0, fun_shifter_carry, fun_V); break;
@@ -366,10 +367,10 @@ inline void CPU::Data_Processing(IR_ARM& ir) {
 	case AInstructions::ADC: DP_Instr1(ir.s, Rd, gprs[Rn] + shifter_op + cpsr.flag_C, fun_Rd_31, fun_Rd_0, [&]()->bool {return CarryFrom(gprs[Rn], shifter_op, cpsr.flag_C); }, [&]()->bool {return OverflowFromAdd(gprs[Rn], shifter_op, cpsr.flag_C); }); break;
 	case AInstructions::SBC: DP_Instr1(ir.s, Rd, gprs[Rn] - shifter_op - !cpsr.flag_C, fun_Rd_31, fun_Rd_0, [&]()->bool {return !BorrowFromSub(gprs[Rn], shifter_op, !cpsr.flag_C); }, [&]()->bool {return OverflowFromSub(gprs[Rn], shifter_op, !cpsr.flag_C); }); break;
 	case AInstructions::RSC: DP_Instr1(ir.s, Rd, shifter_op - gprs[Rn] - !cpsr.flag_C, fun_Rd_31, fun_Rd_0, [&]()->bool {return !BorrowFromSub(shifter_op, gprs[Rn], !cpsr.flag_C); }, [&]()->bool {return OverflowFromSub(shifter_op, gprs[Rn], !cpsr.flag_C); }); break;
-	case AInstructions::TST: DP_Instr2(gprs[Rn] & shifter_op, fun_r_31, fun_r_0, [&](u32 r)->bool {return shifter_carry; }, [&](u32 r)->bool {return cpsr.flag_V; }); break;
+	case AInstructions::TST: DP_Instr2(gprs[Rn] & shifter_op, fun_r_31, fun_r_0, [&](u32 r)->bool {return shifter_carry; }, fun_r_V); break;
 	case AInstructions::CMP: DP_Instr2(gprs[Rn] - shifter_op, fun_r_31, fun_r_0, [&](u32 r)->bool {return !BorrowFromSub(gprs[Rn], shifter_op); }, [&](u32 r)->bool {return OverflowFromSub(gprs[Rn], shifter_op); }); break;
 	case AInstructions::CMN: DP_Instr2(gprs[Rn] + shifter_op, fun_r_31, fun_r_0, [&](u32 r)->bool {return CarryFrom(gprs[Rn], shifter_op); }, [&](u32 r)->bool {return OverflowFromAdd(gprs[Rn], shifter_op); }); break;
-	case AInstructions::TEQ: DP_Instr2(gprs[Rn] ^ shifter_op, fun_r_31, fun_r_0, [&](u32 r)->bool {return shifter_carry; }, [&](u32 r)->bool {return cpsr.flag_V; }); break;
+	case AInstructions::TEQ: DP_Instr2(gprs[Rn] ^ shifter_op, fun_r_31, fun_r_0, [&](u32 r)->bool {return shifter_carry; }, fun_r_V); break;
 	case AInstructions::ORR: DP_Instr1(ir.s, Rd, gprs[Rn] | shifter_op, fun_Rd_31, fun_Rd_0, fun_shifter_carry, fun_V); break;
 	case AInstructions::MOV: DP_Instr1(ir.s, Rd, shifter_op, fun_Rd_31, fun_Rd_0, fun_shifter_carry, fun_V); break;
 	case AInstructions::BIC: DP_Instr1(ir.s, Rd, gprs[Rn] & ~shifter_op, fun_Rd_31, fun_Rd_0, fun_shifter_carry, fun_V); break;
