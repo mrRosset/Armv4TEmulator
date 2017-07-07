@@ -209,12 +209,12 @@ void Decoder::Decoder_Load_Store_W_B_H_imm(IR_Thumb& ir, u16 instr) {
 	ir.type = InstructionType::Load_Store;
 
 	switch ((instr >> 11) & 0b1'1111) {
-	case 01100: ir.instr = TInstructions::STR_imm; break;
-	case 01101: ir.instr = TInstructions::LDR_imm; break;
-	case 01110: ir.instr = TInstructions::STRB_imm; break;
-	case 01111: ir.instr = TInstructions::LDRB_imm; break;
-	case 10000: ir.instr = TInstructions::STRH_imm; break;
-	case 10001: ir.instr = TInstructions::LDRH_imm; break;
+	case 0b01100: ir.instr = TInstructions::STR_imm; break;
+	case 0b01101: ir.instr = TInstructions::LDR_imm; break;
+	case 0b01110: ir.instr = TInstructions::STRB_imm; break;
+	case 0b01111: ir.instr = TInstructions::LDRB_imm; break;
+	case 0b10000: ir.instr = TInstructions::STRH_imm; break;
+	case 0b10001: ir.instr = TInstructions::LDRH_imm; break;
 	}
 
 	ir.operand1 = instr & 0b111; //Rd
