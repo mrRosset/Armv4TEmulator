@@ -56,7 +56,7 @@ void Decoder::Decode(IR_Thumb& ir, u16 instr){
 		default: throw std::string("Could not decode Thumb instruction"); break;
 		}
 		return;
-	case 0b1100: throw std::string("Could not decode Thumb instruction"); return;
+	case 0b1100: Decode_Load_Store_Multiple(ir, instr); return;
 	case 0b1101: 
 		switch ((instr >> 8) & 0xF) {
 		case 0b1110: throw std::string("Undefined instruction"); break;
@@ -250,7 +250,14 @@ void Decoder::Decode_Load_PC(IR_Thumb& ir, u16 instr) {
 
 void Decoder::Decode_Load_Store_SP(IR_Thumb& ir, u16 instr) {
 	ir.type = InstructionType::Load_Store;
-	ir.instr = getBit(instr, 11) == 1 ? TInstructions::LDR_sp: TInstructions::STR_sp;
+	ir.instr = getBit(instr, 11) == 1 ? TInstructions::LDR_sp : TInstructions::STR_sp;
 	ir.operand1 = instr & 0xFF; //immed
 	ir.operand2 = (instr >> 8) & 0b111; //Rd
+}
+
+void Decoder::Decode_Load_Store_Multiple(IR_Thumb& ir, u16 instr) {
+	ir.type = InstructionType::Load_Store_Multiple;
+	ir.instr = getBit(instr, 11) == 1 ? TInstructions::LDMIA : TInstructions::STMIA;
+	ir.operand1 = instr & 0xFF; //reg_list
+	ir.operand2 = (instr >> 8) & 0b111; //Rn
 }
