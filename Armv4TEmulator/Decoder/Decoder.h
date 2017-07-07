@@ -32,4 +32,5 @@ namespace Decoder {
 	void Decoder_Load_Store_W_B_H_imm(IR_Thumb& ir, u16 instr);
 	void Decode_Load_Store_Reg_offset(IR_Thumb& ir, u16 instr);
 	void Decode_Load_PC(IR_Thumb& ir, u16 instr);
+	void Decode_Load_Store_SP(IR_Thumb& ir, u16 instr);
 }
