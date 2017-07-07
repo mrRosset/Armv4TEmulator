@@ -22,23 +22,28 @@ void Decoder::Decode(IR_Thumb& ir, u16 instr){
 	case 0b111: Decode_Unconditionnal_Branch(ir, instr); return;
 	}
 	
-	if (((instr >> 10) & 0b111111) == 0b010000) {
+	if (((instr >> 10) & 0b11'1111) == 0b010000) {
 		Decode_Data_Processing_Register(ir, instr);
 		return;
 	}
 
-	if (((instr >> 8) & 0b11111111) == 0b01000111) {
+	if (((instr >> 8) & 0b1111'1111) == 0b01000111) {
 		Decode_Branch_With_Exchange(ir, instr);
 		return;
 	}
 
-	if (((instr >> 10) & 0b111111) == 0b010001) {
+	if (((instr >> 10) & 0b11'1111) == 0b010001) {
 		Decode_Special_Data_Processing(ir, instr);
 		return;
 	}
 
+	if (((instr >> 11) & 0b1'1111) == 0b01001) {
+		Decode_Load_PC(ir, instr);
+		return;
+	}
+
 	switch ((instr >> 12) & 0b1111) {
-	case 0b0101: Decoder_Load_Store_Reg_offset(ir, instr); return;
+	case 0b0101: Decode_Load_Store_Reg_offset(ir, instr); return;
 	case 0b0110:
 	case 0b0111: 
 	case 0b1000: Decoder_Load_Store_W_B_H_imm(ir, instr); return;
@@ -215,7 +220,7 @@ void Decoder::Decoder_Load_Store_W_B_H_imm(IR_Thumb& ir, u16 instr) {
 	ir.operand3 = (instr >> 6) & 0b11111; //immed
 }
 
-void Decoder::Decoder_Load_Store_Reg_offset(IR_Thumb& ir, u16 instr) {
+void Decoder::Decode_Load_Store_Reg_offset(IR_Thumb& ir, u16 instr) {
 	ir.type = InstructionType::Load_Store;
 
 	switch ((instr >> 9) & 0b111) {
@@ -232,4 +237,11 @@ void Decoder::Decoder_Load_Store_Reg_offset(IR_Thumb& ir, u16 instr) {
 	ir.operand1 = instr & 0b111; //Rd
 	ir.operand2 = (instr >> 3) & 0b111; //Rn
 	ir.operand3 = (instr >> 6) & 0b111; //Rm
+}
+
+void Decoder::Decode_Load_PC(IR_Thumb& ir, u16 instr) {
+	ir.type = InstructionType::Load_Store;
+	ir.instr = TInstructions::LDR_pc;
+	ir.operand1 = instr & 0xFF; //immed
+	ir.operand2 = (instr >> 8) & 0b111; //Rd
 }
