@@ -58,20 +58,22 @@ void Decoder::Decode(IR_Thumb& ir, u16 instr){
 		return;
 	case 0b1100: throw std::string("Could not decode Thumb instruction"); return;
 	case 0b1101: 
-		unsigned bits11_8 = (instr >> 8) & 0xF;
-		switch (bits11_8) {
-		case 0b1110: throw std::string("Undefined instruction");
+		switch ((instr >> 8) & 0xF) {
+		case 0b1110: throw std::string("Undefined instruction"); break;
 		case 0b1111: throw std::string("Could not decode Thumb instruction"); break; //Software interrupts
-		default:
-			ir.type = InstructionType::Branch;
-			ir.instr = TInstructions::B_cond;
-			ir.cond = static_cast<Conditions>(bits11_8);
-			ir.operand1 = instr & 0xFF; // signed immed
+		default: Decode_Conditional_Branch(ir, instr); break;
 		}
 		return;
 	}
 
 	throw std::string("Could not decode Thumb instruction");
+}
+
+void Decoder::Decode_Conditional_Branch(IR_Thumb& ir, u16 instr) {
+	ir.type = InstructionType::Branch;
+	ir.instr = TInstructions::B_cond;
+	ir.cond = static_cast<Conditions>((instr >> 8) & 0xF);
+	ir.operand1 = instr & 0xFF; // signed immed
 }
 
 void Decoder::Decode_Unconditionnal_Branch(IR_Thumb& ir, u16 instr) {
