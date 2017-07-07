@@ -28,7 +28,7 @@ void loadFile(std::string path, std::vector<u8>& data) {
 	if (data.size() < length) {
 		data.resize(length);
 	}
-	if (!stream.read((char*)data.data() + 0x40'000 - 0x7c, length))
+	if (!stream.read((char*)data.data(), length))
 	{
 		throw std::string("Error reading bytes from file");
 	}
@@ -42,22 +42,20 @@ void emulate(std::string path) {
 	loadFile(path, cpu.mem.mem);
 
 	//test
-	cpu.gprs[Regs::PC] = 0x40'000;//0x7c;
-	//cpu.gprs[Regs::PC] = 0x622CC; //0x62230
-	//cpu.gprs[Regs::PC] = 0x627c0; // 0x62744
-	
-	cpu.gprs[Regs::SP] = 0x6c;
+	cpu.gprs[Regs::PC] = 0x64;
+	cpu.gprs[Regs::SP] = 0x3F'FFF;
 
 	while (true) {
 		for (int i = 0; i < 5; i++) {
-			u32 instr = cpu.mem.read32(cpu.gprs[Regs::PC] + i*4);
-			IR_ARM ir;
+			u16 instr = cpu.mem.read16(cpu.gprs[Regs::PC] + i*2);
+			IR_Thumb ir;
 			try {
 				Decoder::Decode(ir, instr);
-				std::cout << std::hex << cpu.gprs[Regs::PC] + i*4 << " - " << instr << std::dec << ": " << std::hex << Disassembler::Disassemble(ir) << std::endl;
+				std::string text = Disassembler::Disassemble(ir);
+				std::cout << std::hex << cpu.gprs[Regs::PC] + i*2 << " - " << instr << std::dec << ": " << std::hex << Disassembler::Disassemble(ir) << std::endl;
 			}
 			catch (...) {
-				std::cout << std::hex << cpu.gprs[Regs::PC] + i*4 << " - " << instr << std::dec << ": " << "Unkown instruction" << std::endl;
+				std::cout << std::hex << cpu.gprs[Regs::PC] + i*2 << " - " << instr << std::dec << ": " << "Unkown instruction" << std::endl;
 			}
 		}
 
@@ -71,7 +69,8 @@ void emulate(std::string path) {
 
 		std::cin.get();
 		system("cls");
-		cpu.Step();
+		//cpu.Step();
+		cpu.gprs[Regs::PC] += 2;
 	}
 
 	for (int i = 0; i < cpu.mem.mem.size() / 4; i += 4) {
