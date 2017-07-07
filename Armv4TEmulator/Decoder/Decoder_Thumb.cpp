@@ -53,7 +53,7 @@ void Decoder::Decode(IR_Thumb& ir, u16 instr){
 		switch ((instr >> 8) & 0xF) {
 		case 0b0000: Decode_Adjust_SP(ir, instr); break;
 		case 0b1110: throw std::string("Could not decode Thumb instruction"); break;
-		default: throw std::string("Could not decode Thumb instruction"); break;
+		default: Decode_Push_Pop(ir, instr); break;
 		}
 		return;
 	case 0b1100: Decode_Load_Store_Multiple(ir, instr); return;
