@@ -75,6 +75,13 @@ std::string Disassembler::Disassemble(IR_Thumb& ir) {
 	case TInstructions::LDR_pc: return "ldr " + Disassemble_Reg(ir.operand2) + ", [pc, #" + std::to_string(ir.operand1 * 4) + "]";
 	case TInstructions::LDR_sp: return "ldr " + Disassemble_Reg(ir.operand2) + ", [sp, #" + std::to_string(ir.operand1 * 4) + "]";
 	case TInstructions::STR_sp: return "str " + Disassemble_Reg(ir.operand2) + ", [sp, #" + std::to_string(ir.operand1 * 4) + "]";
+	
+	//Load/Store Multiple Instructions
+	case TInstructions::LDMIA: return "ldmia " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Small_Reg_List(ir.operand1, false, false);
+	case TInstructions::STMIA: return "stmia " + Disassemble_Reg(ir.operand2) + ", " + Disassemble_Small_Reg_List(ir.operand1, false, false);
+
+	case TInstructions::POP:  return "pop "  + Disassemble_Small_Reg_List(ir.operand1, false, !!ir.operand2);
+	case TInstructions::PUSH: return "push " + Disassemble_Small_Reg_List(ir.operand1, !!ir.operand2, false);
 	}
 
 	throw std::string("Could not disassemble Thumb instruction");
@@ -83,4 +90,32 @@ std::string Disassembler::Disassemble(IR_Thumb& ir) {
 std::string Disassembler::Disassemble_Branch_Signed_Offset(s32 offset) {
 	std::string sign = offset >= 0 ? "+" : "-";
 	return sign + "#" + std::to_string(abs(offset));
+}
+
+std::string Disassembler::Disassemble_Small_Reg_List(u16 list, bool lr, bool pc) {
+	std::string result = "{";
+	bool current = false;
+	unsigned start = 0;
+	unsigned end = 0;
+
+	for (int i = 0; i < 8; i++) {
+		if (!current && getBit(list, i) == 1) {
+			current = true;
+			start = i;
+		}
+
+		if (current && getBit(list, i) == 1 && (i == 15 || getBit(list, i + 1) == 0)) {
+			current = false;
+			end = i;
+			if (start == end) {
+				result += Disassemble_Reg(start) + ",";
+			}
+			else {
+				result += Disassemble_Reg(start) + "-" + Disassemble_Reg(end) + ",";
+			}
+		}
+	}
+	if (pc) return result + "pc}";
+	else if (lr) return result + "lr}";
+	else return result.substr(0, result.length() - 1) + "}";
 }
