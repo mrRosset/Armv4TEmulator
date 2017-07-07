@@ -3,29 +3,7 @@
 #include "Utils.h"
 #include "Decoder/Decoder.h"
 
-bool CPU::Check_Condition(IR_ARM& ir) {
-	switch (ir.cond) {
-	case Conditions::EQ: return cpsr.flag_Z;
-	case Conditions::NE: return !cpsr.flag_Z;
-	case Conditions::CS_HS: return cpsr.flag_C;
-	case Conditions::CC_LO: return !cpsr.flag_C;
-	case Conditions::MI: return cpsr.flag_N;
-	case Conditions::PL: return !cpsr.flag_N;
-	case Conditions::VS: return cpsr.flag_V;
-	case Conditions::VC: return !cpsr.flag_V;
-	case Conditions::HI: return cpsr.flag_C && !cpsr.flag_Z;
-	case Conditions::LS: return !cpsr.flag_C || cpsr.flag_Z;
-	case Conditions::GE: return cpsr.flag_N == cpsr.flag_V;
-	case Conditions::LT: return cpsr.flag_N != cpsr.flag_V;
-	case Conditions::GT: return !cpsr.flag_Z && cpsr.flag_N == cpsr.flag_V;
-	case Conditions::LE: return cpsr.flag_Z && cpsr.flag_N != cpsr.flag_V;
-	case Conditions::AL: return true;
-	case Conditions::NV: throw "Unpredictable instructions are not emulated";
-	}
-	throw "Invalid condition";
-}
-
-void CPU::ARM_Execute(IR_ARM& ir) {
+void CPU::Execute(IR_ARM& ir) {
 	switch (ir.type) {
 	case InstructionType::Data_Processing: Data_Processing(ir); break;
 	case InstructionType::Branch: Branch(ir); break;

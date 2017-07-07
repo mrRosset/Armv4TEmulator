@@ -30,6 +30,7 @@ struct PSR {
 //Forward declaration
 struct IR_ARM;
 struct Shifter_op;
+enum class Conditions : u8;
 
 class CPU {
 public:
@@ -50,8 +51,10 @@ public:
 
 	CPU();
 	void Step();
-	bool Check_Condition(IR_ARM& ir);
-	void ARM_Execute(IR_ARM& ir);
+	bool Check_Condition(Conditions& cond);
+
+	//ARM
+	void Execute(IR_ARM& ir);
 	void Load_Store_Multiple(IR_ARM& ir);
 	void Load_Store(IR_ARM& ir);
 	void Status_Register_Access(IR_ARM& ir);
