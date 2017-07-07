@@ -44,6 +44,16 @@ std::string Disassembler::Disassemble(IR_Thumb& ir) {
 	case     TInstructions::MUL: return "mul " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2);
 	case     TInstructions::BIC: return "bic " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2);
 	case     TInstructions::MVN: return "mvn " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2);	
+
+	case TInstructions::ADD_imm_pc: return "add " + Disassemble_Reg(ir.operand2) + ", PC, #" + std::to_string(ir.operand1 * 4);
+	case TInstructions::ADD_imm_sp: return "add " + Disassemble_Reg(ir.operand2) + ", SP, #" + std::to_string(ir.operand1 * 4);
+
+	case TInstructions::ADD_inc_sp: return "add SP, #" + std::to_string(ir.operand1 * 4);
+	case TInstructions::SUB_dec_sp: return "sub SP, #" + std::to_string(ir.operand1 * 4);
+	
+	case TInstructions::ADD_hig_reg: return "add " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2);
+	case TInstructions::CMP_hig_reg: return "cmp " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2);
+	case TInstructions::MOV_hig_reg: return "mov " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2);
 	}
 
 	return std::string();
