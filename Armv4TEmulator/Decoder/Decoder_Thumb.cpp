@@ -38,25 +38,25 @@ void Decoder::Decode(IR_Thumb& ir, u16 instr){
 	}
 
 	switch ((instr >> 12) & 0b1111) {
-	case 0b0101: return;
+	case 0b0101: throw std::string("Could not decode Thumb instruction"); return;
 	case 0b0110:
-	case 0b0111: return;
-	case 0b1000: return;
-	case 0b1001: return;
+	case 0b0111: throw std::string("Could not decode Thumb instruction"); return;
+	case 0b1000: throw std::string("Could not decode Thumb instruction"); return;
+	case 0b1001: throw std::string("Could not decode Thumb instruction"); return;
 	case 0b1010: Decode_Add_To_PC_SP(ir, instr); return;
 	case 0b1011: 
 		switch ((instr >> 8) & 0xF) {
 		case 0b0000: Decode_Adjust_SP(ir, instr); break;
-		case 0b1110: break;
-		default: break;
+		case 0b1110: throw std::string("Could not decode Thumb instruction"); break;
+		default: throw std::string("Could not decode Thumb instruction"); break;
 		}
 		return;
-	case 0b1100: return;
+	case 0b1100: throw std::string("Could not decode Thumb instruction"); return;
 	case 0b1101: 
 		unsigned bits11_8 = (instr >> 8) & 0xF;
 		switch (bits11_8) {
 		case 0b1110: throw std::string("Undefined instruction");
-		case 0b1111: break; //Software interrupts
+		case 0b1111: throw std::string("Could not decode Thumb instruction"); break; //Software interrupts
 		default:
 			ir.type = InstructionType::Branch;
 			ir.instr = TInstructions::B_cond;
@@ -66,6 +66,7 @@ void Decoder::Decode(IR_Thumb& ir, u16 instr){
 		return;
 	}
 
+	throw std::string("Could not decode Thumb instruction");
 }
 
 void Decoder::Decode_Unconditionnal_Branch(IR_Thumb& ir, u16 instr) {

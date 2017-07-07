@@ -56,7 +56,7 @@ std::string Disassembler::Disassemble(IR_Thumb& ir) {
 	case TInstructions::MOV_hig_reg: return "mov " + Disassemble_Reg(ir.operand1) + ", " + Disassemble_Reg(ir.operand2);
 	}
 
-	return std::string();
+	throw std::string("Could not disassemble Thumb instruction");
 }
 
 std::string Disassembler::Disassemble_Branch_Signed_Offset(s32 offset) {
