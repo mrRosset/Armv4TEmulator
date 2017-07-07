@@ -70,6 +70,7 @@ public:
 
 	//Thumb
 	void Execute(IR_Thumb & ir);
-	void Data_Processing(IR_Thumb & ir);
+	void Data_Processing_1(IR_Thumb & ir);
+	void DP_Instr1(unsigned Rd, u32 result, std::function<bool()> N, std::function<bool()> Z, std::function<bool()> C, std::function<bool()> V);
 
 };
