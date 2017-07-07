@@ -40,8 +40,8 @@ void Decoder::Decode(IR_Thumb& ir, u16 instr){
 	switch ((instr >> 12) & 0b1111) {
 	case 0b0101: throw std::string("Could not decode Thumb instruction"); return;
 	case 0b0110:
-	case 0b0111: throw std::string("Could not decode Thumb instruction"); return;
-	case 0b1000: throw std::string("Could not decode Thumb instruction"); return;
+	case 0b0111: 
+	case 0b1000: Decoder_Load_Store_W_B_H_imm(ir, instr); return;
 	case 0b1001: throw std::string("Could not decode Thumb instruction"); return;
 	case 0b1010: Decode_Add_To_PC_SP(ir, instr); return;
 	case 0b1011: 
@@ -196,4 +196,21 @@ void Decoder::Decode_Special_Data_Processing(IR_Thumb& ir, u16 instr) {
 
 	ir.operand1 = (getBit(instr, 7) << 3) | (instr & 0b111); // H1|Rd/Rn
 	ir.operand2 = (instr >> 3) & 0xF; // H2|Rm
+}
+
+void Decoder::Decoder_Load_Store_W_B_H_imm(IR_Thumb& ir, u16 instr) {
+	ir.type = InstructionType::Load_Store;
+
+	switch ((instr >> 11) & 0b1'1111) {
+	case 01100: ir.instr = TInstructions::STR_imm;
+	case 01101: ir.instr = TInstructions::LDR_imm;
+	case 01110: ir.instr = TInstructions::STRB_imm;
+	case 01111: ir.instr = TInstructions::LDRB_imm;
+	case 10000: ir.instr = TInstructions::STRH_imm;
+	case 10001: ir.instr = TInstructions::LDRH_imm;
+	}
+
+	ir.operand1 = instr & 0b111; //Rd
+	ir.operand2 = (instr >> 3) & 0b111; //Rn
+	ir.operand3 = (instr >> 6) & 0b11111; //immed
 }
