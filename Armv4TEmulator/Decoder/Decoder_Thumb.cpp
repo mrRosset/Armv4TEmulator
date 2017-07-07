@@ -38,7 +38,7 @@ void Decoder::Decode(IR_Thumb& ir, u16 instr){
 	}
 
 	switch ((instr >> 12) & 0b1111) {
-	case 0b0101: throw std::string("Could not decode Thumb instruction"); return;
+	case 0b0101: Decoder_Load_Store_Reg_offset(ir, instr); return;
 	case 0b0110:
 	case 0b0111: 
 	case 0b1000: Decoder_Load_Store_W_B_H_imm(ir, instr); return;
@@ -202,15 +202,34 @@ void Decoder::Decoder_Load_Store_W_B_H_imm(IR_Thumb& ir, u16 instr) {
 	ir.type = InstructionType::Load_Store;
 
 	switch ((instr >> 11) & 0b1'1111) {
-	case 01100: ir.instr = TInstructions::STR_imm;
-	case 01101: ir.instr = TInstructions::LDR_imm;
-	case 01110: ir.instr = TInstructions::STRB_imm;
-	case 01111: ir.instr = TInstructions::LDRB_imm;
-	case 10000: ir.instr = TInstructions::STRH_imm;
-	case 10001: ir.instr = TInstructions::LDRH_imm;
+	case 01100: ir.instr = TInstructions::STR_imm; break;
+	case 01101: ir.instr = TInstructions::LDR_imm; break;
+	case 01110: ir.instr = TInstructions::STRB_imm; break;
+	case 01111: ir.instr = TInstructions::LDRB_imm; break;
+	case 10000: ir.instr = TInstructions::STRH_imm; break;
+	case 10001: ir.instr = TInstructions::LDRH_imm; break;
 	}
 
 	ir.operand1 = instr & 0b111; //Rd
 	ir.operand2 = (instr >> 3) & 0b111; //Rn
 	ir.operand3 = (instr >> 6) & 0b11111; //immed
+}
+
+void Decoder::Decoder_Load_Store_Reg_offset(IR_Thumb& ir, u16 instr) {
+	ir.type = InstructionType::Load_Store;
+
+	switch ((instr >> 9) & 0b111) {
+	case 0b000: ir.instr = TInstructions::STRB_reg; break;
+	case 0b001: ir.instr = TInstructions::STRH_reg; break;
+	case 0b010: ir.instr = TInstructions::STRB_reg; break;
+	case 0b011: ir.instr = TInstructions::LDRSB; break;
+	case 0b100: ir.instr = TInstructions::LDR_reg; break;
+	case 0b101: ir.instr = TInstructions::LDRH_reg; break;
+	case 0b110: ir.instr = TInstructions::LDRB_reg; break;
+	case 0b111: ir.instr = TInstructions::LDRSH; break;
+	}
+
+	ir.operand1 = instr & 0b111; //Rd
+	ir.operand2 = (instr >> 3) & 0b111; //Rn
+	ir.operand3 = (instr >> 6) & 0b111; //Rm
 }

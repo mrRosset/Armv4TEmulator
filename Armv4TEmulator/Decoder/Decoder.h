@@ -29,4 +29,5 @@ namespace Decoder {
 	void Decode_Adjust_SP(IR_Thumb& ir, u16 instr);
 	void Decode_Special_Data_Processing(IR_Thumb& ir, u16 instr);
 	void Decoder_Load_Store_W_B_H_imm(IR_Thumb& ir, u16 instr);
+	void Decoder_Load_Store_Reg_offset(IR_Thumb& ir, u16 instr);
 }
