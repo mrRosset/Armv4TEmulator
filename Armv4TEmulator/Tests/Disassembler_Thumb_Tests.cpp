@@ -27,3 +27,11 @@ TEST_CASE("Branch", "[Disassembler][Thumb]") {
 	REQUIRE(Disassemble(0x4730) == "bx r6");
 }
 
+TEST_CASE("Load", "[Disassembler][Thumb]") {
+	REQUIRE(Disassemble(0x4813) == "ldr r0, [pc, #76]");
+	REQUIRE(Disassemble(0x6840) == "ldr r0, [r0, #4]");
+	REQUIRE(Disassemble(0x4d11) == "ldr r5, [pc, #68]");
+
+	REQUIRE(Disassemble(0xb570) == "push {r4-r6,lr}");
+}
+
