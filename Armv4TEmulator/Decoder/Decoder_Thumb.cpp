@@ -261,3 +261,10 @@ void Decoder::Decode_Load_Store_Multiple(IR_Thumb& ir, u16 instr) {
 	ir.operand1 = instr & 0xFF; //reg_list
 	ir.operand2 = (instr >> 8) & 0b111; //Rn
 }
+
+void Decoder::Decode_Push_Pop(IR_Thumb& ir, u16 instr) {
+	ir.type = InstructionType::Load_Store_Multiple;
+	ir.instr = getBit(instr, 11) == 1 ? TInstructions::POP : TInstructions::PUSH;
+	ir.operand1 = instr & 0xFF; //reg_list
+	ir.operand2 = getBit(instr, 8); //R
+}
