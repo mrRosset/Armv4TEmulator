@@ -21,5 +21,7 @@
     <ClCompile Include="Disassembler\Disassembler_Thumb.cpp" />
     <ClCompile Include="Tests\Disassembler_ARM_Tests.cpp" />
     <ClCompile Include="Tests\Disassembler_Thumb_Tests.cpp" />
+    <ClCompile Include="CPU_ARM.cpp" />
+    <ClCompile Include="CPU_Thumb.cpp" />
   </ItemGroup>
 </Project>

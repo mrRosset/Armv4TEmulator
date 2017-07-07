@@ -210,6 +210,8 @@
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CPU_ARM.cpp" />
+    <ClCompile Include="CPU_Thumb.cpp" />
     <ClCompile Include="Decoder\Decoder_ARM.cpp" />
     <ClCompile Include="Decoder\Decoder_Thumb.cpp" />
     <ClCompile Include="Disassembler\Disassembler_ARM.cpp" />
