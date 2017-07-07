@@ -29,6 +29,7 @@ struct PSR {
 
 //Forward declaration
 struct IR_ARM;
+struct IR_Thumb;
 struct Shifter_op;
 enum class Conditions : u8;
 
@@ -66,4 +67,8 @@ public:
 	void DP_Instr1(bool S, unsigned Rd, u32 result, std::function<bool()> N, std::function<bool()> Z, std::function<bool()> C, std::function<bool()> V);
 	void DP_Instr2(u32 result, std::function<bool(u32)> N, std::function<bool(u32)> Z, std::function<bool(u32)> C, std::function<bool(u32)> V);
 	std::tuple<u32, bool> shifter_operand(Shifter_op& so, bool negatif);
+
+	//Thumb
+	void Execute(IR_Thumb & ir);
+
 };

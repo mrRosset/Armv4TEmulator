@@ -26,7 +26,7 @@ void CPU::Step() {
 		u32 old_pc = gprs[Regs::PC];
 
 		if (Check_Condition(ir.cond)) {
-			//ARM_Execute(ir);
+			Execute(ir);
 		}
 
 		if (gprs[Regs::PC] == old_pc) {
@@ -43,7 +43,7 @@ void CPU::Step() {
 		u32 old_pc = gprs[Regs::PC];
 
 		if (Check_Condition(ir.cond)) {
-			ARM_Execute(ir);
+			Execute(ir);
 		}
 
 		if (gprs[Regs::PC] == old_pc) {

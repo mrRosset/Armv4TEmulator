@@ -276,7 +276,7 @@ TEST_CASE("Data Processing", "[ARM]"){
 		IR_ARM instr = { InstructionType::Data_Processing, test.op, Conditions::AL, test.S,  1, 0};
 		instr.shifter_operand = { Shifter_type::Immediate, test.shifter_result, 0};
 		cpu.gprs[0] = test.operand1;
-		cpu.ARM_Execute(instr);
+		cpu.Execute(instr);
 		REQUIRE(cpu.gprs[1] == test.expected_result);
 	}
 }
