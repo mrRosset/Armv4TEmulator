@@ -226,7 +226,7 @@ void Decoder::Decode_Load_Store_Reg_offset(IR_Thumb& ir, u16 instr) {
 	ir.type = InstructionType::Load_Store;
 
 	switch ((instr >> 9) & 0b111) {
-	case 0b000: ir.instr = TInstructions::STRB_reg; break;
+	case 0b000: ir.instr = TInstructions::STR_reg; break;
 	case 0b001: ir.instr = TInstructions::STRH_reg; break;
 	case 0b010: ir.instr = TInstructions::STRB_reg; break;
 	case 0b011: ir.instr = TInstructions::LDRSB; break;
