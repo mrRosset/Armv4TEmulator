@@ -166,8 +166,6 @@ enum class TInstructionType {
 	Data_Processing_7,
 	Data_Processing_8,
 	Branch,
-	Multiply,
-	Status_Regsiter_Access,
 	Load_Store,
 	Load_Store_Multiple,
 	Exception_Generating,
