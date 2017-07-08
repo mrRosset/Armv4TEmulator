@@ -14,7 +14,7 @@ void CPU::Execute(IR_Thumb& ir) {
 	case TInstructionType::Data_Processing_8: Data_Processing_8(ir); break;
 	case TInstructionType::Branch: Branch(ir); break;
 	case TInstructionType::Load_Store: Load_Store(ir); break;
-	case TInstructionType::Load_Store_Multiple: throw std::string("Unimplemented opcode"); break;
+	case TInstructionType::Load_Store_Multiple: Load_Store_Multiple(ir); break;
 	case TInstructionType::Exception_Generating: throw std::string("Unimplemented opcode"); break;
 	}
 }
