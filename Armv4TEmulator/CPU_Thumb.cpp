@@ -133,3 +133,19 @@ void CPU::Data_Processing_5(IR_Thumb& ir) {
 	break;
 	}
 }
+
+void CPU::Data_Processing_6_7(IR_Thumb& ir) {
+	u16& immed = ir.operand1;
+	u16& Rd = ir.operand2;
+
+	auto fun_Rd_31 = [&]()->bool {return !!getBit(gprs[Rd], 31); };
+	auto fun_Rd_0 = [&]()->bool {return gprs[Rd] == 0; };
+
+	//PC = PC or PC + 4 ??
+	switch (ir.instr) {
+	case TInstructions::ADD_imm_pc: gprs[Rd] = (gprs[Regs::PC] & 0xFFFFFFFC) + (immed << 2);  break;
+	case TInstructions::ADD_imm_sp: gprs[Rd] = gprs[Regs::SP] + (immed << 2); break;
+	case TInstructions::ADD_inc_sp: gprs[Regs::SP] = gprs[Regs::SP] + (immed << 2);  break;
+	case TInstructions::SUB_dec_sp: gprs[Regs::SP] = gprs[Regs::SP] - (immed << 2); break;
+	}
+}
