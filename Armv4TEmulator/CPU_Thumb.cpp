@@ -23,11 +23,12 @@ void CPU::Load_Store(IR_Thumb& ir) {
 	u16& Rd = ir.operand1;
 	u16& Rn = ir.operand2;
 	u16& immed = ir.operand3;
+	u16& Rm = ir.operand3;
 
 	switch (ir.instr) {
 	case TInstructions::LDR_imm: {
 		u32 address = gprs[Rn] + (immed * 4);
-		if (address & 0b11 == 0b00) gprs[Rd] = mem.read32(address);
+		if ((address & 0b11) == 0b00) gprs[Rd] = mem.read32(address);
 		else throw std::string("unpredictable load of unaligned address");
 		break;
 	}
@@ -38,13 +39,13 @@ void CPU::Load_Store(IR_Thumb& ir) {
 	}
 	case TInstructions::LDRH_imm: {
 		u32 address = gprs[Rn] + (immed * 2);
-		if (address & 0b1 == 0b0) gprs[Rd] = mem.read16(address);
+		if ((address & 0b1) == 0b0) gprs[Rd] = mem.read16(address);
 		else throw std::string("unpredictable load of unaligned address");
 		break;
 	}
 	case TInstructions::STR_imm: {
 		u32 address = gprs[Rn] + (immed * 4);
-		if (address & 0b11 == 0b00) mem.write32(address, gprs[Rd]);
+		if ((address & 0b11) == 0b00) mem.write32(address, gprs[Rd]);
 		else throw std::string("unpredictable load of unaligned address");
 		break;
 	}
@@ -55,11 +56,58 @@ void CPU::Load_Store(IR_Thumb& ir) {
 	}
 	case TInstructions::STRH_imm: {
 		u32 address = gprs[Rn] + (immed * 2);
-		if (address & 0b1 == 0b0) mem.write16(address, gprs[Rd]);
+		if ((address & 0b1) == 0b0) mem.write16(address, gprs[Rd]);
 		else throw std::string("unpredictable load of unaligned address");
 		break;
 	}
 	
+	case TInstructions::LDR_reg: {
+		u32 address = gprs[Rn] + gprs[Rm];
+		if ((address & 0b11) == 0b00) gprs[Rd] = mem.read32(address);
+		else throw std::string("unpredictable load of unaligned address");
+		break;
+	}
+	case TInstructions::LDRB_reg: {
+		u32 address = gprs[Rn] + gprs[Rm];
+		gprs[Rd] = mem.read8(address);
+		break;
+	}
+	case TInstructions::LDRH_reg: {
+		u32 address = gprs[Rn] + gprs[Rm];
+		if ((address & 0b1) == 0b0) gprs[Rd] = mem.read16(address);
+		else throw std::string("unpredictable load of unaligned address");
+		break;
+	}
+
+	case TInstructions::STR_reg: {
+		u32 address = gprs[Rn] + gprs[Rm];
+		if ((address & 0b11) == 0b00) mem.write32(address, gprs[Rd]);
+		else throw std::string("unpredictable load of unaligned address");
+		break;
+	}
+	case TInstructions::STRB_reg: {
+		u32 address = gprs[Rn] + gprs[Rm];
+		mem.write8(address, gprs[Rd]);
+		break;
+	}
+	case TInstructions::STRH_reg: {
+		u32 address = gprs[Rn] + gprs[Rm];
+		if ((address & 0b1) == 0b0) mem.write16(address, gprs[Rd]);
+		else throw std::string("unpredictable load of unaligned address");
+		break;
+	}
+	
+	case TInstructions::LDRSB: {
+		u32 address = gprs[Rn] + gprs[Rm];
+		gprs[Rd] = SignExtend<s32>(mem.read8(address), 8);
+		break; 
+	}
+	case TInstructions::LDRSH: {
+		u32 address = gprs[Rn] + gprs[Rm];
+		if ((address & 0b1) == 0b0) gprs[Rd] = SignExtend<s32>(mem.read16(address), 16);
+		else throw std::string("unpredictable load of unaligned address");
+		break;
+	}
 
 	}
 }
