@@ -68,6 +68,7 @@ public:
 
 	//Thumb
 	void Execute(IR_Thumb& ir);
+	void Load_Store_Multiple(IR_Thumb& ir);
 	void Load_Store(IR_Thumb& ir);
 	void Branch(IR_Thumb& ir);
 	void Data_Processing_1_2(IR_Thumb& ir);

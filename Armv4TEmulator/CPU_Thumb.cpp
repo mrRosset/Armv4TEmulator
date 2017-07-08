@@ -19,6 +19,102 @@ void CPU::Execute(IR_Thumb& ir) {
 	}
 }
 
+void CPU::Load_Store_Multiple(IR_Thumb& ir) {
+	u16& reg_list = ir.operand1;
+	u16& Rn = ir.operand2;
+	u16& R = ir.operand2;
+
+	unsigned number_regs_modified = 0;
+
+	for (int i = 0; i < 8; i++) {
+		if (getBit(reg_list, i) == 1) {
+			number_regs_modified++;
+		}
+	}
+
+	switch (ir.instr) {
+
+	case TInstructions::LDMIA: {
+		u32 start_address = gprs[Rn];
+		u32 end_address = gprs[Rn] + (number_regs_modified * 4) - 4;
+		u32 address = start_address;
+		for (int i = 0; i < 8; i++) {
+			if (getBit(reg_list, i) == 1) {
+				gprs[i] = mem.read32(address);
+				address = address + 4;
+			}
+		}
+		if (!(end_address == address - 4)) {
+			throw std::string("Something went wrong in Load multiple");
+		}
+		gprs[Rn] = gprs[Rn] + (number_regs_modified * 4);
+		break;
+	}
+
+	case TInstructions::STMIA: {
+		u32 start_address = gprs[Rn];
+		u32 end_address = gprs[Rn] + (number_regs_modified * 4) - 4;
+		u32 address = start_address;
+		for (int i = 0; i < 8; i++) {
+			if (getBit(reg_list, i) == 1) {
+				mem.write32(address, gprs[i]);
+				address = address + 4;
+			}
+		}
+		if (!(end_address == address - 4)) {
+			throw std::string("Something went wrong in Load multiple");
+		}
+		gprs[Rn] = gprs[Rn] + (number_regs_modified * 4);
+		break;
+	}
+	case TInstructions::POP: {
+		u32 start_address = gprs[Regs::SP];
+		u32 end_address = gprs[Regs::SP] + 4 * (R + number_regs_modified);
+		u32 address = start_address;
+
+		for (int i = 0; i < 8; i++) {
+			if (getBit(reg_list, i) == 1) {
+				gprs[i] = mem.read32(address);
+				address = address + 4;
+			}
+		}
+
+		if (R == 1) {
+			gprs[Regs::PC] = mem.read32(address) & 0xFFFFFFFE;
+			address = address + 4;
+		}
+
+		if (!(end_address == address)) {
+			throw std::string("Something went wrong in Load multiple");
+		}
+		gprs[Regs::SP] = end_address;
+		break;
+	}
+
+	case TInstructions::PUSH: {
+		u32 start_address = gprs[Regs::SP] - 4 * (R + number_regs_modified);
+		u32 end_address = gprs[Regs::SP] - 4;
+		u32 address = start_address;
+		for (int i = 0; i < 8; i++) {
+			if (getBit(reg_list, i) == 1) {
+				mem.write32(address, gprs[i]);
+				address = address + 4;
+			}
+		}
+
+		if (R == 1) {
+			mem.write32(address, gprs[Regs::LR]);
+			address = address + 4;
+		}
+		if (!(end_address == address - 4)) {
+			throw std::string("Something went wrong in Load multiple");
+		}
+		gprs[Regs::SP] = gprs[Regs::SP] - 4 * (R + number_regs_modified);
+		break;
+	}
+	}
+}
+
 void CPU::Load_Store(IR_Thumb& ir) {
 	u16& Rd = ir.operand1;
 	u16& Rn = ir.operand2;
