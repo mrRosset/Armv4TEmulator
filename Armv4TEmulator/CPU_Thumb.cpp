@@ -9,6 +9,9 @@ void CPU::Execute(IR_Thumb& ir) {
 	case TInstructionType::Data_Processing_3: Data_Processing_3(ir); break;
 	case TInstructionType::Data_Processing_4: Data_Processing_4(ir); break;
 	case TInstructionType::Data_Processing_5: Data_Processing_5(ir); break;
+	case TInstructionType::Data_Processing_6: Data_Processing_6_7(ir); break;
+	case TInstructionType::Data_Processing_7: Data_Processing_6_7(ir); break;
+	case TInstructionType::Data_Processing_8: Data_Processing_8(ir); break;
 	case TInstructionType::Branch: throw std::string("Unimplemented opcode"); break;
 	case TInstructionType::Multiply: throw std::string("Unimplemented opcode"); break;
 	case TInstructionType::Status_Regsiter_Access: throw std::string("Unimplemented opcode"); break;
