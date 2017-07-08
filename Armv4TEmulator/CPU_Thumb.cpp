@@ -12,13 +12,30 @@ void CPU::Execute(IR_Thumb& ir) {
 	case TInstructionType::Data_Processing_6: Data_Processing_6_7(ir); break;
 	case TInstructionType::Data_Processing_7: Data_Processing_6_7(ir); break;
 	case TInstructionType::Data_Processing_8: Data_Processing_8(ir); break;
-	case TInstructionType::Branch: throw std::string("Unimplemented opcode"); break;
+	case TInstructionType::Branch: Branch(ir); break;
 	case TInstructionType::Load_Store: throw std::string("Unimplemented opcode"); break;
 	case TInstructionType::Load_Store_Multiple: throw std::string("Unimplemented opcode"); break;
 	case TInstructionType::Exception_Generating: throw std::string("Unimplemented opcode"); break;
 	}
 }
 
+void CPU::Branch(IR_Thumb& ir) {
+
+	switch (ir.instr) {
+	case TInstructions::B_cond: gprs[Regs::PC] += SignExtend<s32>(ir.operand1 << 1, 9) + 4;  break;
+	case TInstructions::B_imm:  gprs[Regs::PC] += SignExtend<s32>(ir.operand1 << 1, 12) + 4; break;
+	case TInstructions::BL_high: gprs[Regs::LR] = gprs[Regs::PC] + (SignExtend<s32>(ir.operand1, 11) << 12) + 4;  break;
+	case TInstructions::BL:
+		//TODO: Check that it works
+		gprs[Regs::LR] = (gprs[Regs::PC] + 2) | 1; //address of next instruction
+		gprs[Regs::PC] = gprs[Regs::LR] + (ir.operand1 << 1);
+		break;
+	case TInstructions::BX:
+		cpsr.flag_T = !!(gprs[ir.operand1] & 0b1);
+		gprs[Regs::PC] = gprs[ir.operand1] & 0xFFFFFFFE;
+		break;
+	}
+}
 
 void CPU::Data_Processing_1_2(IR_Thumb& ir) {
 	u16& Rd = ir.operand1;

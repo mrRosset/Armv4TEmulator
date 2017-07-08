@@ -67,7 +67,8 @@ public:
 	std::tuple<u32, bool> shifter_operand(Shifter_op& so, bool negatif);
 
 	//Thumb
-	void Execute(IR_Thumb & ir);
+	void Execute(IR_Thumb& ir);
+	void Branch(IR_Thumb& ir);
 	void Data_Processing_1_2(IR_Thumb& ir);
 	void Data_Processing_3(IR_Thumb& ir);
 	void Data_Processing_4(IR_Thumb& ir);
