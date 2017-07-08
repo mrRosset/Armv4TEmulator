@@ -138,14 +138,26 @@ void CPU::Data_Processing_6_7(IR_Thumb& ir) {
 	u16& immed = ir.operand1;
 	u16& Rd = ir.operand2;
 
-	auto fun_Rd_31 = [&]()->bool {return !!getBit(gprs[Rd], 31); };
-	auto fun_Rd_0 = [&]()->bool {return gprs[Rd] == 0; };
-
 	//PC = PC or PC + 4 ??
 	switch (ir.instr) {
 	case TInstructions::ADD_imm_pc: gprs[Rd] = (gprs[Regs::PC] & 0xFFFFFFFC) + (immed << 2);  break;
 	case TInstructions::ADD_imm_sp: gprs[Rd] = gprs[Regs::SP] + (immed << 2); break;
-	case TInstructions::ADD_inc_sp: gprs[Regs::SP] = gprs[Regs::SP] + (immed << 2);  break;
+	case TInstructions::ADD_inc_sp: gprs[Regs::SP] = gprs[Regs::SP] + (immed << 2); break;
 	case TInstructions::SUB_dec_sp: gprs[Regs::SP] = gprs[Regs::SP] - (immed << 2); break;
+	}
+}
+
+void CPU::Data_Processing_8(IR_Thumb& ir) {
+	u16& Rd = ir.operand1;
+	u16& Rn = ir.operand1;
+	u16& Rm = ir.operand2;
+
+	auto fun_Rd_31 = [&]()->bool {return !!getBit(gprs[Rd], 31); };
+	auto fun_Rd_0 = [&]()->bool {return gprs[Rd] == 0; };
+
+	switch (ir.instr) {
+	case TInstructions::ADD_hig_reg: gprs[Rd] = gprs[Rd] + gprs[Rm]; break;
+	case TInstructions::CMP_hig_reg: case TInstructions::CMP_reg: DP_Instr2(gprs[Rn] - gprs[Rm], fun_r_31, fun_r_0, [&](u32 r)->bool {return !BorrowFromSub(gprs[Rn], gprs[Rm]); }, [&](u32 r)->bool {return OverflowFromSub(gprs[Rn], gprs[Rm]); }); break;
+	case TInstructions::MOV_hig_reg: gprs[Rd] = gprs[Rm];  break;
 	}
 }

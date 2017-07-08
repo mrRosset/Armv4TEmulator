@@ -73,6 +73,7 @@ public:
 	void Data_Processing_4(IR_Thumb& ir);
 	void Data_Processing_5(IR_Thumb& ir);
 	void Data_Processing_6_7(IR_Thumb& ir);
+	void Data_Processing_8(IR_Thumb& ir);
 
 	//Common
 	void DP_Instr1(bool S, unsigned Rd, u32 result, std::function<bool()> N, std::function<bool()> Z, std::function<bool()> C, std::function<bool()> V);
