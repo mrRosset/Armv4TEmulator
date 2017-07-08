@@ -109,6 +109,26 @@ void CPU::Load_Store(IR_Thumb& ir) {
 		break;
 	}
 
+	//from here the Rd, Rn, ... don't correspond anymore
+
+	case TInstructions::LDR_pc: {
+		u32 address = (gprs[Regs::PC] & 0xFFFFFFFC) + (ir.operand1 * 4);
+		gprs[ir.operand2] = mem.read32(address);
+		break;
+	}
+
+	case TInstructions::LDR_sp: {
+		u32 address = gprs[Regs::SP] + (ir.operand1 * 4);
+		if ((address & 0b11) == 0b00) gprs[ir.operand2] = mem.read32(address);
+		else throw std::string("unpredictable load of unaligned address");
+		break;
+	}
+	case TInstructions::STR_sp: {
+		u32 address = gprs[Regs::SP] + (ir.operand1 * 4);
+		if ((address & 0b11) == 0b00) mem.write32(address, gprs[ir.operand2]);
+		else throw std::string("unpredictable load of unaligned address");
+		break;
+	}
 	}
 }
 
