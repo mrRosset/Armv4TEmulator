@@ -77,7 +77,7 @@ bool CPU::Check_Condition(Conditions& cond) {
 	throw "Invalid condition";
 }
 
-inline void CPU::DP_Instr1(bool S, unsigned Rd, u32 result, std::function<bool()> N, std::function<bool()> Z, std::function<bool()> C, std::function<bool()> V) {
+void CPU::DP_Instr1(bool S, unsigned Rd, u32 result, std::function<bool()> N, std::function<bool()> Z, std::function<bool()> C, std::function<bool()> V) {
 	gprs[Rd] = result;
 	if (S && Rd == Regs::PC) {
 		throw("no sprs in user/system mode, other mode not implemented yet");
@@ -90,7 +90,7 @@ inline void CPU::DP_Instr1(bool S, unsigned Rd, u32 result, std::function<bool()
 	}
 }
 
-inline void CPU::DP_Instr1(unsigned Rd, u32 result, std::function<bool()> N, std::function<bool()> Z, std::function<bool()> C, std::function<bool()> V) {
+void CPU::DP_Instr1(unsigned Rd, u32 result, std::function<bool()> N, std::function<bool()> Z, std::function<bool()> C, std::function<bool()> V) {
 	gprs[Rd] = result;
 	cpsr.flag_N = N();
 	cpsr.flag_Z = Z();
@@ -98,7 +98,7 @@ inline void CPU::DP_Instr1(unsigned Rd, u32 result, std::function<bool()> N, std
 	cpsr.flag_V = V();
 }
 
-inline void CPU::DP_Instr2(u32 result, std::function<bool(u32)> N, std::function<bool(u32)> Z, std::function<bool(u32)> C, std::function<bool(u32)> V) {
+void CPU::DP_Instr2(u32 result, std::function<bool(u32)> N, std::function<bool(u32)> Z, std::function<bool(u32)> C, std::function<bool(u32)> V) {
 	//TODO: What is alu_out ? what's supposed to happens to the result ?
 	u32 alu_out = result;
 	cpsr.flag_N = N(result);
