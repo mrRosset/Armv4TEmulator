@@ -133,11 +133,3 @@ void CPU::Data_Processing_5(IR_Thumb& ir) {
 	break;
 	}
 }
-
-inline void CPU::DP_Instr1(unsigned Rd, u32 result, std::function<bool()> N, std::function<bool()> Z, std::function<bool()> C, std::function<bool()> V) {
-	gprs[Rd] = result;
-	cpsr.flag_N = N();
-	cpsr.flag_Z = Z();
-	cpsr.flag_C = C();
-	cpsr.flag_V = V();
-}

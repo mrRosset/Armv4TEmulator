@@ -64,8 +64,6 @@ public:
 	void MUL_Instr2(bool S, unsigned RdHi, unsigned RdLo, u32 resultHi, u32 resultLo);
 	void Branch(IR_ARM& ir);
 	void Data_Processing(IR_ARM& ir);
-	void DP_Instr1(bool S, unsigned Rd, u32 result, std::function<bool()> N, std::function<bool()> Z, std::function<bool()> C, std::function<bool()> V);
-	void DP_Instr2(u32 result, std::function<bool(u32)> N, std::function<bool(u32)> Z, std::function<bool(u32)> C, std::function<bool(u32)> V);
 	std::tuple<u32, bool> shifter_operand(Shifter_op& so, bool negatif);
 
 	//Thumb
@@ -74,9 +72,12 @@ public:
 	void Data_Processing_3(IR_Thumb& ir);
 	void Data_Processing_4(IR_Thumb& ir);
 	void Data_Processing_5(IR_Thumb& ir);
+
+	//Common
+	void DP_Instr1(bool S, unsigned Rd, u32 result, std::function<bool()> N, std::function<bool()> Z, std::function<bool()> C, std::function<bool()> V);
 	void DP_Instr1(unsigned Rd, u32 result, std::function<bool()> N, std::function<bool()> Z, std::function<bool()> C, std::function<bool()> V);
-
-
+	void DP_Instr2(u32 result, std::function<bool(u32)> N, std::function<bool(u32)> Z, std::function<bool(u32)> C, std::function<bool(u32)> V);
+	
 	//useful lambdas
 	std::function<bool()> fun_C = [&]()->bool {return cpsr.flag_C; };
 	std::function<bool()> fun_V = [&]()->bool {return cpsr.flag_V; };
