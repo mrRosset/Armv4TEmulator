@@ -73,6 +73,7 @@ public:
 	void Data_Processing_1_2(IR_Thumb& ir);
 	void Data_Processing_3(IR_Thumb& ir);
 	void Data_Processing_4(IR_Thumb& ir);
+	void Data_Processing_5(IR_Thumb& ir);
 	void DP_Instr1(unsigned Rd, u32 result, std::function<bool()> N, std::function<bool()> Z, std::function<bool()> C, std::function<bool()> V);
 
 
@@ -81,5 +82,6 @@ public:
 	std::function<bool()> fun_V = [&]()->bool {return cpsr.flag_V; };
 	std::function<bool(u32)> fun_r_31 = [&](u32 r)->bool {return !!((r >> 31) & 0b1); };
 	std::function<bool(u32)> fun_r_0 = [&](u32 r)->bool {return r == 0; };
+	std::function<bool(u32)> fun_r_C = [&](u32 r)->bool {return cpsr.flag_C; };
 	std::function<bool(u32)> fun_r_V = [&](u32 r)->bool {return cpsr.flag_V; };
 };

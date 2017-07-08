@@ -212,7 +212,7 @@ enum class TInstructions {
 	LSR_imm,
 	LSR_reg,
 	MOV_imm,
-	MOV_reg,
+	//MOV_reg, encoded as an Add with 0 immediate
 	MOV_hig_reg,
 	MUL,
 	MVN,
