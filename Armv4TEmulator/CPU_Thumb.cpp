@@ -234,11 +234,13 @@ void CPU::Branch(IR_Thumb& ir) {
 	case TInstructions::B_cond: gprs[Regs::PC] += SignExtend<s32>(ir.operand1 << 1, 9) + 4;  break;
 	case TInstructions::B_imm:  gprs[Regs::PC] += SignExtend<s32>(ir.operand1 << 1, 12) + 4; break;
 	case TInstructions::BL_high: gprs[Regs::LR] = gprs[Regs::PC] + (SignExtend<s32>(ir.operand1, 11) << 12) + 4;  break;
-	case TInstructions::BL:
+	case TInstructions::BL: {
 		//TODO: Check that it works
-		gprs[Regs::LR] = (gprs[Regs::PC] + 2) | 1; //address of next instruction
+		u32 next_instruction = (gprs[Regs::PC] + 2) | 1;
 		gprs[Regs::PC] = gprs[Regs::LR] + (ir.operand1 << 1);
+		gprs[Regs::LR] = next_instruction;
 		break;
+	}
 	case TInstructions::BX:
 		cpsr.flag_T = !!(gprs[ir.operand1] & 0b1);
 		gprs[Regs::PC] = gprs[ir.operand1] & 0xFFFFFFFE;
