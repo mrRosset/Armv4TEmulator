@@ -35,3 +35,9 @@ TEST_CASE("Load", "[Disassembler][Thumb]") {
 	REQUIRE(Disassemble(0xb570) == "push {r4-r6,lr}");
 }
 
+
+TEST_CASE("Store", "[Disassembler][Thumb]") {
+	REQUIRE(Disassemble(0x9405) == "str r4, [sp, #20]");
+}
+
+
