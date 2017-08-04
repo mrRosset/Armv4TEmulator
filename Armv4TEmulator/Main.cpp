@@ -42,11 +42,12 @@ void emulate(std::string path) {
 	loadFile(path, cpu.mem.mem);
 
 	//test
-	cpu.gprs[Regs::PC] = 0x64;
+	cpu.gprs[Regs::PC] = 0x88;//0x64;
 	cpu.gprs[Regs::SP] = 0x3F'FFF;
+	cpu.cpsr.flag_T = true;
 
 	while (true) {
-		for (int i = 0; i < 23; i++) {
+		for (int i = 0; i < 5; i++) {
 			u16 instr = cpu.mem.read16(cpu.gprs[Regs::PC] + i*2);
 			IR_Thumb ir;
 			ir.instr = TInstructions::SWI;
@@ -60,18 +61,18 @@ void emulate(std::string path) {
 			}
 		}
 
-		/*std::cout << "\n\n";
+		std::cout << "\n\n";
 
 		for (int i = 0; i < 15; i++) {
 			std::cout << Disassembler::Disassemble_Reg(i) << ": " << std::hex << cpu.gprs[i] << std::dec << std::endl;
 		}
 
-		std::cout << "N:" << cpu.cpsr.flag_N << " Z:" <<cpu.cpsr.flag_Z << " C:" << cpu.cpsr.flag_C << " V:" << cpu.cpsr.flag_V << std::endl;*/
+		std::cout << "N:" << cpu.cpsr.flag_N << " Z:" <<cpu.cpsr.flag_Z << " C:" << cpu.cpsr.flag_C << " V:" << cpu.cpsr.flag_V << std::endl;
 
 		std::cin.get();
 		system("cls");
-		//cpu.Step();
-		cpu.gprs[Regs::PC] += 2;
+		cpu.Step();
+		//cpu.gprs[Regs::PC] += 2;
 	}
 
 	for (int i = 0; i < cpu.mem.mem.size() / 4; i += 4) {

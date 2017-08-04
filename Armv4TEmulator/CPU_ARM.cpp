@@ -18,7 +18,7 @@ void CPU::Execute(IR_ARM& ir) {
 	}
 }
 
-inline void CPU::Exception_Generating(IR_ARM& ir){
+inline void CPU::Exception_Generating(IR_ARM& ir) {
 	switch (ir.instr) {
 	case AInstructions::SWI:
 		if (swi_callback) {
@@ -418,12 +418,12 @@ std::tuple<u32, bool> CPU::shifter_operand(Shifter_op& so, bool negatif) {
 	u32& Rm = so.operand1;
 	u32& Rs = so.operand2;
 	u32& shift_imm = so.operand2;
-
+	
 	u32 vRm = Rm <= Regs::PC ? gprs[Rm] : 0;
 	u32 vRs = Rs <= Regs::PC ? gprs[Rs] : 0;
 
 	//TODO take care of PC as Rm, Rn, Rd, Rs
-
+	
 	if (Rs == Regs::PC && so.type != Shifter_type::Immediate && so.type != Shifter_type::Register && so.type != Shifter_type::LSL_imm && so.type != Shifter_type::LSR_imm && so.type != Shifter_type::ASR_imm && so.type != Shifter_type::ROR_imm && so.type != Shifter_type::RRX) {
 		throw std::string("PC as Rs is unpredictable");
 	}
