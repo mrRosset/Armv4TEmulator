@@ -1,6 +1,7 @@
 #pragma once
 #include <tuple>
 #include <functional>
+#include <vector>
 #include "Common.h"
 #include "Memory.h"
 
@@ -96,6 +97,9 @@ public:
 	std::function<bool(u32)> fun_r_0 = [&](u32 r)->bool {return r == 0; };
 	std::function<bool(u32)> fun_r_C = [&](u32 r)->bool {return cpsr.flag_C; };
 	std::function<bool(u32)> fun_r_V = [&](u32 r)->bool {return cpsr.flag_V; };
+
+	//Call stack
+	std::vector<u32> call_stack;
 
 	//Callbacks
 	std::function<void(u32 number)> swi_callback = nullptr;
