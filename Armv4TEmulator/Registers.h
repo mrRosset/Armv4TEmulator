@@ -1,8 +1,6 @@
 #pragma once
 #include "Common.h"
 
-struct PSR;
-
 class Registers {
 
 	//TODO: Take care of registers when in mode switch.
@@ -16,13 +14,11 @@ class Registers {
 	//use u32 or s32 ? -> mgba use s32
 	u32 gprs[16];
 
-	PSR& cpsr;
-
 public:
 
-	Registers(PSR& cpsr);
+	Registers() : gprs{} {}
 
-	u32 operator[] (int idx) const;
-	u32& operator[](int idx);
+	u32 operator[] (int idx) const { return gprs[idx]; }
+	u32 &operator[](int idx) { return gprs[idx]; }
 
 };
