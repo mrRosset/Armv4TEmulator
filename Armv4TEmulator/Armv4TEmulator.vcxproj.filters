@@ -9,7 +9,6 @@
     <ClInclude Include="Decoder\IR.h" />
     <ClInclude Include="Decoder\Decoder.h" />
     <ClInclude Include="Disassembler\Disassembler.h" />
-    <ClInclude Include="Registers.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CPU.cpp" />
