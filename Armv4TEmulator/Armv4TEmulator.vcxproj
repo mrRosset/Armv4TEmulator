@@ -207,6 +207,7 @@
     <ClInclude Include="Decoder\IR.h" />
     <ClInclude Include="Disassembler\Disassembler.h" />
     <ClInclude Include="Memory.h" />
+    <ClInclude Include="Registers.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
