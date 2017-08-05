@@ -218,6 +218,7 @@
     <ClCompile Include="Disassembler\Disassembler_ARM.cpp" />
     <ClCompile Include="Disassembler\Disassembler_Thumb.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Registers.cpp" />
     <ClCompile Include="Tests\CPU_Tests.cpp" />
     <ClCompile Include="CPU.cpp" />
     <ClCompile Include="Tests\Decoder_Tests.cpp" />
